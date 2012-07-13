@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title> JY-DEMO </title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <script type="text/javascript" src="JY.js"></script>
+  <script type="text/javascript" src="jquery-1.7.js"></script>
+  <script>
+	JY.ready(function(){
+		console.log( JY.byId("li1") );
+		console.log( JY.next("li1") );
+		console.log( JY.prev("li3") );
+		console.log(JY.first(JY.child("myDiv")[0]));
+		console.log(JY.last(JY.child("myDiv")[0]));
+		//console.dir(JY.query("li"))
+
+		var list1= new List();
+		list1.push("sdf");
+		list1.push("999");
+		var list2= new List();
+		list2.push("11");
+		list2.push("22");
+		//console.dir(list1.concat(list2))
+		var list =new List();
+		console.dir(list.concat(Array.prototype.slice.call(list2).concat(Array.prototype.slice.call(list1))).slice(1));
+		JY.ajax({
+			url:"json.json",
+			type:"POST",
+			asny:false,
+			dataType:"json",
+			data:{a:1},
+			success:function(r){
+			 console.log(r);
+			}
+		});
+	});
+  </script>
+ </head>
+ <body>  
+ <div id="myDiv">
+	<ul class="ul">
+		<li id="li1">11111</li>
+		<li id="li2">22222</li>
+		<li id="li3">33333</li>
+		<li id="li4">44444</li>
+	</ul>
+	<ul class="ul2">
+		<li class="li">aaa</li>
+		<li class="li">bbb</li>
+		<li class="li">ccc</li>
+	</ul>
+ </div>
+ </body>
+</html>
