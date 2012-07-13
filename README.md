@@ -1,4 +1,0 @@
-JY
-==
-
-javascript JY
