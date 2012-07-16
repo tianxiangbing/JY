@@ -25,16 +25,25 @@
 		//console.dir(list1.concat(list2))
 		var list =new List();
 		console.dir(list.concat(Array.prototype.slice.call(list2).concat(Array.prototype.slice.call(list1))).slice(1));
+		/*
 		JY.ajax({
-			url:"json.json",
+			url:"ajax.asp",
+			data:{a:11,b:22},
 			type:"POST",
-			asny:false,
+			async:false,
 			dataType:"json",
-			data:{a:1},
 			success:function(r){
-			 console.log(r);
+				console.info(r);
 			}
 		});
+		JY.post("ajax.asp",{"a":2},function(r){
+			console.log(r)
+		},"json");
+		JY.get("ajax.asp?",{"id":2},function(r){
+			console.log(r)
+		},"html");
+		*/
+		console.dir(JY.query("ul").find("li").filter(":not(.li)"))
 	});
   </script>
  </head>

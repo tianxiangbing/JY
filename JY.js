@@ -292,7 +292,26 @@
 		},
 		ajax:function(argsObj){
 			var xhr = new XHR();
-			return xhr.send(argsObj.url,argsObj.success,argsObj.error,argsObj.type,argsObj.async,argsObj.dataType);
+			return xhr.send(argsObj);
+		},
+		get:function(){
+			var args = arguments ;
+			var argsObj = {};
+			argsObj . url = args[0];
+			argsObj .data = args [1]||{};
+			argsObj .success = args [2] || null;
+			argsObj.dataType =args[3]||"html";
+			new XHR().send(argsObj);
+		},
+		post:function(){
+			var args = arguments ;
+			var argsObj = {};
+			argsObj . url = args[0];
+			argsObj .data = args [1]||{};
+			argsObj .success = args [2] || null;
+			argsObj. type = "POST";
+			argsObj.dataType =args[3]||"html";
+			new XHR().send(argsObj);
 		},
 		parseJson:function(txt){
 			return  ( new Function( "return " + txt ) )();
@@ -317,6 +336,9 @@
 				}
 				return a.join("&");
 			}
+		},
+		is: function( selector ) {
+			return !!selector && this.filter( selector ).length > 0 ;
 		}
 	};
 	//*列表集合*/
@@ -385,6 +407,18 @@
 		},
 		eq:function(i){
 			return this[i];
+		},
+		find:function(arg){
+			var list = new List();
+			this.each(function(){
+				var tmp =JY.query.find(arg,this).set;
+				Array.prototype.push.apply( list, tmp);
+			});
+			return list;
+		},
+		filter:function(arg){
+			var tmp =JY.query.filter(arg,this);
+			return  JY.makeArr(tmp);
 		}
 	});
 	function applyr(f){
@@ -418,24 +452,41 @@
 				return xhr;
 			}
 		},
-		send:function(url , success , error , type ,async , dataType){
+		send:function(argsObj){
 			var _self = this;
 			var xhr = _self.create();
-			dataType =dataType||"html";
-			if (async == undefined){
-				async=true;
+			dataType =argsObj.dataType||"html";
+			argsObj.contentType = argsObj.contentType||"application/x-www-form-urlencoded";
+			if (argsObj.async == undefined){
+				argsObj.async=true;
 			}
-			if (async){
+			if (argsObj.async){
 				xhr.onreadystatechange = function(){
 					if(xhr.readyState==4 ){
-						JY.method(success,_self.format(xhr.responseText,xhr.responseXML,dataType)) ;
+						JY.method(argsObj.success,_self.format(xhr.responseText,xhr.responseXML, argsObj.dataType)) ;
 					}
 				};
 			}
-			xhr.open(type||"GET",url,async);
-			xhr.send(null);
-			if (!async){
-				JY.method(success,_self.format(xhr.responseText,xhr.responseXML,dataType)) ;
+			if (argsObj.type == "GET" || !argsObj.type){
+				var tmpArr = argsObj.url.split("?");
+				if (tmpArr[1]){
+					argsObj.url += "&"+JY.param(argsObj.data);
+				}else{
+					argsObj.url = tmpArr[0]+"?"+JY.param(argsObj.data);
+				}
+				xhr.open("GET",argsObj.url,argsObj.async);
+				xhr.send(null);
+			}else{
+				xhr.open("POST",argsObj.url, argsObj.async);
+				xhr.setRequestHeader("Content-Type",argsObj.contentType);
+				try{
+					xhr.send(JY.param(argsObj.data));
+				}catch(e){
+					JY.method(argsObj.error ,e);
+				}
+			}
+			if (!argsObj.async){
+				JY.method(argsObj.success,_self.format(xhr.responseText,xhr.responseXML,argsObj.dataType)) ;
 			}
 			return xhr;
 		},
