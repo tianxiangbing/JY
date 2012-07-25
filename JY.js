@@ -46,7 +46,7 @@
 				this.bind=function(target,eventType,handle){
 					target.attachEvent("on"+eventType,handle);
 				}
-			}
+			};
 			this.bind(target,eventType,handle);
 			return JY;
 		},
@@ -59,7 +59,7 @@
 				this.unbind=function(target,eventType){
 					target.detachEvent("on"+eventType,handle);
 				}
-			}
+			};
 			this.unbind(target,eventType);
 			return JY;
 		},
@@ -70,27 +70,34 @@
 				JY.bind(document,"readystatechange",JY.DOMContentLoaded);
 			}else{
 				JY.bind(win,"DOMContentLoaded",JY.DOMContentLoaded);
-			}
+			};
 			return JY;
 		},
-		startReady:function(){
+		_startReady:function(){
 			for(var i=0,len=readyList.length;i<len;i++){
 				setTimeout(readyList[i],25);
-			}
+			};
 			return JY;
 		},
 		DOMContentLoaded:function(func){
 			if(_ie){
 				if( document.readyState ==="complete"||document.readyState==="interactive"){					
 					JY.unbind(document,"readystatechange",JY.DOMContentLoaded);
-					JY.startReady();
+					JY._startReady();
 				}
 			}else{
 				JY.unbind(win,"DOMContentLoaded",JY.DOMContentLoaded);
-				JY.startReady();
-			}
+				JY._startReady();
+			};
 			return JY;
 		},
+		//查找元素父级节点
+		parent:function(elem){
+			elem = JY.byId(elem);
+			var p = elem. parentNode;
+			return p && p.nodeType !== 11 ? p : null;
+		},
+		//查找当前元素的子级
 		child:function(elem){
 			elem=JY.byId(elem); 
 			var n = elem.firstChild;
@@ -99,19 +106,23 @@
 				if ( n.nodeType === 1 && n !== elem ) {
 					r.push( n );
 				}
-			}
+			};
 			return r;
 		},
+		//查找相邻元素(后面)
 		next:function (elem){
 			return this._brother(elem,"nextSibling");
 		},
+			//查找相领前面元素
 		prev:function(elem){
 			return this._brother(elem,"previousSibling");
 		},
+			//第一个子级节点
 		first:function(elem){
 			elem=JY.byId(elem).firstChild;
 			return (elem && elem.nodeType !=1) ? this.next(elem):elem;
 		},
+			// 最后一个子级节点
 		last:function(elem){
 			elem = JY.byId(elem).lastChild;
 			return (elem && elem.nodeType !=1) ? this.prev(elem):elem;
@@ -124,13 +135,32 @@
 			while (elem && elem.nodeType !=1);
 			return elem;
 		},
+			//设置或获取节点样式
 		css:function(elem,name,value){
 			elem=JY.byId(elem);
-			return JY._assign(elem,name,value,'style')
+			if (value){
+				return JY._assign(elem,name,value,'style');
+			}else{
+				return JY.curCss(elem,name);	
+			}
 		},
+		curCss:function(elem,name){
+			if (doc.defaultView){
+				this.curCss = function(elem,name){
+					return doc.defaultView.getComputedStyle(elem,null)[name];
+				};
+				return this.curCss(elem,name);
+			}else{
+				this.curCss = function(elem ,name){
+					return elem. currentStyle[name];
+				};
+				return this.curCss(elem ,name);
+			}
+		},
+			//获取或设置属性置
 		attr:function(elem,name,value){
 			elem=JY.byId(elem);
-			return JY._assign(elem,name,value,'attribute')
+			return JY._assign(elem,name,value,'attribute');
 		},
 		_assign:function(elem,name,value,func){
 			if(typeof name ==="string"){
@@ -145,17 +175,19 @@
 					}
 			}
 		},
+			//隐藏节点
 		hide:function(elem){
 			elem = JY.byId(elem);
 			JY.css(elem,"display","none");
 			return this;
 		},
+			//显示节点
 		show:function(elem){
 			elem = JY.byId(elem);
 			JY.css(elem,"display","block");
 			return this; 
 		},
-		//*继承*/
+		//*继承扩展对象*/
 		extend:function(){
 			var target = arguments[0]||{};
 			var obj = arguments[1];
@@ -180,9 +212,10 @@
 				var tempCls = JY.attr(elem,"class");
 				tempCls = tempCls ? (tempCls + " " + cls) : cls;
 				JY.attr(elem,"class",tempCls);
-			}
+			};
 			return elem;
 		},
+			//判断是否有class
 		hasClass:function(elem,cls){
 			var elem = JY.byId(elem);
 			if (elem.hasClass){
@@ -202,15 +235,16 @@
 				return isCls;*/
 			}
 		},
+			//根据class查找节点列表List
 		byClass:function(cls,parent,isArr){
 			if (doc.getElementsByClassName ){
 				return isArr ? Array.prototype.slice.call(doc.getElementsByClassName (cls)): List.prototype.init.call(null,doc.getElementsByClassName (cls));
-			}
+			};
 			if (parent){
 				parent = JY.byId(parent).childNodes;
 			}else{
 				parent = doc.getElementsByTagName("*");
-			}
+			};
 			var re = new RegExp('\\b' + cls + '\\b');
 			var list =isArr ? [] : new List();
 			var item = null;
@@ -219,9 +253,22 @@
 				if (JY.hasClass(item,cls)){
 					list.push(item);
 				}
-			}
+			};
 			return list;
 		},
+		//删除样式类
+		removeClass:function(elem,cls){
+			var classlist =JY.attr(elem,"class").split(spaceRex);
+			var tmp = [];
+			for (var i =0; i < classlist.length ;i++ ){
+				if (classlist[i] !== cls){
+					tmp.push(classlist[i]);
+				}
+			};
+			JY.attr(elem,"class", tmp.join(" "));
+			return this;
+		},
+		//根据tagName获取节点列表List
 		byTag:function(tag,context,isArr){
 			//return List.prototype.init.call(null,doc.getElementsByTagName(tag));
 			context = context||doc;
@@ -229,6 +276,7 @@
 			 arr =isArr ? Array.prototype.slice.call(arr) : JY.makeArr(arr);
 			 return arr;
 		},
+		//根据css3查找节点列表List
 		query:function(){
 			return this.makeArr(this._query.apply(this,arguments));
 		},
@@ -253,16 +301,16 @@
 						tmpList = tmpList.concat (JY.byClass(match[2],context,1) );
 					}else if(match[3]){
 						tmpList = tmpList .concat(JY.byId(match[3],context));
-					}
+					};
 					var tmpArr = [];
 					for (var j = 0, len=matchArr.length; j <len ; j++ ){
 						tmpArr = [];
 						for (var i = 0,l = tmpList.length; i < l ; i++ ){
 							tmpArr = tmpArr.concat( arguments.callee( matchArr .join(" ") ,tmpList[i]  ) );
 						}
-					}
+					};
 					tmpList= tmpArr.length== 0 ? tmpList:tmpArr;
-				}
+				};
 				return tmpList ;
 			}
 		},
@@ -279,21 +327,29 @@
 			}
 			return tmpList;
 		}*/
+		//筛选出与指定表达式匹配的元素集合。
 		filter:function(filterStr , list){
 			
 		},
+		//htmlCollection生成List
 		makeArr:function(htmlConllecton){
 			/*return List.prototype.init.call(null,htmlConllecton);*/
+			/*
 			var arr = Array.prototype.slice.call(htmlConllecton);
 			//arr.push.apply(arr, arguments);
 			arr.__proto__ = List.prototype;
 			return arr;
-			
+			*/
+			var list = new List();
+			var arr = Array.prototype.slice.call(htmlConllecton);
+			return list.concat (arr);
 		},
+			//ajax异表
 		ajax:function(argsObj){
 			var xhr = new XHR();
 			return xhr.send(argsObj);
 		},
+			//get方法的ajax
 		get:function(){
 			var args = arguments ;
 			var argsObj = {};
@@ -303,6 +359,7 @@
 			argsObj.dataType =args[3]||"html";
 			new XHR().send(argsObj);
 		},
+			//post方法的ajax
 		post:function(){
 			var args = arguments ;
 			var argsObj = {};
@@ -313,8 +370,9 @@
 			argsObj.dataType =args[3]||"html";
 			new XHR().send(argsObj);
 		},
+			//字符串转换成json格式
 		parseJson:function(txt){
-			return  ( new Function( "return " + txt ) )();
+			return  typeof txt ==="string" ? ( new Function( "return " + txt ) )() :  txt;
 		},
 		method:function(){
 			var func = arguments[0]; 
@@ -323,6 +381,7 @@
 				func.apply(null,args);
 			}
 		},
+			//json转换成&url参数
 		param:function(obj){
 			if (typeof obj =="string"){
 				return obj;
@@ -337,32 +396,86 @@
 				return a.join("&");
 			}
 		},
-		is: function( selector ) {
-			return !!selector && this.filter( selector ).length > 0 ;
+		//用一个表达式来检查当前选择的元素集合，如果其中至少有一个元素符合这个给定的表达式就返回true。
+		is: function(elem, selector ) {
+			return !!selector && JY.query.filter( selector , elem ).length > 0 ;
+		},
+			//遍历集合List或array
+		each:function(arr , callback){
+			for (var i = 0,l = arr. length; i<l ; i++ ){
+				callback.call(arr[i],arr[i],i);
+			}
+			return this;
+		},
+			//元素位置
+		position:function(elem){
+			elem = JY.byId(elem);	
+			return {x:elem.getBoundingClientRect().left + doc.documentElement.scrollLeft,y:elem.getBoundingClientRect().top + doc.documentElement.scrollTop};
+		},
+		//元素偏移量
+		offset:function(elem){
+			elem = JY.byId(elem);	
+			return {x:elem.getBoundingClientRect().left + doc.documentElement.scrollLeft,y:elem.getBoundingClientRect().top + doc.documentElement.scrollTop};
+		},
+		//交互变换的样式
+		toggleClass:function(elem,cls){
+			if (JY.hasClass(elem,cls)){
+				JY.removeClass(elem,cls);
+			}else{
+				JY.addClass(elem,cls);
+			}
+			return this;
 		}
 	};
+	//元素高度和宽度
+	JY.each(["Height","Width"],function(){		
+		var _self = this;
+		var name = this.toLowerCase();
+		JY[name] = function(elem , value){
+				elem = JY.byId(elem);
+				if (value){
+					value = typeof value ==="string" ?value:value+'px';
+					JY.css(elem,name ,value);
+					return this;
+				}
+				if (elem == window){
+					return document.compatMode == "CSS1Compat" && document.documentElement[ "client" + _self ] || document.body[ "client" + _self ];
+				}else
+				if (elem == document ){
+					return Math.max(
+						document.documentElement["client" + _self],
+						document.body["scroll" + _self], document.documentElement["scroll" + _self],
+						document.body["offset" + _self], document.documentElement["offset" + _self]
+					);
+				}else{
+						var val = 0;
+						var wich = name=="height"?["Top","Bottom"]:["Left","Right"];
+						if (doc.defaultView ){
+							val = parseFloat(JY.curCss(elem,name));
+						}else{
+							val = elem["offset"+_self];
+							JY.each(wich,function(){
+								val -= parseFloat(JY.css(elem,"border"+this+"Width"));
+								val -= parseFloat(JY.css(elem, "padding"+this));
+							});
+						}
+						return Math.round(val) ;
+					}
+			}
+	});
 	//*列表集合*/
 	var List = function(){		
 	};
 	List.prototype = new Array();
 	JY.extend(List,{		
 		each : function(callBack){
+			/*
 				for (var i = 0,l = this.length; i<l ;i++ ){
-					callBack.call(this[i],this[i]);
+					callBack.call(this[i],this[i],i);
 				}
+				*/
+				JY.each(this,callBack);
 				return this;
-		},
-		hide : function(){
-			this.each(function(){
-				JY.hide(this);
-			});
-			return this;
-		},
-		show : function(){
-			this.each(function(){
-				JY.show(this);
-			});
-			return this;
 		},
 		_assign:function(v,n){			
 			this.each(function(){
@@ -370,7 +483,12 @@
 			});
 		},
 		css:function(){
-			applyr(this._assign,"css").apply(this,arguments);
+			if (arguments.length ==2){
+				applyr(this._assign,"css").apply(this,arguments);
+				return this;
+			}else{
+				JY.css(this[0],arguments[0]);
+			}
 		},
 		attr:function(){
 			applyr(this._assign,"attr").apply(this,arguments);
@@ -419,7 +537,81 @@
 		filter:function(arg){
 			var tmp =JY.query.filter(arg,this);
 			return  JY.makeArr(tmp);
+		},
+		parents:function(arg){
+			var tmp = new List();
+			var arr= new List();
+			this.each(function(){		
+				var p =  JY.parent(this);
+				while (p&&p.nodeType !== 9){
+					tmp.push(p);
+					p = JY.parent(p);
+				}
+			});
+			arr = JY.makeArr (JY.unique(JY.query.filter( arg , tmp) ));
+			return arr;
+		},
+		closest:function(arg){
+			var tmp = new List();
+			this.each(function(){		
+				var p =  JY.parent(this);
+				while (p && p.nodeType !== 9){
+					if (JY.is([p], arg)){
+						tmp.push( p );
+						break;
+					}
+					p = JY.parent(p);
+				}
+			});
+			return JY.unique(tmp);
 		}
+		/*,
+		height:function(arg){
+			if (this.length==1){
+				if( arg ){
+					JY.height(this[0],arg);
+					return this;
+				}else{
+					return JY.height(this[0]);
+				}
+			}else{
+				var arr = [];
+				this.each(function(){
+					arr.push(JY.height(this,arg));
+				});
+				return arg  ? this : arr;
+			}
+		}*/
+	});
+	JY.each(["height","width","position"],function(){
+		var name  = this;
+		List.prototype[name] = function(arg){			
+			if (this.length==1){
+				if( arg ){
+					JY[name](this[0],arg);
+					return this;
+				}else{
+					return JY[name](this[0]);
+				}
+			}else{
+				var arr = [];
+				this.each(function(){
+					arr.push(JY[name](this,arg));
+				});
+				return arg  ? this : arr;
+			}
+		}
+	});
+	JY.each(["bind","unbind","show","hide","addClass","toggleClass","removeClass"],function(){
+		var name = this;
+		List.prototype[name]=function(){
+			var args = Array.prototype.slice.call( arguments, 0 );
+			this.each(function(){
+				JY[name].apply( this,[this].concat(args) );
+			});
+			return this;
+		};
+		return this;
 	});
 	function applyr(f){
 		var args =  Array.prototype.slice.call(arguments,1);
@@ -536,7 +728,7 @@ var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[
 });
 
 var Sizzle = function( selector, context, results, seed ) {
-	results = results || [];
+	results = results || new List;
 	context = context || document;
 
 	var origContext = context;
@@ -1948,5 +2140,6 @@ JY.query = Sizzle;
 JY.text = Sizzle.getText;
 JY.contains = Sizzle.contains;
 Sizzle.attr = JY.attr;
+JY.unique = Sizzle.uniqueSort;
 })();
 
