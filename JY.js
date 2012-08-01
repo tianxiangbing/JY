@@ -30,14 +30,10 @@
 		byId:function(id,doc){
 			return ((typeof id =="string") ?(doc||document).getElementById(id):id)||null;
 		},
-		ready:function(callback){
-			readyList.push(callback);
-			ready();
-			return JY;
-		},
 		//**事件延迟加载*/
 		//****绑定事件****/
 		bind:function(target,eventType,handle){
+			/*
 			if(target.addEventListener){
 				this.bind=function(target,eventType,handle){
 					target.addEventListener(eventType,handle,false);
@@ -48,9 +44,13 @@
 				}
 			};
 			this.bind(target,eventType,handle);
+			*/
+			target = JY.byId(target);
+			JY.event.add(target,eventType,handle);
 			return JY;
 		},
 		unbind:function(target,eventType,handle){
+			/*
 			if(target.removeEventListener){
 				this.unbind=function(target,eventType){
 					target.removeEventListener(eventType,handle,false);
@@ -61,7 +61,24 @@
 				}
 			};
 			this.unbind(target,eventType);
+			*/
+			target = JY.byId(target);
+			JY.event.remove(target,eventType,handle);
 			return JY;
+		},
+		one:function(target,eventType,handle){
+			target = JY.byId(target);
+			JY.event.add(target,eventType,handle,"one");
+			return JY;
+		},
+		delegate:function(selector,target,eventType,handle){
+			target = JY.byId(target);
+			JY.event.add(selector,eventType,handle,"delegate",target);
+			return JY;
+		},
+		live:function(target,eventType,handle){
+			JY.event.add(document,eventType,handle,"delegate",target);
+			return JY;			
 		},
 		ready:function(func){	
 			readyList.push(func);
@@ -602,7 +619,7 @@
 			}
 		}
 	});
-	JY.each(["bind","unbind","show","hide","addClass","toggleClass","removeClass"],function(){
+	JY.each(["bind","unbind","show","hide","addClass","toggleClass","removeClass","live","one","delegate"],function(){
 		var name = this;
 		List.prototype[name]=function(){
 			var args = Array.prototype.slice.call( arguments, 0 );
@@ -618,6 +635,86 @@
 		return function (x){
 			return f.apply( this,[x].concat(args) );
 		}
+	};
+	JY.cache = {};
+	JY.event={
+		add:function(target,eventType,handle,type,selector){			
+			if(target.addEventListener){
+				this.add=function(target,eventType,handle){
+					handle = this._proxy.apply(this,Array.prototype.slice.call(arguments,0));
+					target.addEventListener(eventType,handle,false);
+				}
+			}else{
+				this.add=function(target,eventType,handle){
+					handle = this._proxy.apply(this,Array.prototype.slice.call(arguments,0));
+					target.attachEvent("on"+eventType,handle);
+				}
+			};
+			this.add.apply(this,Array.prototype.slice.call(arguments ,0));
+		},
+		_proxy:function(target,eventType,handle,type,selector){
+			var fn = handle;
+			var _self = this;
+			_self.guid++;
+			_self.handleList[_self.guid] = fn ;
+			handle = function(e){
+				if (type==="delegate"){
+					JY.query(selector).each(function(){					
+						if (e.target === this){
+							e.stop=function(){
+								e.preventDefault();
+								e.stopPropagation();
+							};
+							fn.call(null,e)
+						};
+					});
+					return false;
+				}
+				e.stop=function(){
+					e.preventDefault();
+					e.stopPropagation();
+				};
+				if (!fn.call(null,e)){
+					e.preventDefault();
+				};
+				if (type==="one"){
+					_self.remove(target,eventType,handle)
+				}
+			};
+			handle.guid = _self.guid;
+			JY.cache.event ={};
+			JY.cache.event [_self.guid] = {target:target,handle:handle};
+			return handle;
+		},
+		remove:function(target,eventType,handle){
+			if(target.removeEventListener){
+				this.remove=function(target,eventType,handle){
+					if (handle){
+						for (var i=0,l=this.handleList.length;i<l ;i++ ){
+							if (handle == this.handleList[i]){
+								handle = JY.cache.event [i].handle;
+								delete JY.cache.event [i];
+							}
+						};
+						target.removeEventListener(eventType,handle,false);
+					}else{
+						for (var j in JY.cache.event ){
+							if (JY.cache.event [j].target == target){
+								target.removeEventListener(eventType,JY.cache.event [j].handle,false);
+								delete JY.cache.event [j];
+							}
+						}
+					}
+				}
+			}else{
+				this.remove=function(target,eventType,handle){
+					target.detachEvent("on"+eventType,handle);
+				}
+			};
+			this.remove(target,eventType,handle);
+		},
+		guid:0,
+		handleList:[]
 	};
 	win.JY=JY;
 	win.List=List;
@@ -639,10 +736,10 @@
 						xhr=new ActiveXObject(msxml_progid[i]);
 						break;
 					}catch(e){}
-				}
+				};
 			}finally{
 				return xhr;
-			}
+			};
 		},
 		send:function(argsObj){
 			var _self = this;
@@ -651,7 +748,7 @@
 			argsObj.contentType = argsObj.contentType||"application/x-www-form-urlencoded";
 			if (argsObj.async == undefined){
 				argsObj.async=true;
-			}
+			};
 			if (argsObj.async){
 				xhr.onreadystatechange = function(){
 					if(xhr.readyState==4 ){
@@ -665,7 +762,7 @@
 					argsObj.url += "&"+JY.param(argsObj.data);
 				}else{
 					argsObj.url = tmpArr[0]+"?"+JY.param(argsObj.data);
-				}
+				};
 				xhr.open("GET",argsObj.url,argsObj.async);
 				xhr.send(null);
 			}else{
@@ -679,7 +776,7 @@
 			}
 			if (!argsObj.async){
 				JY.method(argsObj.success,_self.format(xhr.responseText,xhr.responseXML,argsObj.dataType)) ;
-			}
+			};
 			return xhr;
 		},
 		format:function(txt,xml, type){
