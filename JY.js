@@ -71,9 +71,10 @@
 			JY.event.add(target,eventType,handle,"one");
 			return JY;
 		},
-		delegate:function(selector,target,eventType,handle){
-			target = JY.byId(target);
-			JY.event.add(selector,eventType,handle,"delegate",target);
+		//为所有选择器匹配的元素附加一个处理一个或多个事件，现在或将来，基于一组特定的根元素。
+		//父节点是trigger，目标节点是selector
+		delegate:function(trigger,selector,eventType,handle){
+			JY.event.add(trigger,eventType,handle,"delegate",selector);
 			return JY;
 		},
 		live:function(target,eventType,handle){
@@ -442,6 +443,69 @@
 				JY.addClass(elem,cls);
 			}
 			return this;
+		},
+		//去除空格
+		trim:function(txt){
+			return txt == null? "": txt.toString().replace(trimLeft , "").replace(trimRight ,"");
+		},
+		//dom插入操作的中间函数
+		_domInsert:function(elem,child,callback){
+			var tmp = document.createElement("div");
+			var frag = document.createDocumentFragment();
+			if (typeof child ==="string"){
+				tmp.innerHTML = child;
+			}else{
+				tmp.appendChild(child);
+			};	
+			var n = tmp.firstChild;
+			for ( ; n; n = n.nextSibling ) {
+				if ( (n.nodeType === 1|| n.nodeType ===3) && n !== tmp ) {
+					frag.appendChild(n);
+				}
+			};
+			//elem.appendChild(frag);
+			callback.call(elem,frag);
+			return elem;
+		},
+		//追加，插入到后面
+		append:function(elem ,child){
+			elem = this.byId(elem);
+			return this._domInsert(elem,child,function(c){
+				this.appendChild(c);
+			} )
+		},
+		//插入最前面
+		prepend:function(elem,child){
+			elem = this.byId(elem);			
+			return this._domInsert(elem,child,function(c){
+				this.insertBefore(c,this.firstChild);
+			} );
+		},
+		//插入之前
+		before:function(elem,node){
+			elem = this.byId (elem);
+			return this._domInsert(elem,node,function(c){
+				this.parentNode.insertBefore(c,elem);
+			});
+		},
+		//插入之后
+		after:function(elem,node){
+			elem = this.byId (elem);
+			return this._domInsert(elem,node,function(c){
+				this.parentNode.insertBefore(c,JY.next(elem));
+			});
+		},
+		//HTML文本
+		toText:function(elem,txt){
+			elem = this.byId(elem);
+			if (txt ==null){
+				var tmpNode = document.createElement("div");
+				tmpNode.appendChild( document.createTextNode(elem.innerHTML));
+				return tmpNode.innerHTML;
+			}else{
+				elem.appendChild( document.createTextNode(txt));
+				return elem;
+			}
 		}
 	};
 	//元素高度和宽度
@@ -484,6 +548,7 @@
 	var List = function(){		
 	};
 	List.prototype = new Array();
+	List.prototype.constructor = List;
 	JY.extend(List,{		
 		each : function(callBack){
 			/*
@@ -658,21 +723,27 @@
 			_self.guid++;
 			_self.handleList[_self.guid] = fn ;
 			handle = function(e){
+				e.stop=function(){
+					e.preventDefault();
+					e.stopPropagation();
+				};
 				if (type==="delegate"){
-					JY.query(selector).each(function(){					
+					var evtList =new List;
+					if (typeof selector === "object"){
+						if (selector.constructor === List){
+							evtList = selector;
+						}else{
+							evtList.push(selector);
+						}
+					}else{
+						evtList = JY.query(selector,target);
+					};
+					evtList.each(function(){					
 						if (e.target === this){
-							e.stop=function(){
-								e.preventDefault();
-								e.stopPropagation();
-							};
 							fn.call(null,e)
 						};
 					});
 					return false;
-				}
-				e.stop=function(){
-					e.preventDefault();
-					e.stopPropagation();
 				};
 				if (!fn.call(null,e)){
 					e.preventDefault();
