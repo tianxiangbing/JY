@@ -175,7 +175,7 @@
 				return this.curCss(elem,name);
 			}else{
 				this.curCss = function(elem ,name){
-					return elem. currentStyle[name];
+					return elem.currentStyle ? elem. currentStyle[name]:elem.style[name];
 				};
 				return this.curCss(elem ,name);
 			}
@@ -561,16 +561,23 @@
 			}
 		},
 		//分解优化循环
-		resolve:function(callback,startIndex,max){
+		resolve:function(callback,startIndex,max,arr){
 			var start =+ new Date();
 			var n = startIndex;
 			for (; n<max && +new Date()-start<50 ; n++){
-				callback();
+				if (arr && arr[n] ===undefined){
+					continue;
+				};
+				arr ? callback.call(arr[n],arr[n],n) :  callback(n) ;
 			};
 			if (n<max){
 				var calleeFunc = arguments.callee;
 				setTimeout(applyr(calleeFunc,callback,n,max),25);
 			}
+		},
+		//碰撞检测
+		hits:function(oA,oB){
+			return  (Math.abs(oA.x - oB.x) <=Math.max(oA.width,oB.width) && Math.abs(oA.y - oB.y) <= Math.max(oA.width,oB.width) )
 		}
 	};
 	//元素高度和宽度
@@ -2429,6 +2436,10 @@ JY.unique = Sizzle.uniqueSort;
 		this.timer=null;//计时器
 		this.func = new Function();//当前执行函数
 		this.stage=stage;//舞台
+		if (stage){
+			this.stage.width = JY.width(stage);
+			this.stage.height = JY.height(stage);
+		};
 		this.lastState=null;
 		this.currentState=null;//当前状态
 		this.nextState = null;
@@ -2438,9 +2449,11 @@ JY.unique = Sizzle.uniqueSort;
 		this.titleScreen = null;
 		this.InstructionsScreen= null;
 		this.scoreScreen=null;
-		this.scoreScreen=null;
+		this.gameOverScreen=null;
+		this.frequency =100;//刷新频率
 	};
 	var Game =function(){
+		this.newLevel=function(){};
 	};
 	JYG.prototype={
 		init:function(){
@@ -2448,15 +2461,14 @@ JY.unique = Sizzle.uniqueSort;
 		},
 		setStage:function(stage){
 			this.stage = stage;
+			this.stage.width = JY.width(stage);
+			this.stage.height = JY.height(stage);		
 		},
 		startTimer:function(){
 			var _self=this;
-			this.timer = setInterval(JY.proxyFunc(_self.runGame,_self),100);
-		},
-		resetGame:function(){
-			this.clearState();
-			this.game.resetState();		
-			this.startTimer();
+			if (!_self.timer){
+				_self.timer = setInterval(JY.proxyFunc(_self.runGame,_self),_self.frequency);
+			}
 		},
 		runGame:function(){
 			this.func();
@@ -2499,29 +2511,32 @@ JY.unique = Sizzle.uniqueSort;
 		},
 		setTitle:function(){
 			this.addChild(this.titleScreen);
-			JY.bind(this.stage,"click", JY.proxyFunc( this.okButtonClickListener,this));
+			//JY.bind(this.titleScreen,"click", JY.proxyFunc( this.okButtonClickListener,this));
 			this.checkState(JYGSTATE.STATE_SYSTEM_WAIT);
 			this.nextState=JYGSTATE.STATE_SYSTEM_INSTRUCTIONS;
+			//this.stopTimer();
 		},
-		setInstructions:function(){			
-			this.removeChild(this.titleScreen);
+		setInstructions:function(){		
 			this.addChild(this.InstructionsScreen);
-			JY.bind(this.stage,"click", JY.proxyFunc( this.okButtonClickListener,this));
+			JY.bind(this.InstructionsScreen,"click", JY.proxyFunc( this.okButtonClickListener,this));
 			this.nextState=JYGSTATE.STATE_SYSTEM_NEW_GAME;
+			this.stopTimer();
 		},
 		systemNewGame:function(){
-			this.removeChild(this.InstructionsScreen);
 			this.game.newGame();
 			this.addChild(this.scoreScreen);
+			this.checkState(JYGSTATE.STATE_SYSTEM_NEW_LEVEL);
 		},
 		gameOver:function(){
 			this.clearState();
-			this.addChild(this.scoreScreen);
-			JY.bind(this.stage,"click", JY.proxyFunc( this.resetGame,this));
+			this.addChild(this.gameOverScreen);
+			JY.bind(this.gameOverScreen,"click", JY.proxyFunc( this.okButtonClickListener,this));
+			//this.checkState(JYGSTATE.STATE_SYSTEM_WAIT_FOR_CLOSE);
 			this.nextState=JYGSTATE.STATE_SYSTEM_TITLE;
-			clearInterval(this.timer);
+			this.stopTimer();
 		},
 		newLevel:function(){
+			this.game.newLevel();
 			this.checkState(JYGSTATE.STATE_SYSTEM_LEVEL_IN);
 		},
 		gamePlay:function(){
@@ -2534,11 +2549,13 @@ JY.unique = Sizzle.uniqueSort;
 			}
 		},
 		waitClose:function(){
-			this.checkState(this.nextState);
+			//this.checkState(this.nextState);
+			this.okButtonClickListener();
 			waitCount = 0;
 		},
 		levelIn:function(){
-			JY.bind(this.stage,"click", JY.proxyFunc( this.okButtonClickListener,this));
+			waitTime = 10;
+			this.checkState(JYGSTATE.STATE_SYSTEM_WAIT);
 			this.nextState=JYGSTATE.STATE_SYSTEM_GAME_PLAY;
 		},
 		clearState:function(){
@@ -2547,8 +2564,22 @@ JY.unique = Sizzle.uniqueSort;
 			JY.each(child,function(){
 				_self.removeChild(this);
 			});
+			this.stopTimer();
 		},
 		okButtonClickListener:function(e){
+			switch(this.nextState){
+				case JYGSTATE.STATE_SYSTEM_TITLE:{
+					this.removeChild(this.gameOverScreen);
+					this.startTimer();
+				}break;
+				case JYGSTATE.STATE_SYSTEM_INSTRUCTIONS:{	
+					this.removeChild(this.titleScreen);
+				}break;
+				case JYGSTATE.STATE_SYSTEM_NEW_GAME:{	
+					this.removeChild(this.InstructionsScreen);
+					this.startTimer();
+				}break;
+			}
 			this.checkState(this.nextState);
 		},
 		removeChild:function(child){
@@ -2558,15 +2589,19 @@ JY.unique = Sizzle.uniqueSort;
 			if (child){
 				JY.append(this.stage,child);
 			}
+		},
+		stopTimer:function(){
+			clearInterval(this.timer);
+			this.timer=null;
 		}
 	};	
 	function Sprite(w,h,style){
 		this.DOM = document.createElement("i");
 		style = style||{};
-		JY.extend(style,{position:"absolute",overflow:"hidden",width:w+"px",height:h+"px"})
+		JY.extend(style,{position:"absolute",overflow:"hidden",width:w+"px",height:h+"px"});
 		JY.css(this.DOM,style);
-		this.width = JY.height(this.DOM);
-		this.height = JY.width(this.DOM);
+		this.width = w;
+		this.height = h;
 		this.x = 0;
 		this.y= 0;
 		this.data=null;
