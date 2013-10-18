@@ -1,0 +1,39 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title>跳跃吧英雄</title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <style>
+  #gameContent {
+    background: url("images/run/board.png") repeat-y scroll 0 0 transparent;
+    margin: 0 auto;
+    width: 600px;
+}
+	#gameboard{width:520px;height:600px;position:relative;border:1px solid #dedede;overflow:hidden;background-color:#F2F2F2;margin:0 auto;background:url(images/run/bg.jpg) repeat-y ;}
+	#gameboard i.floor{display:block;width:30px;height:30px;line-height:30px;background-color:#666;color:#fff;text-align:center;border-radius:15px;box-shadow:3px 3px rgba(0,0,0,0.3);cursor:pointer;}
+	.point{position:absolute;width:1px;height:1px;font-size:1px;overflow:hidden;background-color:red;zoom:1;}
+	.config dt,.config dd{float:left;}
+	.config:after{clear:both;content:".";display:block;height:0;line-height:0;font-size:0;visibility:hidden;}
+	.config{zoom:1;width:700px;margin:0 auto;line-height:30px;height:30px;}
+	.config input{width:60px;border:1px solid #cecece;}
+	.instruction h3{font-size:14px;color:#333;font-weight:normal;}
+	.instruction{font-size:12px;color:#555;}
+	.instruction p{text-indent:2em;}
+	h1{font-size:14px;}
+  </style>
+ </head>
+
+ <body>
+  <div id="gameContent">
+<div id="gameboard">
+
+</div>
+</div>
+			<div class="instruction"><h3>玩法说明：</h3><p>方向键左右移动英雄，基友(JY)，让我们一起向一百层出发吧!</p><p>更多游戏请<a href="http://www.lovewebgames.com">点击这里</a></p></div>
+<script src="../JY.js"></script>
+<script src="run.js"></script>
+ </body>
+</html>

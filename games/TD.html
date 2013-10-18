@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>美丽约</title>
+  <meta name="Generator" content="EditPlus">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="Author" content="前端:田想兵2013/9/12">
+  <meta name="Keywords" content="移动的铁环-JY游戏">
+  <meta name="Description" content="移动的铁环">
+  <style>
+	#gameboard h1{color:#eee;font-size:18px;}
+	#gameboard{width:640px;height:640px;position:relative;border:1px solid #dedede;overflow:hidden;margin:0 auto;}
+	#gameboard i.floor{display:block;width:30px;height:30px;line-height:30px;background-color:#666;color:#fff;text-align:center;border-radius:15px;box-shadow:3px 3px rgba(0,0,0,0.3);cursor:pointer;}
+	#gameboard a{color:#EEE;}
+	.point{position:absolute;width:1px;height:1px;font-size:1px;overflow:hidden;background-color:red;zoom:1;}
+	.config dt,.config dd{float:left;}
+	.config:after{clear:both;content:".";display:block;height:0;line-height:0;font-size:0;visibility:hidden;}
+	.config{zoom:1;width:700px;margin:0 auto;line-height:30px;height:30px;}
+	.config input{width:60px;border:1px solid #cecece;}
+	.instruction h3{font-size:14px;color:#333;font-weight:normal;}
+	.instruction{font-size:12px;color:#555;}
+	.instruction p{text-indent:2em;}
+	h1{font-size:14px;}
+	.point{position:absolute;width:1px;height:1px;font-size:1px;overflow:hidden;background-color:red;zoom:1;}	
+	#path,#gameboard,#monster,#action{width:640px;height:640px;position:absolute;top:0;left:0;}
+	#content{position:relative;height:640px;width:640px;margin:0 auto;background-color:#4d4d4d;}
+  </style>
+ </head>
+
+ <body>
+ <div id="content">
+	<canvas id="path" width="640px" height="640px"></canvas>
+	<canvas id="action" width="640px" height="640px"></canvas>
+	<canvas id="monster" width="640px" height="640px"></canvas>
+	<div id="gameboard">
+	</div>
+</div>
+<div class="instruction">
+</div>
+<script src="../JY.min.js"></script>
+<script src="TD.js"></script>
+ </body>
+</html>
