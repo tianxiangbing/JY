@@ -949,14 +949,17 @@
 					if (!target){
 						return this;
 					};
-					var _data = JY.attr(target , "JY_data");
+					var _data = JY.attr(target , "JY_data");					
+					if (!_data){
+						//不存在
+						_data = "JY_"+JY.CID;
+						JY.attr(target , "JY_data",_data);
+						JY.CID++;
+					};
 					var ishaveEvt = true;//是否已存在相同的事件
 					if (!JY.cache[_data] || !JY.cache[_data][eventType]){
 						ishaveEvt = false
 					};
-					if (eventType =="mouseover"){
-						//debugger;
-					}
 					handle = this._proxy.apply(this,Array.prototype.slice.call(arguments,0));
 					if (!ishaveEvt){//没有就添加
 						JY.cache[_data][eventType].handle = handle;
@@ -976,20 +979,12 @@
 		},
 		_proxy:function(target,eventType,handle,type,selector){
 			var _data = JY.attr(target , "JY_data");
-			if (_data){
-				//不存在
-				_data = "JY_"+JY.CID;
-				JY.attr(target , "JY_data",_data);
-				JY.CID++;
-			};
 			
 			JY.cache[_data] = JY.cache[_data] ||{};//初始化缓存事件列表
 			JY.cache[_data][eventType] = JY.cache[_data][eventType] ||[];
 			var eList = JY.cache[_data][eventType];
 			var _self = this;
 			var fn = handle;
-			_self.guid++;
-			_self.handleList[_self.guid] = fn ;
 			handle = function(e){
 				e.target=e.target || e.srcElement ;
 				e.stop=function(){
