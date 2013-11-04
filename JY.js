@@ -939,16 +939,29 @@
 		}
 	};
 	JY.cache = {};
+	JY.CID = 0 ;// DOM节点缓存的ID
 	//事件驱动
 	JY.event={
 		add:function(target,eventType,handle,type,selector){	
+
 			if(target.addEventListener){
 				this.add=function(target,eventType,handle){
 					if (!target){
 						return this;
+					};
+					var _data = JY.attr(target , "JY_data");
+					var ishaveEvt = true;//是否已存在相同的事件
+					if (!JY.cache[_data] || !JY.cache[_data][eventType]){
+						ishaveEvt = false
+					};
+					if (eventType =="mouseover"){
+						//debugger;
 					}
 					handle = this._proxy.apply(this,Array.prototype.slice.call(arguments,0));
-					target.addEventListener(eventType,handle,false);
+					if (!ishaveEvt){//没有就添加
+						JY.cache[_data][eventType].handle = handle;
+						target.addEventListener(eventType,handle,false);
+					}
 				}
 			}else{
 				this.add=function(target,eventType,handle){					
@@ -962,8 +975,19 @@
 			this.add.apply(this,Array.prototype.slice.call(arguments ,0));
 		},
 		_proxy:function(target,eventType,handle,type,selector){
-			var fn = handle;
+			var _data = JY.attr(target , "JY_data");
+			if (_data){
+				//不存在
+				_data = "JY_"+JY.CID;
+				JY.attr(target , "JY_data",_data);
+				JY.CID++;
+			};
+			
+			JY.cache[_data] = JY.cache[_data] ||{};//初始化缓存事件列表
+			JY.cache[_data][eventType] = JY.cache[_data][eventType] ||[];
+			var eList = JY.cache[_data][eventType];
 			var _self = this;
+			var fn = handle;
 			_self.guid++;
 			_self.handleList[_self.guid] = fn ;
 			handle = function(e){
@@ -997,42 +1021,48 @@
 					_self.remove(target,eventType,handle)
 				}
 			};
-			handle.guid = _self.guid;			
-			JY.cache.event =JY.cache.event||{};
-			JY.cache.event[_self.guid] = {target:target,handle:handle};
-			return handle;
+			handle.oldHandle = fn;
+			eList.push( handle );
+			return function(e){
+				JY.each(eList,function(d){
+					d.call(this,e);
+				});
+			};
 		},
 		remove:function(target,eventType,handle){
-			if(target.removeEventListener){
-				this.remove=function(target,eventType,handle){
-					if (handle){
-						for (var i=0,l=this.handleList.length;i<l ;i++ ){
-							if (handle == this.handleList[i]){
-								handle = JY.cache.event [i].handle;
-								delete JY.cache.event [i];
-								delete this.handleList[i];
-							}
-						};
-						target.removeEventListener(eventType,handle,false);
+			var _self = this;
+			var _data = JY.attr(target , "JY_data");
+			var evtList = JY.cache[_data][eventType]||false;
+			if (handle){
+				var count = 0;
+				JY.each(evtList,function(d,i){
+					if (handle == d.oldHandle ){
+						delete evtList[i];
 					}else{
-						for (var j in JY.cache.event ){
-							if (JY.cache.event [j].target == target){
-								target.removeEventListener(eventType,JY.cache.event [j].handle,false);
-								delete JY.cache.event [j];
-								delete this.handleList[i];
-							}
-						}
-					}
+						count++; 
+					};
+				});
+				if (count ===0 ){
+					this.remove(target,eventType);
 				}
 			}else{
-				this.remove=function(target,eventType,handle){
+				if (evtList){
+					//target.removeEventListener(eventType,evtList.handle,false);
+					_self.deleteEvt(target,eventType,evtList.handle);
+				}
+			};
+		},
+		deleteEvt :function(target,eventType,handle){
+			if(target.removeEventListener){
+				this.deleteEvt = function(target,eventType,handle){
+					target.removeEventListener(eventType,handle,false);
+				}
+			}else{
+				this.deleteEvt = function(target,eventType,handle){
 					target.detachEvent("on"+eventType,handle);
 				}
 			};
-			this.remove(target,eventType,handle);
-		},
-		guid:0,
-		handleList:[]
+		}
 	};
 	//绘图函数
 	JY.draw={
