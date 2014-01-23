@@ -1,0 +1,40 @@
+@charset "utf-8";
+
+*:focus {outline: none;}
+
+.jbox-fade{background-color:#000000;}
+
+.jbox-drag{border:1px dashed #febb05;}
+
+div.jbox {padding:0px;border:none;font-size:12px;}
+
+div.jbox .jbox-border{background: none repeat scroll 0 0 #000000;filter:alpha(opacity=20);-moz-opacity:0.2;opacity:0.2;}
+
+div.jbox .jbox-container{background-color:#ffffff;border:1px solid #999999;}
+
+div.jbox .jbox-title-panel{ background:url("https://property.alibaba-inc.com/lib_rocky/jBox/Skins2/Yellow/images/ui-bg_gloss-wave_35_f6a828_500x100.png") left top repeat-x; height:32px;}
+div.jbox .jbox-title{font-weight:bold;color:#ffffff;}
+div.jbox .jbox-title-icon{background:url("https://property.alibaba-inc.com/lib_rocky/jBox/Skins2/Yellow/images/jbox-title-icon.gif") no-repeat scroll 3px 5px transparent;}
+div.jbox .jbox-close,div.jbox .jbox-close-hover{background:url("https://property.alibaba-inc.com/lib_rocky/jBox/Skins2/Yellow/images/jbox-close1.gif") no-repeat scroll 0px 0px transparent;}
+div.jbox .jbox-close-hover{background-position:-16px 0;}
+
+div.jbox .jbox-content{min-height:24px;line-height:28px;color:#444444;}
+div.jbox .jbox-content-loading{background-color:#E6E6E6;}
+div.jbox .jbox-content-loading-image{background:url("https://property.alibaba-inc.com/lib_rocky/jBox/Skins2/Yellow/images/jbox-content-loading.gif") no-repeat bottom center;}
+
+div.jbox .jbox-button-panel{border-top:1px solid #CCCCCC;background-color: #f0f0f0;}
+div.jbox .jbox-bottom-text{text-indent:10px;color:#444444;}
+div.jbox .jbox-button{background:#f3f3f3; border:1px solid #ccc; color:#4d4d4d; border-radius:3px 3px 3px 3px;margin:1px 7px 0px 0px; padding-bottom:46px; cursor:pointer;}
+
+div.jbox-warning .jbox .jbox-button-panel{background-color: #FFFFFF;}
+
+div.jbox .jbox-tip-color{background: #febb05;background: -webkit-gradient(linear, left top, left bottom, from(#febb05), to(#fda601));background: -moz-linear-gradient(top,  #febb05,  #fda601);filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#febb05', endColorstr='#fda601');border-color:#d89413;border-radius:3px 3px 3px 3px;color:#fff;}
+
+div.jbox span.jbox-icon{background:url("https://property.alibaba-inc.com/lib_rocky/jBox/Skins2/Yellow/images/jbox-icons.png") no-repeat scroll 0 0 transparent;_background:url("https://property.alibaba-inc.com/lib_rocky/jBox/Skins2/Yellow/images/jbox-icons-ie6.gif") no-repeat scroll 0 0 transparent;}
+div.jbox span.jbox-icon-info {background-position:0 0;}
+div.jbox span.jbox-icon-question {background-position:-35px 0;}
+div.jbox span.jbox-icon-success {background-position:-73px 0;}
+div.jbox span.jbox-icon-warning {background-position:-105px 0;}
+div.jbox span.jbox-icon-error {background-position:-140px 0;}
+div.jbox span.jbox-icon-none {display: none; overflow:hidden;}
+div.jbox span.jbox-icon-loading {background:url("https://property.alibaba-inc.com/lib_rocky/jBox/Skins2/Yellow/images/jbox-loading1.gif") no-repeat scroll 0 0 transparent;}

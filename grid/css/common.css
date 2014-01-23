@@ -1,0 +1,59 @@
+.header {
+	height : 100px;
+	width : 100%;
+	background-color : #E73C00;
+}
+.logo {
+	display : inline-block;
+	background : url('../images/logo.png') top left no-repeat;
+	width : 540px;
+	height : 100px;
+}
+.content, .footer {
+	margin-top : 20px;
+}
+.footer .footer-inner {
+	border-top : 1px solid #cccccc;
+	padding : 20px 20px;
+}
+.footer ul, .footer li {
+	display : inline-block;
+}
+.footer span, .footer li {
+	padding : 0 8px;
+}
+.footer a {
+	color : #333333;
+}
+.footer a:hover {
+	color : #333333;
+	text-decoration : none;
+}
+.grey {
+	color : #999999;
+}
+.border-left {
+	border-left : 1px solid #cccccc;
+}
+.nav-list > .active > a, .nav-list > .active > a:hover, .nav-list > .active > a:focus {
+	background : inherit;
+	color : #FF6600;
+	text-shadow : none;
+}
+.widget {
+	margin-bottom : 10px;
+}
+.widget .table {
+	margin-bottom : 10px;
+}
+.table-nobordered tr,  .table-nobordered th, .table-nobordered td {
+	border : none;
+}
+.widget .w-header {
+	line-height : 30px;
+	border-bottom : 1px solid #cccccc;
+	margin-bottom : 0 0 0 5px;
+}
+.widget .pagination {
+	margin : 5px 0;
+}
