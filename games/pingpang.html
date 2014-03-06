@@ -1,0 +1,38 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title> 乒乓球 - JY游戏</title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="田想兵">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <link rel="stylesheet" type="text/css" href ="../css/css.css"/>
+  <style>
+	html,body{height:100%;padding:0;margin:0;}
+	#gameboard{width:1000px;height:500px;position:relative;border:1px solid #dedede;overflow:hidden;margin:0 auto;position:absolute;z-index:1;}
+	#drawBall{position:absolute;top:1px;left:1px;z-index;-1;background-color:#F2F2F2;}
+	.user{background-color:gray;background:url(images/jbp.gif) no-repeat;}
+	.point{position:absolute;width:1px;height:1px;font-size:1px;overflow:hidden;background-color:red;zoom:1;}
+	.config dt,.config dd{float:left;}
+	.config:after{clear:both;content:".";display:block;height:0;line-height:0;font-size:0;visibility:hidden;}
+	.config{zoom:1;width:700px;margin:0 auto;line-height:30px;height:30px;}
+	.config input{width:60px;border:1px solid #cecece;}
+	.instruction h3{font-size:14px;color:#333;font-weight:normal;}
+	.instruction{font-size:12px;color:#555;}
+	.instruction p{text-indent:2em;}
+	.relative{position:relative;width:1000px;height:500px;margin:0 auto;}
+  </style>
+ </head>
+
+ <body>
+ <div class="relative">
+	<div id="gameboard">
+
+	</div>
+	<canvas width="1000px" height="500px" id="drawBall"></canvas>
+</div>
+<script src="../JY.js"></script>
+<script src="pingpang.js"></script>
+ </body>
+</html>

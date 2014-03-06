@@ -942,14 +942,26 @@
 	JY.CID = 0 ;// DOM节点缓存的ID
 	//事件驱动
 	JY.event={
+		getData:function(target){
+			var _data ;
+			if (target ===win){						
+				_data= 'JY_win';	
+			}else if (target === document){				
+				_data= 'JY_doc';
+			}else{
+				_data= JY.attr(target , "JY_data");	
+			};
+
+			return _data;
+		},
 		add:function(target,eventType,handle,type,selector){	
 
 			if(target.addEventListener){
 				this.add=function(target,eventType,handle){
-					if (!target){
+					if (!target || target.nodeType  === 3|| target.nodeType  === 8){//文本或注释
 						return this;
-					};
-					var _data = JY.attr(target , "JY_data");					
+					};					
+					var _data = this.getData(target);
 					if (!_data){
 						//不存在
 						_data = "JY_"+JY.CID;
@@ -978,7 +990,7 @@
 			this.add.apply(this,Array.prototype.slice.call(arguments ,0));
 		},
 		_proxy:function(target,eventType,handle,type,selector){
-			var _data = JY.attr(target , "JY_data");
+			var _data = this.getData(target);
 			
 			JY.cache[_data] = JY.cache[_data] ||{};//初始化缓存事件列表
 			JY.cache[_data][eventType] = JY.cache[_data][eventType] ||[];
@@ -1026,7 +1038,7 @@
 		},
 		remove:function(target,eventType,handle){
 			var _self = this;
-			var _data = JY.attr(target , "JY_data");
+			var _data = this.getData(target);
 			var evtList = JY.cache[_data][eventType]||false;
 			if (handle){
 				var count = 0;
@@ -1396,7 +1408,7 @@
 		this.addChild = function(s){
 			JY.append(this.DOM,s.DOM);
 		};
-		this.setPosition=function(x,y){
+		this.setPosition=function(x,y){			
 			this.x = x==null?this.x:x;
 			this.y = y==null?this.y:y;
 			JY.css(this.DOM,{left:this.x+"px",top:this.y+"px"});
@@ -1770,8 +1782,8 @@ JY.soundManage={
 			this.x = x||this.x;
 			this.y =y||this.y;
 			this.context.save();
-			var cutpos = this.cut.pos;
-			var cutsize = this.cut.size;
+			var cutpos = this.cut;
+			var cutsize = this.size;
 			this.context.drawImage(this.img,cutpos.x,cutpos.y,cutsize.x,cutsize.y,this.x,this.y,this.size.x,this.size.y);
 			this.context.restore();
 		};
