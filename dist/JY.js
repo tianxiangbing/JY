@@ -590,6 +590,29 @@
 				return elem;
 			}
 		},
+		text: function(elem, txt) {
+			elem = this.byId(elem);
+			if (txt == null) {
+				var tmpNode = document.createElement("div");
+				tmpNode.appendChild(document.createTextNode(elem.innerHTML));
+				return tmpNode.innerHTML;
+			} else {
+				elem.innerHTML = '';
+				elem.appendChild(document.createTextNode(txt));
+				return elem;
+			}
+		},
+		html: function(elem, html) {
+			elem = this.byId(elem);
+			if (html == null) {
+				return elem.innerHTML;
+			} else {
+				JY.removeChild()
+				elem.innerHTML = '';
+				elem.innerHTML = html;
+				return elem;
+			}
+		},
 		//鼠标拖动事件
 		mouseDrag: function(elem, callback, stopCallback, targetEvent, stopEvent) {
 			var mousemove = null,
@@ -1082,7 +1105,12 @@
 		remove: function(target, eventType, handle) {
 			var _self = this;
 			var _data = this.getData(target);
-			var evtList = JY.cache[_data][eventType] || false;
+			var evtList;
+			if (!_data) {
+				evtList = false;
+			} else {
+				evtList = JY.cache[_data][eventType] || false;
+			}
 			if (handle) {
 				var count = 0;
 				JY.each(evtList, function(d, i) {
@@ -1386,7 +1414,8 @@
 		gameOver: function() {
 			this.clearState();
 			this.addChild(this.gameOverScreen);
-			JY.bind(this.gameOverScreen, "click", JY.proxyFunc(this.okButtonClickListener, this));
+			//JY.bind(this.gameOverScreen, "click", JY.proxyFunc(this.okButtonClickListener, this));
+			JY.touch(this.gameOverScreen, JY.proxyFunc(this.okButtonClickListener, this));
 			//this.checkState(JYGSTATE.STATE_SYSTEM_WAIT_FOR_CLOSE);
 			this.nextState = JYGSTATE.STATE_SYSTEM_TITLE;
 			this.stopTimer();
@@ -3392,31 +3421,46 @@ mobile event touch
 2015-5-18
  */
 (function($) {
-console.log($)
 	$.touch = function(obj, trigger, fn) {
 		var move;
 		var istouch = false;
 		if (typeof trigger === "function") {
 			fn = trigger;
-			istouch = true;
-		};
-		$.on(obj,'touchstart', trigger, function() {
-			istouch = true;
-		});
-		$.on(obj,'touchmove', trigger, function(e) {
-			move = true;
-		}).on(obj,'touchend', trigger, function(e) {
-			e.preventDefault();
-			if (!move) {
-				var returnvalue = fn.call(this, e, 'touch');
-				if (returnvalue === false) {
-					e.preventDefault();
-					e.stopPropagation();
+			$.on(obj, 'touchstart', function() {
+				istouch = true;
+			});
+			$.on(obj, 'touchmove', function(e) {
+				move = true;
+			}).on(obj, 'touchend', function(e) {
+				e.preventDefault();
+				if (!move) {
+					var returnvalue = fn.call(this, e, 'touch');
+					if (returnvalue === false) {
+						e.preventDefault();
+						e.stopPropagation();
+					}
 				}
-			}
-			move = false;
-		});
-		$.on(obj,'mousedown', trigger, click);
+				move = false;
+			});
+		} else {
+			$.on(obj, 'touchstart', trigger, function() {
+				istouch = true;
+			});
+			$.on(obj, 'touchmove', trigger, function(e) {
+				move = true;
+			}).on(obj, 'touchend', trigger, function(e) {
+				e.preventDefault();
+				if (!move) {
+					var returnvalue = fn.call(this, e, 'touch');
+					if (returnvalue === false) {
+						e.preventDefault();
+						e.stopPropagation();
+					}
+				}
+				move = false;
+			});
+			$.on(obj, 'mousedown', trigger, click);
+		}
 
 		function click(e) {
 			if (!istouch) {

@@ -3,7 +3,6 @@ mobile event touch
 2015-5-18
  */
 (function($) {
-	console.log($)
 	$.touch = function(obj, trigger, fn) {
 		var move;
 		var istouch = false;

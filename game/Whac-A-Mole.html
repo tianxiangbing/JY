@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>敲打卡乐猫</title>
+	<title>打卡乐猫</title>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="万色,卡乐猫,游戏"/>
+	<meta name="description" content="打卡乐猫游戏" />
 	<style>
 html,body{margin: 0;padding:0;height: 100%;overflow: hidden;}
 i{font-style: normal;}
@@ -13,12 +15,37 @@ i{font-style: normal;}
 .c-2{background:url(images/Whac-A-Mole/cat2.png) no-repeat; background-size: 100%;}
 .c-3{background:url(images/Whac-A-Mole/cat3.png) no-repeat; background-size: 100%;}
 .c-4{background:url(images/Whac-A-Mole/cat4.png) no-repeat; background-size: 100%;}
+.T{background:url(images/Whac-A-Mole/t.png) no-repeat; background-size: 100%;z-index: 999; }
+.gameover i{width:16px;height:16px;display: inline-block;}
+@-webkit-keyframes zoomIn {
+	0% {  transform:rotate(10deg);}
+	50% { transform:rotate(-30deg); }
+}
+@keyframes zoomIn {
+	0% {  transform:rotate(10deg);}
+	50% { transform:rotate(-30deg); }
+}
+@-webkit-keyframes zoomout {
+	0% {  transform:rotate(0deg);}
+	25% { transform:rotate(-10deg); }
+	50% { transform:rotate(0deg); }
+	100%{transform:rotate(10deg); }
+}
+@keyframes zoomout {
+	0% {  transform:rotate(0deg);}
+	25% { transform:rotate(-10deg); }
+	50% { transform:rotate(0deg); }
+	100%{transform:rotate(10deg); }
+}
+.zoomIn { -webkit-animation-name: zoomIn; -moz-animation-name: zoomIn; -ms-animation-name: zoomIn; animation-name: zoomIn; }
+.animated { -webkit-animation-duration: .5s; -ms-animation-duration: .5s; -moz-animation-duration: .5s; animation-duration: .5s; -webkit-animation-fill-mode: both; -ms-animation-fill-mode: both; -moz-animation-fill-mode: both; animation-fill-mode: both; }
+.hehe{-webkit-animation-duration: .5s;animation-duration: .5s;-webkit-animation-name: zoomout; animation-name: zoomout; }
 	</style>
 </head>
 <body>
 <div id="gameboard"></div>
-<script type="text/javascript" src="../JY.js"></script>
+<script type="text/javascript" src="../JY.min.js"></script>
 <script type="text/javascript" src="../touch.js"></script>
-<script type="text/javascript" src="Whac-A-Mole.js"></script>
+<script type="text/javascript" src="../dist/game/Whac-A-Mole.min.js"></script>
 </body>
 </html>
