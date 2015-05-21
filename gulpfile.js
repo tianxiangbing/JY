@@ -3,7 +3,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat');
-var path = ['JY.js','JYSizzle.js','JY.cookie.js','JY.soundManage.js','touch.js'];
+var path = ['JY.js','JY.cookie.js','JY.soundManage.js','touch.js'];
 gulp.task('js',function(){
 	return gulp.src(path).pipe(concat('JY.js')).pipe(gulp.dest('dist')).pipe(uglify()).pipe(rename({suffix: '.min'})).pipe(gulp.dest('dist')).pipe(gulp.dest('.'));
 });

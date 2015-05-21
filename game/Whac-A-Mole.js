@@ -13,19 +13,20 @@
 	JY.extend(game.prototype, {
 		newGame: function() {
 			//console.log('new');
-			this.level = 1;
-			this.life = 5;
+			this.level = 0;
+			this.life = 3;
 			this.v = 15;
 			//this.holeArr = [];
 			this.hitsArr = [];
 			this.scoreType = [1, 2, 5, -5];
-			this.killArr = [0, 0, 0, 0];
+			this.killArr = [0, 0, 0, 0, 0, 0, 0, 0];
 			this.T = null;
 			this.score = 0;
-			this.wait = 20;
+			this.wait = 30;
+			this.count = 40;
+			this.sc = 0;
 			this.drawToolbar();
 			this.drawMap();
-			this.bindEvent();
 		},
 		runGame: function() {
 			this.creaetMole();
@@ -39,12 +40,12 @@
 		},
 		checkLevel: function() {
 			this.level = Math.floor(this.score / 10);
-			this.wait = Math.max(this.wait - this.level, 0);
+			this.wait = Math.max(30 - this.level, 0);
 		},
 		bindEvent: function() {
 			var _this = this;
-			JY.unbind(b.stage, 'touchend');
 			JY.bind(b.stage, 'touchend', function(e) {
+				if (b.currentState != 7) return;
 				//console.log(e.changedTouches[0]);
 				var touch = e.changedTouches[0];
 				var pos = {
@@ -56,8 +57,8 @@
 				JY.addClass(_this.T.DOM, 'zoomIn animated');
 				return false;
 			});
-			JY.unbind(b.stage, 'touchmove');
 			JY.bind(b.stage, 'touchmove', function(e) {
+				if (b.currentState != 7) return;
 				var touch = e.changedTouches[0];
 				var pos = {
 					x: touch.pageX - _this.T.width / 4,
@@ -121,7 +122,21 @@
 								_this.score += cat.score;
 								_this.killArr[cat.type] ++;
 								v.data = null;
-								delete _this.pullArr[i];
+								//delete _this.pullArr[i];
+								var stext = new Sprite(50, 50);
+								JY.text(stext.DOM, cat.score > 0 ? "+" + cat.score : cat.score);
+								JY.css(stext.DOM, {
+									color: "#fff",
+									'fontSize':'48px',
+									'fontWeight':'bold'
+								});
+								stext.setPosition(_this.T.x + 10, _this.T.y - 10);
+								b.addChild(stext);
+								(function(stext){
+									setTimeout(function(){
+										stext.remove();
+									},500);
+								})(stext);
 							}
 						}
 					}
@@ -130,6 +145,9 @@
 		},
 		checkScore: function() {
 			JY.text(this.scoreTool.DOM, '得分:' + this.score);
+			if (this.score > 100) {
+				JY.addClass(b.stage, 'highbg');
+			}
 		},
 		createT: function() {
 			//创建锤子
@@ -170,8 +188,9 @@
 			b.addChild(tool);
 		},
 		creaetMole: function() {
-			var chance = Math.floor(Math.random() * 100);
-			if (chance < this.level + 10) {
+			//var chance = this.sc; //Math.floor(Math.random() * 150);
+			if (this.sc + Math.floor(Math.random() * 10) >= this.count - this.level * 2) {
+				this.sc = 0;
 				var h = this.holeW / 2 * 1.333;
 				var size = this.pullArr.length;
 				var i = Math.floor(Math.random() * size);
@@ -187,15 +206,23 @@
 					c.setPosition(hole.x + (this.holeW - hole.width) / 2, hole.y + hole.height / 2);
 					//w.setPosition(x,-30);
 					var t = Math.ceil(Math.random() * 4);
-					w.score = this.scoreType[Math.ceil(Math.random() * 4) - 1];
-					w.type = t - 1;
-					JY.addClass(w.DOM, 'c-' + t);
+					if (this.score > 100) {
+						w.score = 10;
+						w.type = t - 1;
+						JY.addClass(w.DOM, 'd-' + t);
+					} else {
+						w.score = this.scoreType[t - 1];
+						//console.log(w.score,t)
+						w.type = t + 4 - 1;
+						JY.addClass(w.DOM, 'c-' + t);
+					}
 					c.data = w;
 					c.addChild(w);
 					b.addChild(c);
 					//this.holeArr.push(c);
 				}
 			}
+			this.sc++;
 		},
 		animateMole: function() {
 			var _this = this;
@@ -239,7 +266,26 @@
 		},
 		checkLife: function() {
 			if (this.life <= 0) {
-				b.gameOverScreen = JY.convertDOM('<div style="padding:50% 0px;width:300px;margin:0 auto; position:relative;" class="gameover"><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div><h1>游戏结束鸟!</h1><p>您在本次游戏中共打了' + this.score + '分</p><p><i class="c-1"></i> x ' + this.killArr[0] + '<i class="c-2"></i> x ' + this.killArr[1] + '<i class="c-3"></i> x ' + this.killArr[2] + '<i class="c-4"></i> x ' + this.killArr[3] + '</p><p>猛击之后重新来过！</p></div>');
+				JY.removeClass(b.stage, 'highbg');
+				var maxScore = parseInt(JY.cookie("klm")) || 0;
+				maxScore = Math.max(maxScore, this.score);
+				JY.cookie("klm", maxScore, 30);
+				var chenghao = '',
+					morekill = '';
+				if (this.score > 100 && this.score < 1000) {
+					chenghao = "您获得 百人斩 称号,"
+					morekill = '<p><i class="d-1"></i> x ' + this.killArr[4] + ' <i class="d-2"></i> x ' + this.killArr[5] + ' <i class="d-3"></i> x ' + this.killArr[6] + ' <i class="d-4"></i> x ' + this.killArr[7] + '</p>';
+				} else if (this.score > 1000) {
+					chenghao = "您获得 千人斩 称号,"
+					morekill = '<p><i class="d-1"></i> x ' + this.killArr[4] + ' <i class="d-2"></i> x ' + this.killArr[5] + ' <i class="d-3"></i> x ' + this.killArr[6] + ' <i class="d-4"></i> x ' + this.killArr[7] + '</p>';
+				}
+				b.gameOverScreen = JY.convertDOM('<div style="padding:50% 0px;width:300px;margin:0 auto; position:relative;" class="gameover"><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div><div style="position:absolute;top:50%;left:0;z-index:2;"><h1>游戏结束!</h1>' + chenghao + '<p>您在本次游戏中共打了' + this.score + '分</p><p><i class="c-1"></i> x ' + this.killArr[0] + ' <i class="c-2"></i> x ' + this.killArr[1] + ' <i class="c-3"></i> x ' + this.killArr[2] + ' <i class="c-4"></i> x ' + this.killArr[3] + '</p><p>历史最高得分：' + maxScore + '</p>' + morekill + '<p>猛击之后重新来过！</p></div></div>');
+				var link = JY.convertDOM('<p style="position:absolute;bottom:0;right:0;color:#fff;z-index:99;">点击进入卡乐猫商城</p>');
+				JY.touch(link, function() {
+					location.href = "http://v.ewanse.com/";
+					return false;
+				});
+				JY.append(b.gameOverScreen, link);
 				b.checkState(JYGSTATE.STATE_SYSTEM_GAME_OVER);
 			}
 		},
@@ -248,16 +294,28 @@
 	JY.extend(MoleGame.prototype, {
 		init: function() {
 			this.game = g;
-			this.frequency = 50;
+			this.frequency = 30;
 			this.waitTime = 5;
 			this.checkState(JYGSTATE.STATE_SYSTEM_TITLE);
 			this.startTimer();
 			/**创建欢迎界面**/
 			this.titleScreen = JY.convertDOM('<div style="color:#555;padding:50% 0px;width:300px;margin:0 auto;position:relative;"><h1>打卡乐猫</h1><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div></div>');
-			this.InstructionsScreen = JY.convertDOM('<div style="padding:50% 0px;width:300px;margin:0 auto; position:relative;"><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div><h1>打卡乐猫</h1><p>点击开始游戏</p><a>作者：田想兵</a>55342775@qq.com</div>');
+
+			this.InstructionsScreen = JY.convertDOM('<div style="padding:50% 0px;width:300px;margin:0 auto; position:relative;"><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div><h1>打卡乐猫</h1><p>点击开始游戏</p>作者：田想兵55342775@qq.com</div>');
 			this.scoreScreen = JY.convertDOM('<div style="color:#555;width:100px;float:right;" id="scoreScreen"></div>');
+			/*JY.on(this.InstructionsScreen, 'touchstart', function(e) {
+				//console.log(this, e.target)
+				//window.open(JY.attr(e.target, 'href'));
+			});*/
+			var link = JY.convertDOM('<p style="position:absolute;bottom:0;right:0;color:#fff;z-index:99;">点击进入卡乐猫商城</p>');
+			JY.touch(link, function() {
+				location.href = "http://v.ewanse.com/";
+				return false;
+			});
+			JY.append(this.InstructionsScreen, link);
 		}
 	});
 	var b = new MoleGame;
 	b.init();
+	g.bindEvent();
 })(JY);

@@ -598,7 +598,7 @@
 				return tmpNode.innerHTML;
 			} else {
 				elem.innerHTML = '';
-				elem.appendChild(document.createTextNode(txt));
+				elem.appendChild(document.createTextNode(txt.toString()));
 				return elem;
 			}
 		},
@@ -607,7 +607,6 @@
 			if (html == null) {
 				return elem.innerHTML;
 			} else {
-				JY.removeChild()
 				elem.innerHTML = '';
 				elem.innerHTML = html;
 				return elem;
