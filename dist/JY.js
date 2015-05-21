@@ -2015,8 +2015,8 @@ mobile event touch
 				}
 				move = false;
 			});
-			$.on(obj, 'mousedown', trigger, click);
 		}
+		$.on(obj, 'mousedown', trigger, click);
 
 		function click(e) {
 			if (!istouch) {

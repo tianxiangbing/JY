@@ -123,14 +123,15 @@
 								_this.killArr[cat.type] ++;
 								v.data = null;
 								//delete _this.pullArr[i];
-								var stext = new Sprite(50, 50);
+								var stext = new Sprite(30, 30);
 								JY.text(stext.DOM, cat.score > 0 ? "+" + cat.score : cat.score);
 								JY.css(stext.DOM, {
 									color: "#fff",
-									'fontSize':'48px',
-									'fontWeight':'bold'
+									'fontSize':'28px',
+									'fontWeight':'bold',
+									"zIndex":999
 								});
-								stext.setPosition(_this.T.x + 10, _this.T.y - 10);
+								stext.setPosition(_this.T.x + 20, _this.T.y - 20);
 								b.addChild(stext);
 								(function(stext){
 									setTimeout(function(){
@@ -208,12 +209,12 @@
 					var t = Math.ceil(Math.random() * 4);
 					if (this.score > 100) {
 						w.score = 10;
-						w.type = t - 1;
+						w.type =t + 4 - 1;
 						JY.addClass(w.DOM, 'd-' + t);
 					} else {
 						w.score = this.scoreType[t - 1];
 						//console.log(w.score,t)
-						w.type = t + 4 - 1;
+						w.type =  t - 1;
 						JY.addClass(w.DOM, 'c-' + t);
 					}
 					c.data = w;
@@ -301,7 +302,9 @@
 			/**创建欢迎界面**/
 			this.titleScreen = JY.convertDOM('<div style="color:#555;padding:50% 0px;width:300px;margin:0 auto;position:relative;"><h1>打卡乐猫</h1><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div></div>');
 
-			this.InstructionsScreen = JY.convertDOM('<div style="padding:50% 0px;width:300px;margin:0 auto; position:relative;"><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div><h1>打卡乐猫</h1><p>点击开始游戏</p>作者：田想兵55342775@qq.com</div>');
+			var top = this.stage.height/3;
+			var left = this.stage.width/3;
+			this.InstructionsScreen = JY.convertDOM('<div style="padding:0px;width:300px;margin:0 auto; position:absolute;top:'+top+'px;left:'+left+'px;"><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div><h1>打卡乐猫</h1><p>点击开始游戏</p>作者：田想兵55342775@qq.com</div>');
 			this.scoreScreen = JY.convertDOM('<div style="color:#555;width:100px;float:right;" id="scoreScreen"></div>');
 			/*JY.on(this.InstructionsScreen, 'touchstart', function(e) {
 				//console.log(this, e.target)
