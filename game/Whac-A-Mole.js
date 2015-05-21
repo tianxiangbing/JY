@@ -44,10 +44,10 @@
 		},
 		bindEvent: function() {
 			var _this = this;
-			JY.bind(b.stage, 'touchend', function(e) {
+			JY.touch(b.stage,function(e) {
 				if (b.currentState != 7) return;
 				//console.log(e.changedTouches[0]);
-				var touch = e.changedTouches[0];
+				var touch = e;
 				var pos = {
 					x: touch.pageX - _this.T.width / 4,
 					y: touch.pageY - _this.T.height / 2
@@ -67,6 +67,15 @@
 				_this.T.setPosition(pos.x, pos.y);
 				return false;
 			});
+			JY.bind(b.stage,'mousemove',function(e){
+				if (b.currentState != 7 ||!_this.T) return;
+				var touch = e;
+				var pos = {
+					x: touch.pageX - _this.T.width / 4,
+					y: touch.pageY - _this.T.height / 2
+				};
+				_this.T.setPosition(pos.x, pos.y);
+			})
 		},
 		getScore: function() {
 			var _this = this;
@@ -310,12 +319,14 @@
 				//console.log(this, e.target)
 				//window.open(JY.attr(e.target, 'href'));
 			});*/
+			/*
 			var link = JY.convertDOM('<p style="position:absolute;bottom:0;right:0;color:#fff;z-index:99;">点击进入卡乐猫商城</p>');
 			JY.touch(link, function() {
 				location.href = "http://v.ewanse.com/";
 				return false;
 			});
 			JY.append(this.InstructionsScreen, link);
+			 */
 		}
 	});
 	var b = new MoleGame;
