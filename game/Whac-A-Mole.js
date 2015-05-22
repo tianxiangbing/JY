@@ -315,7 +315,8 @@
 			var left = this.stage.width/3;
 			this.InstructionsScreen = JY.convertDOM('<div style="padding:0px;width:300px;margin:0 auto; position:absolute;top:'+top+'px;left:'+left+'px;"><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div><h1>打卡乐猫</h1><p>点击开始游戏</p>作者：田想兵55342775@qq.com</div>');
 			this.scoreScreen = JY.convertDOM('<div style="color:#555;width:100px;float:right;" id="scoreScreen"></div>');
-			/*JY.on(this.InstructionsScreen, 'touchstart', function(e) {
+			/*
+			JY.on(this.InstructionsScreen, 'touchstart', function(e) {
 				//console.log(this, e.target)
 				//window.open(JY.attr(e.target, 'href'));
 			});*/

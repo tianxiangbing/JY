@@ -2024,25 +2024,54 @@ mobile event touch
 
 			function click(e) {
 				if (!istouch) {
-					return fn.call(this, e);
+					return fn.call(this, e, 'touch');
 				}
 			}
 		},
 		touchStart: function(obj, fn) {
+			var istouch = false;
 			$.on(obj, 'touchstart', function(e) {
 				var touch = e.changedTouches[0];
 				e.pageX = touch.pageX;
 				e.pageY = touch.pageY;
 				return fn.call(this, e, 'touchstart');
 			});
+			$.on(obj, 'mousedown', trigger, click);
+			function click(e) {
+				if (!istouch) {
+					return fn.call(this, e);
+				}
+			}
+		},
+		touchMove:function(obj,fn){
+			var istouch = false;
+			$.on(obj, 'touchmove', function(e) {
+				var touch = e.changedTouches[0];
+				e.pageX = touch.pageX;
+				e.pageY = touch.pageY;
+				return fn.call(this, e, 'touchmove');
+			});
+			$.on(obj, 'mousemove', trigger, click);
+			function click(e) {
+				if (!istouch) {
+					return fn.call(this, e, 'touchmove');
+				}
+			}
 		},
 		touchEnd: function(obj, fn) {
+			var istouch = false;
 			$.on(obj, 'touchend', function(e) {
 				var touch = e.changedTouches[0];
 				e.pageX = touch.pageX;
 				e.pageY = touch.pageY;
 				return fn.call(this, e, 'touchend');
 			});
+			$.on(obj, 'mouseup', trigger, click);
+			function click(e) {
+				if (!istouch) {
+					return fn.call(this, e, 'touchend');
+				}
+			}
 		},
 		swipeLeft: function(obj, fn) {
 			var start = {},
