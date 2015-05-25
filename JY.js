@@ -84,11 +84,16 @@
 			}
 			return JY;
 		},
-		off: function(trigger, selector, eventType, handle) {
-			if (typeof eventType == "function") {
-				handle = eventType;
+		off: function(trigger, eventType, selector, handle) {
+			var type = '';
+			if (typeof selector == "function") {
+				handle = selector;
+			} else {
+				if (typeof selector == 'string') {
+					type = 'delegate';
+				}
 			}
-			JY.event.remove(target, eventType, handle);
+			JY.event.remove(trigger, eventType, handle, type, selector);
 			return JY;
 		},
 		//为所有选择器匹配的元素附加一个处理一个或多个事件，现在或将来，基于一组特定的根元素。
@@ -1022,10 +1027,11 @@
 		add: function(target, eventType, handle, type, selector) {
 
 			if (target.addEventListener) {
-				this.add = function(target, eventType, handle) {
+				this.add = function(target, eventType, handle, type, selector) {
 					if (!target || target.nodeType === 3 || target.nodeType === 8) { //文本或注释
 						return this;
 					};
+					selector = selector || "";
 					var _data = this.getData(target);
 					if (!_data) {
 						//不存在
@@ -1034,12 +1040,12 @@
 						JY.CID++;
 					};
 					var ishaveEvt = true; //是否已存在相同的事件
-					if (!JY.cache[_data] || !JY.cache[_data][eventType]) {
+					if (!JY.cache[_data] || !JY.cache[_data][eventType + selector]) {
 						ishaveEvt = false
 					};
 					handle = this._proxy.apply(this, Array.prototype.slice.call(arguments, 0));
 					if (!ishaveEvt) { //没有就添加
-						JY.cache[_data][eventType].handle = handle;
+						JY.cache[_data][eventType + selector].handle = handle;
 						target.addEventListener(eventType, handle, false);
 					}
 				}
@@ -1056,10 +1062,10 @@
 		},
 		_proxy: function(target, eventType, handle, type, selector) {
 			var _data = this.getData(target);
-
+			selector = selector || "";
 			JY.cache[_data] = JY.cache[_data] || {}; //初始化缓存事件列表
-			JY.cache[_data][eventType] = JY.cache[_data][eventType] || [];
-			var eList = JY.cache[_data][eventType];
+			JY.cache[_data][eventType + selector] = JY.cache[_data][eventType + selector] || [];
+			var eList = JY.cache[_data][eventType + selector];
 			var _self = this;
 			var fn = handle;
 			handle = function(e) {
@@ -1081,7 +1087,7 @@
 					};
 					JY.each(evtList, function() {
 						if (e.target === this) {
-							fn.call(target, e)
+							fn.call(this, e)
 						};
 					});
 					return false;
@@ -1101,14 +1107,14 @@
 				});
 			};
 		},
-		remove: function(target, eventType, handle) {
+		remove: function(target, eventType, handle, type, selector) {
 			var _self = this;
 			var _data = this.getData(target);
 			var evtList;
 			if (!_data) {
 				evtList = false;
 			} else {
-				evtList = JY.cache[_data][eventType] || false;
+				evtList = JY.cache[_data][eventType + selector] || false;
 			}
 			if (handle) {
 				var count = 0;
@@ -1120,11 +1126,15 @@
 					};
 				});
 				if (count === 0) {
-					this.remove(target, eventType);
+					this.remove(target, eventType + selector);
 				}
 			} else {
 				if (evtList) {
 					//target.removeEventListener(eventType,evtList.handle,false);
+					JY.each(evtList, function(v, i) {
+						delete evtList[i];
+					});
+					JY.cache[_data][eventType + selector] = null;
 					_self.deleteEvt(target, eventType, evtList.handle);
 				}
 			};

@@ -6,7 +6,7 @@
  *web:http://www.lovewebgames.com
  */
 ;
-(function(JY) {
+//(function(JY) {
 	var MoleGame = function() {};
 	var game = function() {};
 	game.prototype = new Game;
@@ -15,7 +15,7 @@
 		newGame: function() {
 			this.now = +new Date();
 			this.blockList = [];
-			this.life = 1;
+			this.life = 3;
 			this.level = 1;
 			this.timer = 0;
 			this.x = 10;
@@ -26,10 +26,15 @@
 			this.drawMap();
 			this.scaning();
 			JY.addClass(b.stage, 'start');
+			this.bindEvent();
 		},
-		bindEvent: function(o, row, cell) {
+		bindEvent: function() {
 			var _this = this;
-			JY.touch(o.DOM, function() {
+			JY.off(b.stage, 'touchstart', 'i.block');
+			JY.on(b.stage, 'touchstart', 'i.block', function(e) {
+				var o = this.data;
+				var row = this.position.x;
+				var cell = this.position.y;
 				if (o.type == "boom") {
 					JY.addClass(o.DOM, 'boom');
 					setTimeout(function() {
@@ -174,13 +179,15 @@
 					block.setPosition(i * w, k * h);
 					var rnd = Math.random() * 1000;
 					block.type = 0;
-					if (rnd < this.level * 50) {
+					block.DOM.data = block;
+					block.DOM.position = {
+						x: k,
+						y: i
+					};
+					if (rnd < this.level * 150) {
 						block.type = "boom";
 						//JY.addClass(block.DOM,'boom');
 					}
-					(function(row, cell) {
-						_this.bindEvent(block, row, cell);
-					})(k, i);
 					b.addChild(block);
 					arr.push(block);
 				}
@@ -214,11 +221,11 @@
 			b.startTimer();
 		},
 		checkLife: function() {
-			if (this.life == 0) {
+			if (this.life <= 0) {
 				b.checkState(JYGSTATE.STATE_SYSTEM_GAME_OVER);
 				var top = b.stage.height / 3;
 				var left = 50;
-				b.gameOverScreen = JY.convertDOM('<div style="color:#555;width:300px;margin:0 auto;position:absolute;top:' + top + 'px;left:' + left + 'px;"><h1>游戏结束!</h1><p>在本次游戏中您共通关' + (this.level-1) + '关,总耗时' + this.timer + '秒,截图炫耀吧!</p><p>点击重新开始游戏</p></div>');
+				b.gameOverScreen = JY.convertDOM('<div style="color:#555;width:300px;margin:0 auto;position:absolute;top:' + top + 'px;left:' + left + 'px;"><h1>游戏结束!</h1><p>在本次游戏中您共通关' + (this.level - 1) + '关,总耗时' + this.timer + '秒,截图炫耀吧!</p><p>点击重新开始游戏</p></div>');
 			}
 		}
 	});
@@ -246,4 +253,4 @@
 	});
 	var b = new MoleGame;
 	b.init();
-})(JY);
+//})(JY);
