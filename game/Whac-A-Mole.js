@@ -44,7 +44,7 @@
 		},
 		bindEvent: function() {
 			var _this = this;
-			JY.touch(b.stage,function(e) {
+			JY.touch(b.stage, function(e) {
 				if (b.currentState != 7) return;
 				//console.log(e.changedTouches[0]);
 				var touch = e;
@@ -67,8 +67,8 @@
 				_this.T.setPosition(pos.x, pos.y);
 				return false;
 			});
-			JY.bind(b.stage,'mousemove',function(e){
-				if (b.currentState != 7 ||!_this.T) return;
+			JY.bind(b.stage, 'mousemove', function(e) {
+				if (b.currentState != 7 || !_this.T) return;
 				var touch = e;
 				var pos = {
 					x: touch.pageX - _this.T.width / 4,
@@ -136,16 +136,16 @@
 								JY.text(stext.DOM, cat.score > 0 ? "+" + cat.score : cat.score);
 								JY.css(stext.DOM, {
 									color: "#fff",
-									'fontSize':'28px',
-									'fontWeight':'bold',
-									"zIndex":999
+									'fontSize': '28px',
+									'fontWeight': 'bold',
+									"zIndex": 999
 								});
 								stext.setPosition(_this.T.x + 20, _this.T.y - 20);
 								b.addChild(stext);
-								(function(stext){
-									setTimeout(function(){
+								(function(stext) {
+									setTimeout(function() {
 										stext.remove();
-									},500);
+									}, 500);
 								})(stext);
 							}
 						}
@@ -218,12 +218,12 @@
 					var t = Math.ceil(Math.random() * 4);
 					if (this.score > 100) {
 						w.score = 10;
-						w.type =t + 4 - 1;
+						w.type = t + 4 - 1;
 						JY.addClass(w.DOM, 'd-' + t);
 					} else {
 						w.score = this.scoreType[t - 1];
 						//console.log(w.score,t)
-						w.type =  t - 1;
+						w.type = t - 1;
 						JY.addClass(w.DOM, 'c-' + t);
 					}
 					c.data = w;
@@ -311,9 +311,9 @@
 			/**创建欢迎界面**/
 			this.titleScreen = JY.convertDOM('<div style="color:#555;padding:50% 0px;width:300px;margin:0 auto;position:relative;"><h1>打卡乐猫</h1><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div></div>');
 
-			var top = this.stage.height/3;
-			var left = this.stage.width/3;
-			this.InstructionsScreen = JY.convertDOM('<div style="padding:0px;width:300px;margin:0 auto; position:absolute;top:'+top+'px;left:'+left+'px;"><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div><h1>打卡乐猫</h1><p>点击开始游戏</p>作者：田想兵55342775@qq.com</div>');
+			var top = this.stage.height / 3;
+			var left = this.stage.width / 3;
+			this.InstructionsScreen = JY.convertDOM('<div style="padding:0px;width:300px;margin:0 auto; position:absolute;top:' + top + 'px;left:' + left + 'px;"><div style="position:absolute;background:url(images/Whac-A-Mole/cat.png) no-repeat center center ;background-size:200px;opacity:0.2;position:absolute;top:20%;left:0;width:100%;height:300px;"></div><h1>打卡乐猫</h1><p>点击开始游戏</p>作者：田想兵55342775@qq.com</div>');
 			this.scoreScreen = JY.convertDOM('<div style="color:#555;width:100px;float:right;" id="scoreScreen"></div>');
 			/*
 			JY.on(this.InstructionsScreen, 'touchstart', function(e) {
@@ -328,6 +328,7 @@
 			});
 			JY.append(this.InstructionsScreen, link);
 			 */
+			JY.loadFile('images/Whac-A-Mole/cat.png,images/Whac-A-Mole/cat1.png,images/Whac-A-Mole/cat2.png,images/Whac-A-Mole/cat3.png,images/Whac-A-Mole/cat4.png,images/Whac-A-Mole/d1.jpg,images/Whac-A-Mole/d2.jpg,images/Whac-A-Mole/d3.jpg,images/Whac-A-Mole/d4.jpg,images/Whac-A-Mole/hole.png,images/Whac-A-Mole/t.png', 'image');
 		}
 	});
 	var b = new MoleGame;
