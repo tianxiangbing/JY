@@ -91,7 +91,7 @@
 			this.currentLevel = d;
 			this.speed = Math.min(this.currentLevel+3,15);
 			//加载地图....
-			JY.loadFile("/game/level/movehoop/level" + d+".js","script",function(){
+			JY.loadFile("level/movehoop/level" + d+".js","script",function(){
 				_self .drawMap();
 				_self.user.setPosition(0,JY.height(b.stage)/2);
 				_self.moveEnabled =false;
@@ -335,7 +335,7 @@
 	});
 	var  b=new WordGame;
 	b.init();	
-	if (location.host !=="www.lovewebgames.com"&&location.hostname !=="localhost"){
+	/*if (location.host !=="www.lovewebgames.com"&&location.hostname !=="localhost"){
 		location.href="http://www.lovewebgames.com";
-	};
+	};*/
 })(window);
