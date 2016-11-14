@@ -1,14 +1,14 @@
 {
-  "name": "dodgeball",
-  "version": "1.0.0",
-  "description": "躲避球游戏",
+  "name": "JY",
+  "version": "2.0.0",
+  "description": "JY游戏框架",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tianxiangbing/DodgeBall.git"
+    "url": "git+https://github.com/tianxiangbing/JY.git"
   },
   "keywords": [
     "game"
@@ -16,9 +16,9 @@
   "author": "tianxiangbing",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tianxiangbing/DodgeBall/issues"
+    "url": "https://github.com/tianxiangbing/JY/issues"
   },
-  "homepage": "https://github.com/tianxiangbing/DodgeBall#readme",
+  "homepage": "https://github.com/tianxiangbing/JY#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.2.0",
