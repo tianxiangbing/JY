@@ -1,18 +1,30 @@
-var gulp = require('gulp'),
-    watchF = require('gulp-watch'),
-    uglify = require('gulp-uglify'),
-    rename = require('gulp-rename'),
-    concat = require('gulp-concat');
-var path = ['JY.js','JY.cookie.js','JY.soundManage.js','touch.js'];
-gulp.task('js',function(){
-	return gulp.src(path).pipe(concat('JY.js')).pipe(gulp.dest('dist')).pipe(uglify()).pipe(rename({suffix: '.min'})).pipe(gulp.dest('dist')).pipe(gulp.dest('.'));
-});
-gulp .task('game',function(){
-	gulp.src("game/*.js").pipe(uglify()).pipe(rename({suffix: '.min'})).pipe(gulp.dest('dist/game'));
+let gulp = require('gulp');
+let iwatch = require('gulp-watch');
+let ts = require("gulp-typescript");
+var sourcemaps = require('gulp-sourcemaps');
+gulp.task('ts',function(){
+    var tsResult = gulp.src('src/*.ts')
+        .pipe(sourcemaps.init()) // This means sourcemaps will be generated
+        .pipe(ts({
+            // ...
+        }));
+
+    return tsResult.js
+       // .pipe( ... ) // You can use other plugins that also support gulp-sourcemaps
+        .pipe(sourcemaps.write('./')) // Now the sourcemaps are added to the .js file
+        .pipe(gulp.dest('dist'));
 });
 gulp.task('watch',function(){
-	watchF(path,function(){
-        gulp.start('default');
+    iwatch(['src/*.ts'],function(){
+        gulp.start('ts')
     });
 });
-gulp.task('default',['js'])
+gulp.task('build', function () {
+    return gulp.src('src/**/*.ts')
+        .pipe(ts({
+            noImplicitAny: true,
+            out: 'JY.js'
+        }))
+        .pipe(gulp.dest('./'));
+});
+gulp.task('default', ['ts','build']);

@@ -1,0 +1,29 @@
+{
+  "name": "dodgeball",
+  "version": "1.0.0",
+  "description": "躲避球游戏",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tianxiangbing/DodgeBall.git"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "tianxiangbing",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tianxiangbing/DodgeBall/issues"
+  },
+  "homepage": "https://github.com/tianxiangbing/DodgeBall#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sourcemaps": "^2.2.0",
+    "gulp-typescript": "^3.1.2",
+    "gulp-watch": "^4.3.10",
+    "typescript": "^2.0.9"
+  }
+}

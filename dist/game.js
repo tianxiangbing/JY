@@ -1,38 +1,3 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-//sprite
-var Sprite = (function () {
-    function Sprite(context, x, y, w, h, img) {
-        this.context = context;
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.img = img;
-    }
-    return Sprite;
-}());
-//舞台设计
-var Stage = (function () {
-    function Stage(width, height, style) {
-        this.width = width;
-        this.height = height;
-        this.style = style;
-        console.log(arguments);
-    }
-    Stage.prototype.create = function () {
-        this.canvas = document.createElement('canvas');
-        // this.canvas.style ={width: this.width,height:this.height};
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-        this.canvas.style.position = 'absolute';
-        return this.canvas;
-    };
-    return Stage;
-}());
 /// <reference path="sprite.ts" />
 /// <reference path="stage.ts" />
 //游戏主框架
@@ -153,34 +118,5 @@ var Game = (function () {
     };
     return Game;
 }());
-/// <reference path="game.ts" />
-var G = (function (_super) {
-    __extends(G, _super);
-    function G() {
-        _super.apply(this, arguments);
-        this.count = 1;
-    }
-    G.prototype.newGame = function () {
-        _super.prototype.newGame.call(this);
-    };
-    G.prototype.running = function () {
-        this.count++;
-        if (this.count > 10) {
-            this.over();
-            return;
-        }
-        console.log(this.count);
-        _super.prototype.running.call(this);
-    };
-    G.prototype.gameOver = function () {
-        _super.prototype.gameOver.call(this);
-    };
-    G.prototype.loading = function () {
-        console.log('loading...');
-        _super.prototype.loading.call(this);
-    };
-    return G;
-}(Game));
-var stage = new Stage(1000, 1000);
-var game = new G(document.getElementById('view'), stage);
-game.run();
+
+//# sourceMappingURL=game.js.map
