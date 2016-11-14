@@ -24,5 +24,5 @@ class G extends  Game{
 }
  let stage = new Stage(1000,1000);
  let descript = new Discript('start');
- let gameOver = new GameOver();
+ let gameOver = new GameOver('restart');
  let game = new G(document.getElementById('view'),stage,descript,gameOver);

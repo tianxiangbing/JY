@@ -79,7 +79,8 @@ class Game {
         this.stage.remove();
         this.stopTimer();
         let gameOver = this.gameOverStage.create(function () {
-            this.run();
+            gameOver.remove();
+            this.setState(STATE.descript);
         }.bind(this));
         this.view.appendChild(gameOver);
     }

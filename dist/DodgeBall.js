@@ -34,7 +34,7 @@ var G = (function (_super) {
 }(Game));
 var stage = new Stage(1000, 1000);
 var descript = new Discript('start');
-var gameOver = new GameOver();
+var gameOver = new GameOver('restart');
 var game = new G(document.getElementById('view'), stage, descript, gameOver);
 
 //# sourceMappingURL=DodgeBall.js.map
