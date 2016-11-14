@@ -20,7 +20,7 @@ gulp.task('watch',function(){
     });
 });
 gulp.task('build', function () {
-    return gulp.src('src/**/*.ts')
+    return gulp.src('src/**/index.ts')
         .pipe(ts({
             noImplicitAny: true,
             out: 'JY.js'

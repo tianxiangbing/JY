@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="game.ts" />
+/// <reference path="index.ts" />
 var G = (function (_super) {
     __extends(G, _super);
     function G() {
@@ -11,6 +11,7 @@ var G = (function (_super) {
         this.count = 1;
     }
     G.prototype.newGame = function () {
+        this.count = 1;
         _super.prototype.newGame.call(this);
     };
     G.prototype.running = function () {
@@ -32,7 +33,8 @@ var G = (function (_super) {
     return G;
 }(Game));
 var stage = new Stage(1000, 1000);
-var game = new G(document.getElementById('view'), stage);
-game.run();
+var descript = new Discript('start');
+var gameOver = new GameOver();
+var game = new G(document.getElementById('view'), stage, descript, gameOver);
 
 //# sourceMappingURL=DodgeBall.js.map

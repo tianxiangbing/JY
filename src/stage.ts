@@ -1,15 +1,19 @@
+/// <reference path="iScreen.ts" />
 //舞台设计
-class Stage{
-    private canvas:HTMLCanvasElement;
+class Stage implements IScreen{
+    elem:HTMLCanvasElement;
     constructor(public width:number,public height:number,public style?:string){
         console.log(arguments)
     }
     create(){
-        this.canvas = document.createElement('canvas');
+        this.elem = document.createElement('canvas');
         // this.canvas.style ={width: this.width,height:this.height};
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-        this.canvas.style.position= 'absolute';
-        return this.canvas;
+        this.elem.width = this.width;
+        this.elem.height = this.height;
+        this.elem.style.position= 'absolute';
+        return this.elem;
+    }
+    remove(){
+        this.elem.remove();
     }
 }

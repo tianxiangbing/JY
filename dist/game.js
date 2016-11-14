@@ -1,4 +1,5 @@
 /// <reference path="sprite.ts" />
+/// <reference path="descript.ts" />
 /// <reference path="stage.ts" />
 //游戏主框架
 var STATE;
@@ -14,9 +15,10 @@ var STATE;
     STATE[STATE["gameOver"] = 8] = "gameOver";
 })(STATE || (STATE = {}));
 var Game = (function () {
-    function Game(view, stage) {
+    function Game(view, stage, descriptStage) {
         this.view = view;
         this.stage = stage;
+        this.descriptStage = descriptStage;
         this.func = new Function;
         this.interval = 20;
         console.log(this.view);
@@ -30,6 +32,7 @@ var Game = (function () {
     Game.prototype.run = function () {
         console.log('run');
         //this.func();
+        this.descriptStage.remove();
         this.createStage(); //创建舞台
         this.setState(STATE.newGame);
     };
@@ -40,11 +43,15 @@ var Game = (function () {
     //标题
     Game.prototype.title = function () {
         console.log('title');
+        this.setState(STATE.descript);
     };
     //说明
     Game.prototype.descript = function () {
         console.log('descript');
-        this.setState(STATE.descript);
+        var desc = this.descriptStage.create(function () {
+            this.run();
+        }.bind(this));
+        this.view.appendChild(desc);
     };
     //新的开始
     Game.prototype.newGame = function () {
@@ -70,6 +77,7 @@ var Game = (function () {
         //游戏结束
         //清空场景，显示结果
         console.log('gameOver');
+        this.stage.remove();
         this.stopTimer();
     };
     //停止刷新

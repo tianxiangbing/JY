@@ -1,3 +1,4 @@
+/// <reference path="iScreen.ts" />
 //舞台设计
 var Stage = (function () {
     function Stage(width, height, style) {
@@ -7,12 +8,15 @@ var Stage = (function () {
         console.log(arguments);
     }
     Stage.prototype.create = function () {
-        this.canvas = document.createElement('canvas');
+        this.elem = document.createElement('canvas');
         // this.canvas.style ={width: this.width,height:this.height};
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-        this.canvas.style.position = 'absolute';
-        return this.canvas;
+        this.elem.width = this.width;
+        this.elem.height = this.height;
+        this.elem.style.position = 'absolute';
+        return this.elem;
+    };
+    Stage.prototype.remove = function () {
+        this.elem.remove();
     };
     return Stage;
 }());

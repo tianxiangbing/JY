@@ -1,59 +1,6 @@
-//sprite
-var Sprite = (function () {
-    function Sprite(context, x, y, w, h, img) {
-        this.context = context;
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.img = img;
-    }
-    return Sprite;
-}());
-//舞台设计
-var Discript = (function () {
-    function Discript(btntitle) {
-        this.btntitle = btntitle;
-        console.log(arguments);
-    }
-    Discript.prototype.create = function (callback) {
-        this.html = document.createElement('div');
-        this.html.className = "discript";
-        this.html.style.position = 'absolute';
-        var btn = document.createElement('button');
-        btn.innerText = this.btntitle;
-        btn.onclick = callback.bind(this);
-        this.html.appendChild(btn);
-        return this.html;
-    };
-    Discript.prototype.remove = function () {
-        this.html.remove();
-    };
-    return Discript;
-}());
-//舞台设计
-var Stage = (function () {
-    function Stage(width, height, style) {
-        this.width = width;
-        this.height = height;
-        this.style = style;
-        console.log(arguments);
-    }
-    Stage.prototype.create = function () {
-        this.canvas = document.createElement('canvas');
-        // this.canvas.style ={width: this.width,height:this.height};
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-        this.canvas.style.position = 'absolute';
-        return this.canvas;
-    };
-    Stage.prototype.remove = function () {
-        this.canvas.remove();
-    };
-    return Stage;
-}());
 /// <reference path="sprite.ts" />
 /// <reference path="descript.ts" />
+/// <reference path="gameOver.ts" />
 /// <reference path="stage.ts" />
 //游戏主框架
 var STATE;
@@ -69,10 +16,11 @@ var STATE;
     STATE[STATE["gameOver"] = 8] = "gameOver";
 })(STATE || (STATE = {}));
 var Game = (function () {
-    function Game(view, stage, descriptStage) {
+    function Game(view, stage, descriptStage, gameOverStage) {
         this.view = view;
         this.stage = stage;
         this.descriptStage = descriptStage;
+        this.gameOverStage = gameOverStage;
         this.func = new Function;
         this.interval = 20;
         console.log(this.view);
@@ -133,6 +81,10 @@ var Game = (function () {
         console.log('gameOver');
         this.stage.remove();
         this.stopTimer();
+        var gameOver = this.gameOverStage.create(function () {
+            this.run();
+        }.bind(this));
+        this.view.appendChild(gameOver);
     };
     //停止刷新
     Game.prototype.stopTimer = function () {
@@ -180,3 +132,5 @@ var Game = (function () {
     };
     return Game;
 }());
+
+//# sourceMappingURL=index.js.map

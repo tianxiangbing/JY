@@ -1,7 +1,8 @@
-/// <reference path="game.ts" />
+/// <reference path="index.ts" />
 class G extends  Game{
     count = 1;
     newGame(){
+        this.count= 1;
         super.newGame();
     }
     running(){
@@ -22,5 +23,6 @@ class G extends  Game{
     }
 }
  let stage = new Stage(1000,1000);
- let game = new G(document.getElementById('view'),stage);
- game.run(); 
+ let descript = new Discript('start');
+ let gameOver = new GameOver();
+ let game = new G(document.getElementById('view'),stage,descript,gameOver);
