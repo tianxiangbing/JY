@@ -7,11 +7,11 @@ class G extends  Game{
     }
     running(){
         this.count++;
-        if(this.count>10){
+        if(this.count>10000){
             this.over();
             return;
         }
-        console.log(this.count)
+        // console.log(this.count)
         super.running();
     }
     gameOver(){
@@ -25,4 +25,7 @@ class G extends  Game{
  let stage = new Stage(1000,1000);
  let descript = new Discript('start');
  let gameOver = new GameOver('restart');
- let game = new G(document.getElementById('view'),stage,descript,gameOver);
+ let title = new Title('躲避球');
+ let control = new Control();
+ control.rect = [100,100]
+ let game = new G(document.getElementById('view'),stage,title,descript,gameOver,control);

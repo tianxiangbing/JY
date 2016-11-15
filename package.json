@@ -2,7 +2,7 @@
   "name": "JY",
   "version": "2.0.0",
   "description": "JY游戏框架",
-  "main": "index.html",
+  "main": "JY.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,7 +1,9 @@
 /// <reference path="sprite.ts" />
+/// <reference path="title.ts" />
 /// <reference path="descript.ts" />
 /// <reference path="gameOver.ts" />
 /// <reference path="stage.ts" />
+/// <reference path="control.ts" />
 //游戏主框架
 enum STATE {
     loading,
@@ -19,7 +21,7 @@ class Game {
     private timer: any;
     private currentState: STATE;
     protected interval: number = 20;
-    constructor(public view: any, public stage: Stage, public descriptStage: Discript,public gameOverStage?:GameOver) {
+    constructor(public view: any, public stage: Stage,public titleStage:Title, public descriptStage: Discript,public gameOverStage?:GameOver,public controlStage?:Control) {
         console.log(this.view)
         this.currentState = STATE.loading;
         this.setState(STATE.loading);
@@ -33,7 +35,11 @@ class Game {
         //this.func();
         this.descriptStage.remove();
         this.createStage();//创建舞台
+        this.controlStage && this.createControl();
         this.setState(STATE.newGame);
+    }
+    createControl(){
+        this.view.appendChild(this.controlStage.create());
     }
     //加载
     loading() {
@@ -42,11 +48,18 @@ class Game {
     //标题
     title() {
         console.log('title')
-        this.setState(STATE.descript)
+        let titleStage = this.titleStage.create(function () {
+            this.run();
+        }.bind(this));
+        this.view.appendChild(titleStage);
+        setTimeout(function(){
+            this.setState(STATE.descript)
+        }.bind(this),1000);
     }
     //说明
     descript() {
         console.log('descript');
+        this.titleStage.remove();
         let desc = this.descriptStage.create(function () {
             this.run();
         }.bind(this));
@@ -77,6 +90,7 @@ class Game {
         //清空场景，显示结果
         console.log('gameOver');
         this.stage.remove();
+        this.controlStage && this.controlStage.remove();
         this.stopTimer();
         let gameOver = this.gameOverStage.create(function () {
             gameOver.remove();
@@ -97,7 +111,7 @@ class Game {
     }
     //游戏中的
     running() {
-        console.log('running...')
+        // console.log('running...')
     }
     //检查状态
     checkState() {

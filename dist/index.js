@@ -1,7 +1,9 @@
 /// <reference path="sprite.ts" />
+/// <reference path="title.ts" />
 /// <reference path="descript.ts" />
 /// <reference path="gameOver.ts" />
 /// <reference path="stage.ts" />
+/// <reference path="control.ts" />
 //游戏主框架
 var STATE;
 (function (STATE) {
@@ -16,11 +18,13 @@ var STATE;
     STATE[STATE["gameOver"] = 8] = "gameOver";
 })(STATE || (STATE = {}));
 var Game = (function () {
-    function Game(view, stage, descriptStage, gameOverStage) {
+    function Game(view, stage, titleStage, descriptStage, gameOverStage, controlStage) {
         this.view = view;
         this.stage = stage;
+        this.titleStage = titleStage;
         this.descriptStage = descriptStage;
         this.gameOverStage = gameOverStage;
+        this.controlStage = controlStage;
         this.func = new Function;
         this.interval = 20;
         console.log(this.view);
@@ -36,7 +40,11 @@ var Game = (function () {
         //this.func();
         this.descriptStage.remove();
         this.createStage(); //创建舞台
+        this.controlStage && this.createControl();
         this.setState(STATE.newGame);
+    };
+    Game.prototype.createControl = function () {
+        this.view.appendChild(this.controlStage.create());
     };
     //加载
     Game.prototype.loading = function () {
@@ -45,11 +53,18 @@ var Game = (function () {
     //标题
     Game.prototype.title = function () {
         console.log('title');
-        this.setState(STATE.descript);
+        var titleStage = this.titleStage.create(function () {
+            this.run();
+        }.bind(this));
+        this.view.appendChild(titleStage);
+        setTimeout(function () {
+            this.setState(STATE.descript);
+        }.bind(this), 1000);
     };
     //说明
     Game.prototype.descript = function () {
         console.log('descript');
+        this.titleStage.remove();
         var desc = this.descriptStage.create(function () {
             this.run();
         }.bind(this));
@@ -80,6 +95,7 @@ var Game = (function () {
         //清空场景，显示结果
         console.log('gameOver');
         this.stage.remove();
+        this.controlStage && this.controlStage.remove();
         this.stopTimer();
         var gameOver = this.gameOverStage.create(function () {
             gameOver.remove();
@@ -100,7 +116,7 @@ var Game = (function () {
     };
     //游戏中的
     Game.prototype.running = function () {
-        console.log('running...');
+        // console.log('running...')
     };
     //检查状态
     Game.prototype.checkState = function () {

@@ -1,10 +1,10 @@
 /// <reference path="iScreen.ts" />
-class GameOver implements  IScreen{
-    elem:HTMLElement;
-    constructor(public btntitle:string){
+class GameOver implements IScreen {
+    elem: HTMLElement;
+    constructor(public btntitle: string) {
 
     }
-    create(callback:Function){
+    create(callback: Function) {
         this.elem = document.createElement('div');
         let btn = document.createElement('button');
         btn.innerText = this.btntitle;
@@ -12,7 +12,7 @@ class GameOver implements  IScreen{
         this.elem.appendChild(btn)
         return this.elem;
     }
-    remove(){
+    remove() {
         this.elem.remove();
     }
 

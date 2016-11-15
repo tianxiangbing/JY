@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 //sprite
 var Sprite = (function () {
     function Sprite(context, x, y, w, h, img) {
@@ -10,27 +15,47 @@ var Sprite = (function () {
     }
     return Sprite;
 }());
-//舞台设计
+/// <reference path="iScreen.ts" />
+//描述设计
 var Discript = (function () {
     function Discript(btntitle) {
         this.btntitle = btntitle;
         console.log(arguments);
     }
     Discript.prototype.create = function (callback) {
-        this.html = document.createElement('div');
-        this.html.className = "discript";
-        this.html.style.position = 'absolute';
+        this.elem = document.createElement('div');
+        this.elem.className = "discript";
+        this.elem.style.position = 'absolute';
         var btn = document.createElement('button');
         btn.innerText = this.btntitle;
         btn.onclick = callback.bind(this);
-        this.html.appendChild(btn);
-        return this.html;
+        this.elem.appendChild(btn);
+        return this.elem;
     };
     Discript.prototype.remove = function () {
-        this.html.remove();
+        this.elem.remove();
     };
     return Discript;
 }());
+/// <reference path="iScreen.ts" />
+var GameOver = (function () {
+    function GameOver(btntitle) {
+        this.btntitle = btntitle;
+    }
+    GameOver.prototype.create = function (callback) {
+        this.elem = document.createElement('div');
+        var btn = document.createElement('button');
+        btn.innerText = this.btntitle;
+        btn.onclick = callback.bind(this);
+        this.elem.appendChild(btn);
+        return this.elem;
+    };
+    GameOver.prototype.remove = function () {
+        this.elem.remove();
+    };
+    return GameOver;
+}());
+/// <reference path="iScreen.ts" />
 //舞台设计
 var Stage = (function () {
     function Stage(width, height, style) {
@@ -40,20 +65,34 @@ var Stage = (function () {
         console.log(arguments);
     }
     Stage.prototype.create = function () {
-        this.canvas = document.createElement('canvas');
+        this.elem = document.createElement('canvas');
         // this.canvas.style ={width: this.width,height:this.height};
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-        this.canvas.style.position = 'absolute';
-        return this.canvas;
+        this.elem.width = this.width;
+        this.elem.height = this.height;
+        this.elem.style.position = 'absolute';
+        return this.elem;
     };
     Stage.prototype.remove = function () {
-        this.canvas.remove();
+        this.elem.remove();
     };
     return Stage;
 }());
+var MyDate = (function (_super) {
+    __extends(MyDate, _super);
+    function MyDate(a) {
+        _super.call(this, a);
+    }
+    MyDate.prototype.valueOf = function () {
+        return _super.prototype.valueOf.call(this);
+    };
+    MyDate.prototype.formatS = function () {
+        //return this.toDateString();
+    };
+    return MyDate;
+}(Date));
 /// <reference path="sprite.ts" />
 /// <reference path="descript.ts" />
+/// <reference path="gameOver.ts" />
 /// <reference path="stage.ts" />
 //游戏主框架
 var STATE;
@@ -69,10 +108,11 @@ var STATE;
     STATE[STATE["gameOver"] = 8] = "gameOver";
 })(STATE || (STATE = {}));
 var Game = (function () {
-    function Game(view, stage, descriptStage) {
+    function Game(view, stage, descriptStage, gameOverStage) {
         this.view = view;
         this.stage = stage;
         this.descriptStage = descriptStage;
+        this.gameOverStage = gameOverStage;
         this.func = new Function;
         this.interval = 20;
         console.log(this.view);
@@ -133,6 +173,11 @@ var Game = (function () {
         console.log('gameOver');
         this.stage.remove();
         this.stopTimer();
+        var gameOver = this.gameOverStage.create(function () {
+            gameOver.remove();
+            this.setState(STATE.descript);
+        }.bind(this));
+        this.view.appendChild(gameOver);
     };
     //停止刷新
     Game.prototype.stopTimer = function () {

@@ -16,11 +16,11 @@ var G = (function (_super) {
     };
     G.prototype.running = function () {
         this.count++;
-        if (this.count > 10) {
+        if (this.count > 10000) {
             this.over();
             return;
         }
-        console.log(this.count);
+        // console.log(this.count)
         _super.prototype.running.call(this);
     };
     G.prototype.gameOver = function () {
@@ -35,6 +35,9 @@ var G = (function (_super) {
 var stage = new Stage(1000, 1000);
 var descript = new Discript('start');
 var gameOver = new GameOver('restart');
-var game = new G(document.getElementById('view'), stage, descript, gameOver);
+var title = new Title('躲避球');
+var control = new Control();
+control.rect = [100, 100];
+var game = new G(document.getElementById('view'), stage, title, descript, gameOver, control);
 
 //# sourceMappingURL=DodgeBall.js.map
