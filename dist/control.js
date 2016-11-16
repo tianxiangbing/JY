@@ -29,12 +29,12 @@ var Control = (function () {
     Control.prototype.resetPos = function () {
         //重置位置
         console.log(this.moveCenter);
-        this.transPosition(this.elemCenter);
+        this.transPosition([0, 0]);
     };
     //传入圆心转换成坐标,
     Control.prototype.transPosition = function (center) {
-        var x = (center[0] - this.moveCenter[0]);
-        var y = (center[1] - this.moveCenter[1]);
+        var x = (this.elemCenter[0] - this.moveCenter[0]) + center[0];
+        var y = (this.elemCenter[1] - this.moveCenter[1]) - center[1];
         this.moveElem.style.left = x + 'px';
         this.moveElem.style.top = y + 'px';
     };
@@ -46,6 +46,12 @@ var Control = (function () {
         this.elem.addEventListener('touchmove', function (event) {
             var epos = event.touches[0] || event;
             this.setPosition(epos);
+            if (event.preventDefault) {
+                event.preventDefault();
+            }
+            else {
+                window.event.returnValue == false;
+            }
         }.bind(this), false);
         this.elem.addEventListener('touchend', function (event) {
             this.resetPos();
@@ -58,7 +64,26 @@ var Control = (function () {
         var y = epos.pageY - this.position[1];
         // x= Math.min (x,this.rect[0]-this.moveCenter[0]);
         // x = Math.max(x,this.moveCenter[0])
-        var toPos = [x, y];
+        var x1 = (x - this.elemCenter[0]); //相对于圆点的位置
+        var y1 = -(y - this.elemCenter[1]);
+        console.log(x1, y1);
+        var ang = Math.atan2(y1, x1);
+        // console.log('角度：'+ang)
+        var c = Math.sqrt(x1 * x1 + y1 * y1);
+        var r = this.elemCenter[0] - this.moveCenter[0]; //最长半径
+        if (c > r) {
+            // console.log('out', c)
+            var x2 = Math.cos(ang) * r;
+            var y2 = Math.sin(ang) * r;
+            //下面是另一种算法
+            // y2=y1*r/c;
+            // x2= x1*r/c;
+            // console.log('xy:', x1, y1)
+            // console.log('x2y2:',x2, y2)
+            x1 = x2;
+            y1 = y2;
+        }
+        var toPos = [x1, y1];
         this.transPosition(toPos);
     };
     Control.prototype.remove = function () {

@@ -31,7 +31,7 @@ var G = (function (_super) {
         _super.prototype.loading.call(this);
     };
     return G;
-}(Game));
+}(JY));
 var stage = new Stage(1000, 1000);
 var descript = new Discript('start');
 var gameOver = new GameOver('restart');

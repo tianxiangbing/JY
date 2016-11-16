@@ -16,7 +16,7 @@ enum STATE {
     die,
     gameOver
 }
-class Game {
+class JY {
     private func: Function = new Function;
     private timer: any;
     private currentState: STATE;
