@@ -28,12 +28,24 @@ var JY = (function () {
         this.func = new Function;
         this.interval = 20;
         console.log(this.view);
+    }
+    JY.prototype.setup = function () {
         this.currentState = STATE.loading;
         this.setState(STATE.loading);
-    }
+        document.addEventListener('touchmove', function (event) {
+            if (event.preventDefault) {
+                event.preventDefault();
+            }
+            else {
+                window.event.returnValue == false;
+            }
+        });
+    };
     JY.prototype.createStage = function () {
         console.log(this.stage);
-        this.view.appendChild(this.stage.create());
+        var canvas = this.stage.create();
+        this.context = canvas.getContext('2d');
+        this.view.appendChild(canvas);
     };
     JY.prototype.run = function () {
         console.log('run');
@@ -48,7 +60,47 @@ var JY = (function () {
     };
     //加载
     JY.prototype.loading = function () {
-        this.setState(STATE.title);
+        this.loadFile(function () {
+            this.setState(STATE.title);
+        }.bind(this));
+    };
+    JY.prototype.loadFile = function (callback) {
+        var _this = this;
+        var obj = {};
+        var _loop_1 = function(v) {
+            obj[v] = {};
+            obj[v].count = 0;
+            var type = v;
+            console.log(_this.files[v]);
+            var _loop_2 = function(i, l) {
+                var item = _this.files[v][i];
+                if (type == 'image') {
+                    var img = new Image();
+                    img.onload = function () {
+                        obj[v].count++;
+                        console.log(item + ' loaded');
+                        if (_this.checkLoaded(obj)) {
+                            callback.call(_this);
+                        }
+                    };
+                    img.src = item;
+                }
+            };
+            for (var i = 0, l = _this.files[v].length; i < l; i++) {
+                _loop_2(i, l);
+            }
+        };
+        for (var v in _this.files) {
+            _loop_1(v);
+        }
+    };
+    JY.prototype.checkLoaded = function (obj) {
+        for (var v in obj) {
+            if (obj[v].count != this.files[v].length) {
+                return false;
+            }
+        }
+        return true;
     };
     //标题
     JY.prototype.title = function () {

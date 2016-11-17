@@ -13,6 +13,7 @@ var G = (function (_super) {
     G.prototype.newGame = function () {
         this.count = 1;
         _super.prototype.newGame.call(this);
+        this.createRole();
     };
     G.prototype.running = function () {
         this.count++;
@@ -21,6 +22,8 @@ var G = (function (_super) {
             return;
         }
         // console.log(this.count)
+        this.context.clearRect(0, 0, this.stage.width, this.stage.height);
+        this.role.draw();
         _super.prototype.running.call(this);
     };
     G.prototype.gameOver = function () {
@@ -30,14 +33,26 @@ var G = (function (_super) {
         console.log('loading...');
         _super.prototype.loading.call(this);
     };
+    //创建英雄
+    G.prototype.createRole = function () {
+        this.role = new Sprite(this.context, 'ball.png');
+        this.role.setSize(this.stage.width / 3, this.stage.width / 3);
+        this.role.setPosition(this.stage.width / 3, this.stage.height - this.role.h);
+    };
     return G;
 }(JY));
-var stage = new Stage(1000, 1000);
+var view = document.getElementById('view');
+var w = view.offsetWidth;
+var h = view.offsetHeight;
+var stage = new Stage(w, h);
 var descript = new Discript('start');
+descript.text = '<p class="title">DodgeBall</p>';
 var gameOver = new GameOver('restart');
-var title = new Title('躲避球');
+var title = new Title('DodgeBall');
 var control = new Control();
 control.rect = [100, 100];
-var game = new G(document.getElementById('view'), stage, title, descript, gameOver, control);
+var game = new G(view, stage, title, descript, gameOver);
+game.files = { image: ['ball.png', 'boll.jpg'] };
+game.setup();
 
 //# sourceMappingURL=DodgeBall.js.map

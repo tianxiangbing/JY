@@ -6,6 +6,7 @@ var GameOver = (function () {
     GameOver.prototype.create = function (callback) {
         this.elem = document.createElement('div');
         var btn = document.createElement('button');
+        btn.className = "button gameOver";
         btn.innerText = this.btntitle;
         btn.onclick = callback.bind(this);
         this.elem.appendChild(btn);

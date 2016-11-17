@@ -1,13 +1,60 @@
 //sprite
 var Sprite = (function () {
-    function Sprite(context, x, y, w, h, img) {
+    function Sprite(context, url) {
+        this.x = 0; //x坐标
+        this.y = 0; //y坐标
+        this.w = 0; //宽度 
+        this.h = 0; //高度
+        this.sw = 0; //剪裁的宽
+        this.sh = 0; //前裁的高
+        this.sx = 0; //剪裁的x
+        this.sy = 0; //前裁的y
+        this.getImg(url);
         this.context = context;
-        this.x = x;
-        this.y = y;
+    }
+    Sprite.prototype.setImg = function (url) {
+        this.getImg(url);
+    };
+    Sprite.prototype.getImg = function (url) {
+        //地址转换成img对象 
+        this.img = new Image();
+        this.img.src = url;
+        // this.img = document.createElement('img');
+        // this.img.src = url;
+        // console.log(this.img.readyState)
+        // this.img.onreadystatechange=function(){
+        //     console.log(222,this.img.readyState)
+        // }
+        this.img.onload = function () {
+            console.log('loaded');
+        };
+        // this.img = document.createElement('img');
+        // this.img.src = url;
+    };
+    Sprite.prototype.setSize = function (w, h) {
         this.w = w;
         this.h = h;
-        this.img = img;
-    }
+    };
+    Sprite.prototype.setCutSize = function (sw, sh) {
+        this.sw = sw;
+        this.sh = sh;
+    };
+    Sprite.prototype.setPosition = function (x, y) {
+        this.x = x;
+        this.y = y;
+    };
+    Sprite.prototype.draw = function () {
+        this.context.save();
+        if (this.sw && this.sh) {
+            this.context.drawImage(this.img, this.sx, this.sy, this.sw, this.sh, this.x, this.y, this.w, this.h);
+        }
+        else {
+            //不需要剪切
+            this.context.drawImage(this.img, this.x, this.y, this.w, this.h);
+        }
+        // this.context.drawImage(this.img,10,10);
+        this.context.restore();
+    };
     return Sprite;
 }());
 

@@ -4,7 +4,7 @@ var Control = (function () {
     function Control() {
         this.rect = [160, 160];
         this.moveRect = [50, 50];
-        this.elemPosition = [80, 80];
+        this.elemPosition = [10, 10];
     }
     Control.prototype.create = function () {
         this.elem = document.createElement('div');
@@ -12,8 +12,8 @@ var Control = (function () {
         this.elem.style.position = 'absolute';
         this.elem.style.width = this.rect[0] + 'px';
         this.elem.style.height = this.rect[1] + 'px';
-        this.elem.style.left = this.elemPosition[0] + 'px';
-        this.elem.style.bottom = this.elemPosition[1] + 'px';
+        this.elem.style.left = this.elemPosition[0] + '%';
+        this.elem.style.bottom = this.elemPosition[1] + '%';
         this.moveElem = document.createElement('div');
         this.moveElem.className = 'move';
         this.moveElem.style.position = 'absolute';
@@ -46,12 +46,6 @@ var Control = (function () {
         this.elem.addEventListener('touchmove', function (event) {
             var epos = event.touches[0] || event;
             this.setPosition(epos);
-            if (event.preventDefault) {
-                event.preventDefault();
-            }
-            else {
-                window.event.returnValue == false;
-            }
         }.bind(this), false);
         this.elem.addEventListener('touchend', function (event) {
             this.resetPos();
@@ -59,7 +53,7 @@ var Control = (function () {
     };
     // 计算边界值,设置位置
     Control.prototype.setPosition = function (epos) {
-        this.position = this.position || [this.elem.offsetLeft, this.elem.offsetTop];
+        this.position = [this.elem.offsetLeft, this.elem.offsetTop];
         var x = epos.pageX - this.position[0];
         var y = epos.pageY - this.position[1];
         // x= Math.min (x,this.rect[0]-this.moveCenter[0]);

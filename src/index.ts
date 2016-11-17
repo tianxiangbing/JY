@@ -21,14 +21,27 @@ class JY {
     private timer: any;
     private currentState: STATE;
     protected interval: number = 20;
-    constructor(public view: any, public stage: Stage,public titleStage:Title, public descriptStage: Discript,public gameOverStage?:GameOver,public controlStage?:Control) {
+    protected context;
+    files: any;
+    constructor(public view: any, public stage: Stage, public titleStage: Title, public descriptStage: Discript, public gameOverStage?: GameOver, public controlStage?: Control) {
         console.log(this.view)
+    }
+    setup() {
         this.currentState = STATE.loading;
         this.setState(STATE.loading);
+        document.addEventListener('touchmove', function (event) {
+            if (event.preventDefault) {
+                event.preventDefault();
+            } else {
+                window.event.returnValue == false;
+            }
+        });
     }
     createStage() {
         console.log(this.stage)
-        this.view.appendChild(this.stage.create());
+        let canvas = this.stage.create();
+        this.context = canvas.getContext('2d');
+        this.view.appendChild(canvas);
     }
     run() {
         console.log('run')
@@ -38,12 +51,46 @@ class JY {
         this.controlStage && this.createControl();
         this.setState(STATE.newGame);
     }
-    createControl(){
+    createControl() {
         this.view.appendChild(this.controlStage.create());
     }
     //加载
     loading() {
-        this.setState(STATE.title)
+        this.loadFile(function () {
+            this.setState(STATE.title)
+        }.bind(this));
+    }
+    loadFile(callback: Function) {
+        let _this = this;
+        let obj = {};
+        for (let v in _this.files) {
+            obj[v]={};
+            obj[v].count = 0;
+            let type = v;
+            console.log(_this.files[v])
+            for (let i = 0, l = _this.files[v].length; i < l; i++) {
+                let item = _this.files[v][i];
+                if (type == 'image') {
+                    let img = new Image();
+                    img.onload = function () {
+                        obj[v].count++;
+                        console.log(item + ' loaded');
+                        if (_this.checkLoaded(obj)) {
+                            callback.call(_this);
+                        }
+                    }
+                    img.src = item;
+                }
+            }
+        }
+    }
+    checkLoaded(obj) {
+        for(var v in obj ){
+            if(obj[v].count != this.files[v].length){
+                return false;
+            }
+        }
+        return true;
     }
     //标题
     title() {
@@ -52,9 +99,9 @@ class JY {
             this.run();
         }.bind(this));
         this.view.appendChild(titleStage);
-        setTimeout(function(){
+        setTimeout(function () {
             this.setState(STATE.descript)
-        }.bind(this),1000);
+        }.bind(this), 1000);
     }
     //说明
     descript() {
