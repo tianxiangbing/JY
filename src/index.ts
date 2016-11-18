@@ -20,7 +20,7 @@ class JY {
     private func: Function = new Function;
     private timer: any;
     private currentState: STATE;
-    protected interval: number = 20;
+    protected interval: number = 10;
     protected context;
     files: any;
     constructor(public view: any, public stage: Stage, public titleStage: Title, public descriptStage: Discript, public gameOverStage?: GameOver, public controlStage?: Control) {

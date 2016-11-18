@@ -26,7 +26,7 @@ var JY = (function () {
         this.gameOverStage = gameOverStage;
         this.controlStage = controlStage;
         this.func = new Function;
-        this.interval = 20;
+        this.interval = 10;
         console.log(this.view);
     }
     JY.prototype.setup = function () {

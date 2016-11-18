@@ -18,6 +18,13 @@ var Stage = (function () {
     Stage.prototype.remove = function () {
         this.elem.remove();
     };
+    //绑定事件回调
+    Stage.prototype.bindEvent = function (callback) {
+        this.elem.addEventListener('touchstart', function (event) {
+            var epos = event.touches[0];
+            callback([epos.pageX, epos.pageY]);
+        }, false);
+    };
     return Stage;
 }());
 
