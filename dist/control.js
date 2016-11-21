@@ -20,8 +20,8 @@ var Control = (function () {
         this.moveElem.style.width = this.moveRect[0] + 'px';
         this.moveElem.style.height = this.moveRect[1] + 'px';
         this.elem.appendChild(this.moveElem);
-        this.moveCenter = this.moveRect.map(function (d, i) { return d / 2; });
-        this.elemCenter = this.rect.map(function (d, i) { return d / 2; });
+        this.moveCenter = this.moveRect.map(function (d) { return d / 2; });
+        this.elemCenter = this.rect.map(function (d) { return d / 2; });
         this.resetPos();
         this.bindEvent();
         return this.elem;

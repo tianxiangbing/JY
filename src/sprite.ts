@@ -1,4 +1,9 @@
 //sprite
+//形状
+enum SHAPE{
+ rect,
+ circle
+}
 class Sprite {
     ///
     context: any;//画布对象
@@ -10,7 +15,9 @@ class Sprite {
     sh: number = 0;//前裁的高
     sx: number = 0;//剪裁的x
     sy: number = 0;//前裁的y
+    r:number = 0 ;//半径
     img: any;//图像地址
+    shape:SHAPE = SHAPE.rect;//默认方形
     constructor(context: any, url: string) {
         this.getImg(url);
         this.context = context;
@@ -35,15 +42,15 @@ class Sprite {
         // this.img = document.createElement('img');
         // this.img.src = url;
     }
-    setSize(w, h) {
+    setSize(w:number, h:number) {
         this.w = w;
         this.h = h;
     }
-    setCutSize(sw, sh) {
+    setCutSize(sw:number, sh:number) {
         this.sw = sw;
         this.sh = sh;
     }
-    setPosition(x, y) {
+    setPosition(x:number, y:number) {
         this.x = x;
         this.y = y;
     }

@@ -12,19 +12,21 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.count = 1;
             this.v = 2; //速度 
             this.ballList = []; //球的集合
+            this.score = 0;
         }
         G.prototype.newGame = function () {
             this.count = 1;
+            this.v = 2;
+            this.score = 0;
+            this.ballList = [];
+            //init
             this.createRole();
+            this.scoreInit();
             _super.prototype.newGame.call(this);
             this.control();
         };
         G.prototype.running = function () {
             this.count++;
-            if (this.count > 10000) {
-                this.over();
-                return;
-            }
             // console.log(this.count)
             this.context.clearRect(0, 0, this.stage.width, this.stage.height);
             this.role.draw();
@@ -33,11 +35,22 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
             this.createBoll();
             this.v = this.v + .003;
+            this.scoreScreen.change('您已行驶 ' + this.score + ' 米');
             this.drop();
+            this.checkHits();
             _super.prototype.running.call(this);
+        };
+        G.prototype.checkHits = function () {
+            var _this = this;
+            this.ballList.forEach(function (ball) {
+                if (_this.hits(_this.role, ball)) {
+                    _this.over();
+                }
+            });
         };
         G.prototype.gameOver = function () {
             _super.prototype.gameOver.call(this);
+            this.gameOverStage.setText('得分：' + this.score);
         };
         G.prototype.loading = function () {
             console.log('loading...');
@@ -61,6 +74,11 @@ var __extends = (this && this.__extends) || function (d, b) {
                 this.jump(col, this.role);
             }.bind(this));
         };
+        //分数面板
+        G.prototype.scoreInit = function () {
+            this.scoreScreen = new Score('--');
+            this.view.appendChild(this.scoreScreen.create());
+        };
         //跳啊
         G.prototype.jump = function (col, obj) {
             var x = this.stage.width / 3 * col - this.stage.width / 3 / 2 - this.role.w / 2;
@@ -74,18 +92,31 @@ var __extends = (this && this.__extends) || function (d, b) {
         G.prototype.createBoll = function () {
             //创建小球
             if (this.count % 100 == 0) {
+                this.score++;
                 //10帧创建
+                var colPos = [1, 2, 3]; //三列中的某一列
                 var rnd = Math.ceil(Math.random() * 2); //创建一个或2;
-                var ball = new Ball(this.context, this.stage.width / 3 - 10, this.stage.width / 4);
-                var x = this.stage.width / 3 * 2 - this.stage.width / 3 / 2 - this.role.w / 2;
-                ball.setPosition(x, 0);
-                this.ballList.push(ball);
+                var i = 0;
+                while (true) {
+                    var ball = new Ball(this.context, this.stage.width / 3 - 10, this.stage.width / 4);
+                    var col = Math.floor(Math.random() * colPos.length);
+                    this.setBallInitPosition(ball, colPos[col]);
+                    this.ballList.push(ball);
+                    colPos.splice(col, 1);
+                    i++;
+                    if (i >= rnd) {
+                        break;
+                    }
+                }
             }
         };
         G.prototype.drop = function () {
             var _this = this;
-            this.ballList.forEach(function (ball) {
+            this.ballList.forEach(function (ball, index) {
                 ball.drop(_this.v);
+                if (ball.x > _this.stage.height) {
+                    _this.ballList.splice(index, 1);
+                }
             });
         };
         return G;
@@ -106,9 +137,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     var h = view.offsetHeight;
     var stage = new Stage(w, h);
     var descript = new Discript('start');
-    descript.text = '<p class="title">DodgeBall</p>';
+    descript.text = '<p class="title">碰撞汽车</p>';
     var gameOver = new GameOver('restart');
-    var title = new Title('DodgeBall');
+    var title = new Title('碰撞汽车');
     var control = new Control();
     control.rect = [100, 100];
     var game = new G(view, stage, title, descript, gameOver);
@@ -116,4 +147,4 @@ var __extends = (this && this.__extends) || function (d, b) {
     game.setup();
 })();
 
-//# sourceMappingURL=DodgeBall.js.map
+//# sourceMappingURL=dropCars.js.map

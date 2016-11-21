@@ -1,4 +1,10 @@
 //sprite
+//形状
+var SHAPE;
+(function (SHAPE) {
+    SHAPE[SHAPE["rect"] = 0] = "rect";
+    SHAPE[SHAPE["circle"] = 1] = "circle";
+})(SHAPE || (SHAPE = {}));
 var Sprite = (function () {
     function Sprite(context, url) {
         this.x = 0; //x坐标
@@ -9,6 +15,8 @@ var Sprite = (function () {
         this.sh = 0; //前裁的高
         this.sx = 0; //剪裁的x
         this.sy = 0; //前裁的y
+        this.r = 0; //半径
+        this.shape = SHAPE.rect; //默认方形
         this.getImg(url);
         this.context = context;
     }

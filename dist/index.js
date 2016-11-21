@@ -199,6 +199,43 @@ var JY = (function () {
         this.checkState();
         this.func();
     };
+    //碰撞检测
+    JY.prototype.hits = function (oA, oB) {
+        var bx = false, by = false;
+        if (oA.shape == SHAPE.rect) {
+            var bw = oB.w;
+            var aw = oA.w;
+            var bh = oB.h;
+            var ah = oA.h;
+            if (oA.x > oB.x) {
+                bx = oA.x - oB.x < bw;
+            }
+            else if (oA.x < oB.x) {
+                bx = oB.x - oA.x < aw;
+            }
+            else {
+                bx = true;
+            }
+            ;
+            if (oA.y > oB.y) {
+                by = oA.y - oB.y < bh;
+            }
+            else if (oA.y < oB.y) {
+                by = oB.y - oA.y < ah;
+            }
+            else {
+                by = true;
+            }
+            ;
+            return (bx && by);
+        }
+        else if (oA.shape == SHAPE.circle) {
+            var r2 = oA.r + oB.r;
+            bx = Math.abs(oA.x - oB.x) < r2;
+            by = Math.abs(oA.y - oB.y) < r2;
+            return (bx && by);
+        }
+    };
     return JY;
 }());
 

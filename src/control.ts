@@ -25,8 +25,8 @@ class Control implements IScreen {
         this.moveElem.style.width = this.moveRect[0] + 'px';
         this.moveElem.style.height = this.moveRect[1] + 'px';
         this.elem.appendChild(this.moveElem);
-        this.moveCenter = this.moveRect.map(function (d: number, i) { return d / 2 });
-        this.elemCenter = this.rect.map(function (d: number, i) { return d / 2 });
+        this.moveCenter = this.moveRect.map(function (d: number) { return d / 2 });
+        this.elemCenter = this.rect.map(function (d: number) { return d / 2 });
         this.resetPos();
         this.bindEvent();
         return this.elem;
@@ -44,20 +44,20 @@ class Control implements IScreen {
         this.moveElem.style.top = y + 'px';
     }
     bindEvent() {
-        this.elem.addEventListener('touchstart', function (event) {
+        this.elem.addEventListener('touchstart', function (event:TouchEvent) {
             let epos = event.touches[0] || event;
             this.setPosition(epos)
         }.bind(this), false);
-        this.elem.addEventListener('touchmove', function (event) {
+        this.elem.addEventListener('touchmove', function (event:TouchEvent) {
             let epos = event.touches[0] || event;
             this.setPosition(epos);
         }.bind(this), false);
-        this.elem.addEventListener('touchend', function (event) {
+        this.elem.addEventListener('touchend', function (event:TouchEvent) {
             this.resetPos();
         }.bind(this), false);
     }
     // 计算边界值,设置位置
-    setPosition(epos) {
+    setPosition(epos:Touch) {
         this.position =  [this.elem.offsetLeft, this.elem.offsetTop];
         let x: number = epos.pageX - this.position[0];
         let y = epos.pageY - this.position[1];

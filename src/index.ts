@@ -4,6 +4,7 @@
 /// <reference path="gameOver.ts" />
 /// <reference path="stage.ts" />
 /// <reference path="control.ts" />
+/// <reference path="score.ts" />
 //游戏主框架
 enum STATE {
     loading,
@@ -21,9 +22,9 @@ class JY {
     private timer: any;
     private currentState: STATE;
     protected interval: number = 10;
-    protected context;
+    protected context:CanvasRenderingContext2D ;
     files: any;
-    constructor(public view: any, public stage: Stage, public titleStage: Title, public descriptStage: Discript, public gameOverStage?: GameOver, public controlStage?: Control) {
+    constructor(public view: HTMLElement, public stage: Stage, public titleStage: Title, public descriptStage: Discript, public gameOverStage?: GameOver, public controlStage?: Control) {
         console.log(this.view)
     }
     setup() {
@@ -62,9 +63,9 @@ class JY {
     }
     loadFile(callback: Function) {
         let _this = this;
-        let obj = {};
+        let obj:any = {};
         for (let v in _this.files) {
-            obj[v]={};
+            obj[v] = {};
             obj[v].count = 0;
             let type = v;
             console.log(_this.files[v])
@@ -84,9 +85,9 @@ class JY {
             }
         }
     }
-    checkLoaded(obj) {
-        for(var v in obj ){
-            if(obj[v].count != this.files[v].length){
+    checkLoaded(obj:any) {
+        for (var v in obj) {
+            if (obj[v].count != this.files[v].length) {
                 return false;
             }
         }
@@ -188,5 +189,36 @@ class JY {
         this.currentState = state;
         this.checkState();
         this.func();
+    }
+    //碰撞检测
+    hits(oA: Sprite, oB: Sprite) {
+        var bx = false,
+            by = false;
+        if (oA.shape == SHAPE.rect) {
+            var bw = oB.w;
+            var aw = oA.w;
+            var bh = oB.h;
+            var ah = oA.h;
+            if (oA.x > oB.x) {
+                bx = oA.x - oB.x < bw;
+            } else if (oA.x < oB.x) {
+                bx = oB.x - oA.x < aw;
+            } else {
+                bx = true;
+            };
+            if (oA.y > oB.y) {
+                by = oA.y - oB.y < bh;
+            } else if (oA.y < oB.y) {
+                by = oB.y - oA.y < ah;
+            } else {
+                by = true;
+            };
+            return (bx && by);
+        } else if (oA.shape == SHAPE.circle) {
+            var r2 = oA.r + oB.r;
+            bx = Math.abs(oA.x - oB.x) < r2;
+            by = Math.abs(oA.y - oB.y) < r2;
+            return (bx && by);
+        }
     }
 }
