@@ -4,7 +4,7 @@
         interval:20;
         count = 1;
         role:Sprite;
-        v= 3;
+        v= 2;//速度 
         ballList :Array<Ball>=[];//球的集合
         newGame() {
             this.count = 1;
@@ -25,6 +25,7 @@
                 ball.draw();
             });
             this.createBoll();
+            this.v = this.v+.003;
             this.drop();
             super.running();
         }
@@ -37,8 +38,9 @@
         }
         //创建英雄
         createRole(){
-            this.role = new Sprite(this.context,'role.gif');
-            this.role.setSize(60,60);
+            this.role = new Sprite(this.context,'car.png');
+            let rect = this.stage.width/3-10;
+            this.role.setSize(rect,rect);
             let x = this.stage.width/2-this.role.w/2;
             // this.role.setPosition(this.stage.width/3,this.stage.height - this.role.h);
             this.jump(1,this.role);
@@ -54,15 +56,20 @@
         }
         //跳啊
         jump(col:number,obj:Sprite){
-            var x = this.stage.width/3 * col -this.stage.width/3/2-this.role.w/2;
+            let x = this.stage.width/3 * col -this.stage.width/3/2-this.role.w/2;
             obj.setPosition(x,this.stage.height/2 + this.role.h);
+        }
+        //设置球的初始位置
+        setBallInitPosition(ball:Sprite,col:number){
+            let x = this.stage.width/3 * col -this.stage.width/3/2-ball.w/2;
+            ball.setPosition(x,0);
         }
         createBoll(){
             //创建小球
-            if(this.count%70==0){
+            if(this.count%100==0){
                 //10帧创建
                 let rnd = Math.ceil(Math.random()*2);//创建一个或2;
-                let ball = new Ball(this.context);
+                let ball = new Ball(this.context,this.stage.width/3-10 ,this.stage.width/4 );
                 let x = this.stage.width/3 * 2 -this.stage.width/3/2-this.role.w/2;
                 ball.setPosition(x,0);
                 this.ballList.push(ball);
@@ -75,9 +82,9 @@
         }
     }
     class Ball extends Sprite{
-        constructor(context){
-            super(context,'ball.png');
-            this.setSize(30,30);
+        constructor(context,w,h){
+            super(context,'car1.png');
+            this.setSize(w,h);
         }
         drop(v:number){
             this.setPosition(this.x,this.y+v)
@@ -94,6 +101,6 @@
     let control = new Control();
     control.rect = [100, 100]
     let game = new G(view, stage, title, descript, gameOver);
-    game.files = {image: ['ball.png','role.gif']};
+    game.files = {image: ['car1.png','car2.png','car.png']};
     game.setup();
 })();

@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         function G() {
             _super.apply(this, arguments);
             this.count = 1;
-            this.v = 3;
+            this.v = 2; //速度 
             this.ballList = []; //球的集合
         }
         G.prototype.newGame = function () {
@@ -32,6 +32,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 ball.draw();
             });
             this.createBoll();
+            this.v = this.v + .003;
             this.drop();
             _super.prototype.running.call(this);
         };
@@ -44,8 +45,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         //创建英雄
         G.prototype.createRole = function () {
-            this.role = new Sprite(this.context, 'role.gif');
-            this.role.setSize(60, 60);
+            this.role = new Sprite(this.context, 'car.png');
+            var rect = this.stage.width / 3 - 10;
+            this.role.setSize(rect, rect);
             var x = this.stage.width / 2 - this.role.w / 2;
             // this.role.setPosition(this.stage.width/3,this.stage.height - this.role.h);
             this.jump(1, this.role);
@@ -64,12 +66,17 @@ var __extends = (this && this.__extends) || function (d, b) {
             var x = this.stage.width / 3 * col - this.stage.width / 3 / 2 - this.role.w / 2;
             obj.setPosition(x, this.stage.height / 2 + this.role.h);
         };
+        //设置球的初始位置
+        G.prototype.setBallInitPosition = function (ball, col) {
+            var x = this.stage.width / 3 * col - this.stage.width / 3 / 2 - ball.w / 2;
+            ball.setPosition(x, 0);
+        };
         G.prototype.createBoll = function () {
             //创建小球
-            if (this.count % 70 == 0) {
+            if (this.count % 100 == 0) {
                 //10帧创建
                 var rnd = Math.ceil(Math.random() * 2); //创建一个或2;
-                var ball = new Ball(this.context);
+                var ball = new Ball(this.context, this.stage.width / 3 - 10, this.stage.width / 4);
                 var x = this.stage.width / 3 * 2 - this.stage.width / 3 / 2 - this.role.w / 2;
                 ball.setPosition(x, 0);
                 this.ballList.push(ball);
@@ -85,9 +92,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     }(JY));
     var Ball = (function (_super) {
         __extends(Ball, _super);
-        function Ball(context) {
-            _super.call(this, context, 'ball.png');
-            this.setSize(30, 30);
+        function Ball(context, w, h) {
+            _super.call(this, context, 'car1.png');
+            this.setSize(w, h);
         }
         Ball.prototype.drop = function (v) {
             this.setPosition(this.x, this.y + v);
@@ -105,7 +112,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var control = new Control();
     control.rect = [100, 100];
     var game = new G(view, stage, title, descript, gameOver);
-    game.files = { image: ['ball.png', 'role.gif'] };
+    game.files = { image: ['car1.png', 'car2.png', 'car.png'] };
     game.setup();
 })();
 
