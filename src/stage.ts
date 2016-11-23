@@ -14,7 +14,7 @@ class Stage implements IScreen {
         return this.elem;
     }
     remove() {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     }
     //绑定事件回调
     bindEvent(callback?: Function) {

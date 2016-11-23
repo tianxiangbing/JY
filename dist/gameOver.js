@@ -23,7 +23,7 @@ var GameOver = (function () {
         this.textElem.innerHTML = text;
     };
     GameOver.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return GameOver;
 }());

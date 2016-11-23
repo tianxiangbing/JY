@@ -18,6 +18,6 @@ class Discript  implements  IScreen{
         return this.elem;
     }
     remove(){
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     }
 }

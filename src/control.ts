@@ -86,6 +86,6 @@ class Control implements IScreen {
         this.transPosition(toPos)
     }
     remove() {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     }
 }

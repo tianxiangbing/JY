@@ -107,13 +107,13 @@ class JY {
         }.bind(this));
         this.view.appendChild(titleStage);
         setTimeout(function () {
+            this.titleStage.remove();
             this.setState(STATE.descript)
         }.bind(this), 1000);
     }
     //说明
     descript() {
         console.log('descript');
-        this.titleStage.remove();
         let desc = this.descriptStage.create(function () {
             this.run();
         }.bind(this));
@@ -149,7 +149,7 @@ class JY {
         this.controlStage && this.controlStage.remove();
         this.stopTimer();
         let gameOver = this.gameOverStage.create(function () {
-            gameOver.remove();
+            this.gameOverStage.remove();
             this.setState(STATE.descript);
         }.bind(this));
         this.view.appendChild(gameOver);

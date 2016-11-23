@@ -16,7 +16,7 @@ var Stage = (function () {
         return this.elem;
     };
     Stage.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     //绑定事件回调
     Stage.prototype.bindEvent = function (callback) {

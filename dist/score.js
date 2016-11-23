@@ -19,7 +19,7 @@ var Score = (function () {
         this.elem.innerHTML = this.text;
     };
     Score.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return Score;
 }());

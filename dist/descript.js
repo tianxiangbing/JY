@@ -19,7 +19,7 @@ var Discript = (function () {
         return this.elem;
     };
     Discript.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return Discript;
 }());

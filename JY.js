@@ -80,7 +80,7 @@ var Title = (function () {
         return this.elem;
     };
     Title.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return Title;
 }());
@@ -105,7 +105,7 @@ var Discript = (function () {
         return this.elem;
     };
     Discript.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return Discript;
 }());
@@ -134,7 +134,7 @@ var GameOver = (function () {
         this.textElem.innerHTML = text;
     };
     GameOver.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return GameOver;
 }());
@@ -156,7 +156,7 @@ var Stage = (function () {
         return this.elem;
     };
     Stage.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     //绑定事件回调
     Stage.prototype.bindEvent = function (callback) {
@@ -250,7 +250,7 @@ var Control = (function () {
         this.transPosition(toPos);
     };
     Control.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return Control;
 }());
@@ -275,7 +275,7 @@ var Score = (function () {
         this.elem.innerHTML = this.text;
     };
     Score.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return Score;
 }());
@@ -337,6 +337,11 @@ var JY = (function () {
         this.controlStage && this.createControl();
         this.setState(STATE.newGame);
     };
+    //分数面板
+    JY.prototype.scoreInit = function () {
+        this.scoreScreen = new Score('--');
+        this.view.appendChild(this.scoreScreen.create());
+    };
     JY.prototype.createControl = function () {
         this.view.appendChild(this.controlStage.create());
     };
@@ -392,13 +397,13 @@ var JY = (function () {
         }.bind(this));
         this.view.appendChild(titleStage);
         setTimeout(function () {
+            this.titleStage.remove();
             this.setState(STATE.descript);
         }.bind(this), 1000);
     };
     //说明
     JY.prototype.descript = function () {
         console.log('descript');
-        this.titleStage.remove();
         var desc = this.descriptStage.create(function () {
             this.run();
         }.bind(this));
@@ -408,6 +413,7 @@ var JY = (function () {
     JY.prototype.newGame = function () {
         //游戏开始，清空场景
         //打开计时器
+        this.scoreInit();
         this.setState(STATE.running);
         this.startTimer();
     };
@@ -428,11 +434,12 @@ var JY = (function () {
         //游戏结束
         //清空场景，显示结果
         console.log('gameOver');
+        this.scoreScreen.remove();
         this.stage.remove();
         this.controlStage && this.controlStage.remove();
         this.stopTimer();
         var gameOver = this.gameOverStage.create(function () {
-            gameOver.remove();
+            this.gameOverStage.remove();
             this.setState(STATE.descript);
         }.bind(this));
         this.view.appendChild(gameOver);

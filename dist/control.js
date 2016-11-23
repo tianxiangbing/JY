@@ -81,7 +81,7 @@ var Control = (function () {
         this.transPosition(toPos);
     };
     Control.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return Control;
 }());

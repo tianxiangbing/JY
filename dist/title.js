@@ -13,7 +13,7 @@ var Title = (function () {
         return this.elem;
     };
     Title.prototype.remove = function () {
-        this.elem.remove();
+        this.elem.parentNode.removeChild(this.elem);
     };
     return Title;
 }());

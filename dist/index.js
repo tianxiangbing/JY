@@ -116,13 +116,13 @@ var JY = (function () {
         }.bind(this));
         this.view.appendChild(titleStage);
         setTimeout(function () {
+            this.titleStage.remove();
             this.setState(STATE.descript);
         }.bind(this), 1000);
     };
     //说明
     JY.prototype.descript = function () {
         console.log('descript');
-        this.titleStage.remove();
         var desc = this.descriptStage.create(function () {
             this.run();
         }.bind(this));
@@ -158,7 +158,7 @@ var JY = (function () {
         this.controlStage && this.controlStage.remove();
         this.stopTimer();
         var gameOver = this.gameOverStage.create(function () {
-            gameOver.remove();
+            this.gameOverStage.remove();
             this.setState(STATE.descript);
         }.bind(this));
         this.view.appendChild(gameOver);
