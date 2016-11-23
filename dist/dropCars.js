@@ -21,7 +21,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.ballList = [];
             //init
             this.createRole();
-            this.scoreInit();
             _super.prototype.newGame.call(this);
             this.control();
         };
@@ -34,7 +33,6 @@ var __extends = (this && this.__extends) || function (d, b) {
                 ball.draw();
             });
             this.createBoll();
-            this.v = this.v + .003;
             this.scoreScreen.change('您已行驶 ' + this.score + ' 米');
             this.drop();
             this.checkHits();
@@ -74,11 +72,6 @@ var __extends = (this && this.__extends) || function (d, b) {
                 this.jump(col, this.role);
             }.bind(this));
         };
-        //分数面板
-        G.prototype.scoreInit = function () {
-            this.scoreScreen = new Score('--');
-            this.view.appendChild(this.scoreScreen.create());
-        };
         //跳啊
         G.prototype.jump = function (col, obj) {
             var x = this.stage.width / 3 * col - this.stage.width / 3 / 2 - this.role.w / 2;
@@ -92,6 +85,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         G.prototype.createBoll = function () {
             //创建小球
             if (this.count % 100 == 0) {
+                this.v = Math.min(this.v + .3, 5);
                 this.score++;
                 //10帧创建
                 var colPos = [1, 2, 3]; //三列中的某一列

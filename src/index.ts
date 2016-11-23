@@ -23,6 +23,7 @@ class JY {
     private currentState: STATE;
     protected interval: number = 10;
     protected context:CanvasRenderingContext2D ;
+    protected scoreScreen :Score;
     files: any;
     constructor(public view: HTMLElement, public stage: Stage, public titleStage: Title, public descriptStage: Discript, public gameOverStage?: GameOver, public controlStage?: Control) {
         console.log(this.view)
@@ -51,6 +52,11 @@ class JY {
         this.createStage();//创建舞台
         this.controlStage && this.createControl();
         this.setState(STATE.newGame);
+    }
+    //分数面板
+    scoreInit(){
+        this.scoreScreen=new Score('--');
+        this.view.appendChild(this.scoreScreen.create());
     }
     createControl() {
         this.view.appendChild(this.controlStage.create());
@@ -117,6 +123,7 @@ class JY {
     protected newGame() {
         //游戏开始，清空场景
         //打开计时器
+        this.scoreInit();
         this.setState(STATE.running);
         this.startTimer();
     }
@@ -137,6 +144,7 @@ class JY {
         //游戏结束
         //清空场景，显示结果
         console.log('gameOver');
+        this.scoreScreen.remove();
         this.stage.remove();
         this.controlStage && this.controlStage.remove();
         this.stopTimer();

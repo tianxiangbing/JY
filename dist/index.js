@@ -4,6 +4,7 @@
 /// <reference path="gameOver.ts" />
 /// <reference path="stage.ts" />
 /// <reference path="control.ts" />
+/// <reference path="score.ts" />
 //游戏主框架
 var STATE;
 (function (STATE) {
@@ -54,6 +55,11 @@ var JY = (function () {
         this.createStage(); //创建舞台
         this.controlStage && this.createControl();
         this.setState(STATE.newGame);
+    };
+    //分数面板
+    JY.prototype.scoreInit = function () {
+        this.scoreScreen = new Score('--');
+        this.view.appendChild(this.scoreScreen.create());
     };
     JY.prototype.createControl = function () {
         this.view.appendChild(this.controlStage.create());
@@ -126,6 +132,7 @@ var JY = (function () {
     JY.prototype.newGame = function () {
         //游戏开始，清空场景
         //打开计时器
+        this.scoreInit();
         this.setState(STATE.running);
         this.startTimer();
     };
@@ -146,6 +153,7 @@ var JY = (function () {
         //游戏结束
         //清空场景，显示结果
         console.log('gameOver');
+        this.scoreScreen.remove();
         this.stage.remove();
         this.controlStage && this.controlStage.remove();
         this.stopTimer();
