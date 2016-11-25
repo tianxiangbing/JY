@@ -25,9 +25,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.control();
         };
         G.prototype.running = function () {
+            _super.prototype.running.call(this);
             this.count++;
             // console.log(this.count)
-            this.context.clearRect(0, 0, this.stage.width, this.stage.height);
             this.role.draw();
             this.ballList.forEach(function (ball) {
                 ball.draw();
@@ -36,7 +36,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.scoreScreen.change('您已行驶 ' + this.score + ' 米');
             this.drop();
             this.checkHits();
-            _super.prototype.running.call(this);
         };
         G.prototype.checkHits = function () {
             var _this = this;

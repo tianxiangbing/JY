@@ -3,7 +3,9 @@
     class G extends JY {
         interval: 20;
         role:Sprite;
-        roleSize:10;
+        roleSize:number=10;
+        v:number=1;//速度 
+        av:number=0;//加速度
         newGame() {
             this.createRole();
             super.newGame();
@@ -18,7 +20,14 @@
         running() {
             console.log(this.controlStage.getAngle())
             super.running();
+            this.move()
             this.role.draw();
+        }
+        move(){
+           let angle = this.controlStage.getAngle();
+           let y:number = Math.sin(angle)*this.v;
+           let x:number = Math.cos(angle)*this.v;
+           this.role.setPosition(this.role.x+x,this.role.y+y);
         }
         gameOver() {
             super.gameOver();

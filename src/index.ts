@@ -172,6 +172,8 @@ class JY {
     //游戏中的
     running() {
         // console.log('running...')
+        
+        this.context.clearRect(0, 0, this.stage.width, this.stage.height);
     }
     //检查状态
     checkState() {

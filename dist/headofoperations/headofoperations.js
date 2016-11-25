@@ -9,6 +9,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         __extends(G, _super);
         function G() {
             _super.apply(this, arguments);
+            this.roleSize = 10;
+            this.v = 1; //速度 
+            this.av = 0; //加速度
         }
         G.prototype.newGame = function () {
             this.createRole();
@@ -24,7 +27,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         G.prototype.running = function () {
             console.log(this.controlStage.getAngle());
             _super.prototype.running.call(this);
+            this.move();
             this.role.draw();
+        };
+        G.prototype.move = function () {
+            var angle = this.controlStage.getAngle();
+            var y = Math.sin(angle) * this.v;
+            var x = Math.cos(angle) * this.v;
+            this.role.setPosition(this.role.x + x, this.role.y + y);
         };
         G.prototype.gameOver = function () {
             _super.prototype.gameOver.call(this);

@@ -19,9 +19,9 @@
             this.control();
         }
         running() {
+            super.running();
             this.count++;
             // console.log(this.count)
-            this.context.clearRect(0, 0, this.stage.width, this.stage.height);
             this.role.draw();
             this.ballList.forEach(ball => {
                 ball.draw();
@@ -30,7 +30,6 @@
             this.scoreScreen.change('您已行驶 '+ this.score+' 米');
             this.drop();
             this.checkHits();
-            super.running();
 
         }
         checkHits(){
