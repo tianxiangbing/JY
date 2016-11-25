@@ -3,7 +3,7 @@ let iwatch = require('gulp-watch');
 let ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
 gulp.task('ts',function(){
-    var tsResult = gulp.src('src/*.ts')
+    var tsResult = gulp.src(['src/*.ts','example/**/*.ts'])
         .pipe(sourcemaps.init()) // This means sourcemaps will be generated
         .pipe(ts({
             // ...
@@ -15,7 +15,7 @@ gulp.task('ts',function(){
         .pipe(gulp.dest('dist'));
 });
 gulp.task('watch',function(){
-    iwatch(['src/*.ts'],function(){
+    iwatch(['src/*.ts','example/**/*.ts'],function(){
         gulp.start('ts')
     });
 });

@@ -22,8 +22,8 @@ class JY {
     private timer: any;
     private currentState: STATE;
     protected interval: number = 10;
-    protected context:CanvasRenderingContext2D ;
-    protected scoreScreen :Score;
+    protected context: CanvasRenderingContext2D;
+    protected scoreScreen: Score;
     files: any;
     constructor(public view: HTMLElement, public stage: Stage, public titleStage: Title, public descriptStage: Discript, public gameOverStage?: GameOver, public controlStage?: Control) {
         console.log(this.view)
@@ -54,8 +54,8 @@ class JY {
         this.setState(STATE.newGame);
     }
     //分数面板
-    scoreInit(){
-        this.scoreScreen=new Score('--');
+    scoreInit() {
+        this.scoreScreen = new Score('--');
         this.view.appendChild(this.scoreScreen.create());
     }
     createControl() {
@@ -69,29 +69,33 @@ class JY {
     }
     loadFile(callback: Function) {
         let _this = this;
-        let obj:any = {};
-        for (let v in _this.files) {
-            obj[v] = {};
-            obj[v].count = 0;
-            let type = v;
-            console.log(_this.files[v])
-            for (let i = 0, l = _this.files[v].length; i < l; i++) {
-                let item = _this.files[v][i];
-                if (type == 'image') {
-                    let img = new Image();
-                    img.onload = function () {
-                        obj[v].count++;
-                        console.log(item + ' loaded');
-                        if (_this.checkLoaded(obj)) {
-                            callback.call(_this);
+        let obj: any = {};
+        if (_this.files.length > 0) {
+            for (let v in _this.files) {
+                obj[v] = {};
+                obj[v].count = 0;
+                let type = v;
+                console.log(_this.files[v])
+                for (let i = 0, l = _this.files[v].length; i < l; i++) {
+                    let item = _this.files[v][i];
+                    if (type == 'image') {
+                        let img = new Image();
+                        img.onload = function () {
+                            obj[v].count++;
+                            console.log(item + ' loaded');
+                            if (_this.checkLoaded(obj)) {
+                                callback.call(_this);
+                            }
                         }
+                        img.src = item;
                     }
-                    img.src = item;
                 }
             }
+        } else {
+            callback.call(_this);
         }
     }
-    checkLoaded(obj:any) {
+    checkLoaded(obj: any) {
         for (var v in obj) {
             if (obj[v].count != this.files[v].length) {
                 return false;

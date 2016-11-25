@@ -2,7 +2,6 @@
 //操作界面
 class Control implements IScreen {
     elem: HTMLElement;
-
     rect: Array<number> = [160, 160];
     moveElem: HTMLElement;
     moveRect: Array<Number> = [50, 50];
@@ -10,6 +9,8 @@ class Control implements IScreen {
     elemCenter: Array<any>;
     elemPosition: Array<Number> = [10, 10];
     position: Array<any>;
+    toPosition:Array<number>;
+    private angle:number=0;//角度
 
     create() {
         this.elem = document.createElement('div');
@@ -33,15 +34,17 @@ class Control implements IScreen {
     }
     resetPos() {
         //重置位置
-        console.log(this.moveCenter)
-        this.transPosition([0, 0]);
+        // console.log(this.moveCenter)
+        this.toPosition = [0, 0];
+        this.transPosition();
     }
     //传入圆心转换成坐标,
-    transPosition(center: Array<number>) {
-        let x = (this.elemCenter[0] - this.moveCenter[0]) + center[0];
-        let y = (this.elemCenter[1] - this.moveCenter[1]) - center[1];
+    transPosition() {
+        let x = (this.elemCenter[0] - this.moveCenter[0]) + this.toPosition[0];
+        let y = (this.elemCenter[1] - this.moveCenter[1]) - this.toPosition[1];
         this.moveElem.style.left = x + 'px';
         this.moveElem.style.top = y + 'px';
+
     }
     bindEvent() {
         this.elem.addEventListener('touchstart', function (event:TouchEvent) {
@@ -67,6 +70,7 @@ class Control implements IScreen {
         let y1 = -(y - this.elemCenter[1]);
         console.log(x1, y1)
         let ang = Math.atan2(y1, x1);
+        // this.angle = ang;
         // console.log('角度：'+ang)
         let c = Math.sqrt(x1 * x1 + y1 * y1);
         let r = this.elemCenter[0] - this.moveCenter[0];//最长半径
@@ -82,9 +86,14 @@ class Control implements IScreen {
             x1 = x2;
             y1 = y2;
         }
-        let toPos = [x1, y1];
-        this.transPosition(toPos)
+        this.toPosition = [x1, y1];
+        this.transPosition()
     }
+    getAngle(){
+        this.angle = Math.atan2.apply(null,this.toPosition);
+        return this.angle;
+    }
+    //获取到角度
     remove() {
         this.elem.parentNode.removeChild(this.elem);
     }

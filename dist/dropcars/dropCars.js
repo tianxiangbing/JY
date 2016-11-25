@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="index.ts" />
+/// <reference path="../../src/index.ts" />
 (function () {
     var G = (function (_super) {
         __extends(G, _super);

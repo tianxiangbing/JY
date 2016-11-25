@@ -73,31 +73,36 @@ var JY = (function () {
     JY.prototype.loadFile = function (callback) {
         var _this = this;
         var obj = {};
-        var _loop_1 = function(v) {
-            obj[v] = {};
-            obj[v].count = 0;
-            var type = v;
-            console.log(_this.files[v]);
-            var _loop_2 = function(i, l) {
-                var item = _this.files[v][i];
-                if (type == 'image') {
-                    var img = new Image();
-                    img.onload = function () {
-                        obj[v].count++;
-                        console.log(item + ' loaded');
-                        if (_this.checkLoaded(obj)) {
-                            callback.call(_this);
-                        }
-                    };
-                    img.src = item;
+        if (_this.files.length > 0) {
+            var _loop_1 = function(v) {
+                obj[v] = {};
+                obj[v].count = 0;
+                var type = v;
+                console.log(_this.files[v]);
+                var _loop_2 = function(i, l) {
+                    var item = _this.files[v][i];
+                    if (type == 'image') {
+                        var img = new Image();
+                        img.onload = function () {
+                            obj[v].count++;
+                            console.log(item + ' loaded');
+                            if (_this.checkLoaded(obj)) {
+                                callback.call(_this);
+                            }
+                        };
+                        img.src = item;
+                    }
+                };
+                for (var i = 0, l = _this.files[v].length; i < l; i++) {
+                    _loop_2(i, l);
                 }
             };
-            for (var i = 0, l = _this.files[v].length; i < l; i++) {
-                _loop_2(i, l);
+            for (var v in _this.files) {
+                _loop_1(v);
             }
-        };
-        for (var v in _this.files) {
-            _loop_1(v);
+        }
+        else {
+            callback.call(_this);
         }
     };
     JY.prototype.checkLoaded = function (obj) {

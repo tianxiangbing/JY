@@ -1,4 +1,4 @@
-/// <reference path="index.ts" />
+/// <reference path="../../src/index.ts" />
 (function () {
     class G extends JY {
         interval: 20;
