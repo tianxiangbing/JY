@@ -84,7 +84,8 @@ var Control = (function () {
         this.transPosition();
     };
     Control.prototype.getAngle = function () {
-        this.angle = Math.atan2.apply(null, this.toPosition);
+        // console.log(this.toPosition)
+        this.angle = Math.atan2(this.toPosition[1], this.toPosition[0]);
         return this.angle;
     };
     //获取到角度

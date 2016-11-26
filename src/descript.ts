@@ -13,7 +13,10 @@ class Discript  implements  IScreen{
         let btn = document.createElement('button');
         btn.className = 'button start';
         btn.innerText = this.btntitle;
-        btn.onclick = callback.bind(this);
+        // btn.onclick = callback.bind(this);
+        btn.addEventListener('touchstart', function (event:TouchEvent) {
+            callback.call(this)
+        }.bind(this),false);
         this.elem.appendChild(btn)
         return this.elem;
     }

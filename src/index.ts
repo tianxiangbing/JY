@@ -230,8 +230,10 @@ class JY {
             return (bx && by);
         } else if (oA.shape == SHAPE.circle) {
             var r2 = oA.r + oB.r;
-            bx = Math.abs(oA.x - oB.x) < r2;
-            by = Math.abs(oA.y - oB.y) < r2;
+            let oAc = oA.getCenter();
+            let oBc = oB.getCenter();
+            bx = Math.abs(oAc[0] - oBc[0]) < r2;
+            by = Math.abs(oAc[1] - oBc[1]) < r2;
             return (bx && by);
         }
     }

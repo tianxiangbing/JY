@@ -40,8 +40,13 @@ var Sprite = (function () {
         // this.img.src = url;
     };
     Sprite.prototype.setSize = function (w, h) {
-        this.w = w;
-        this.h = h;
+        this.w = w || this.w;
+        this.h = h || this.h;
+        this.r = this.r || this.h / 2;
+    };
+    Sprite.prototype.getCenter = function () {
+        //圆心位置
+        return [this.x + this.r, this.y + this.r];
     };
     Sprite.prototype.setCutSize = function (sw, sh) {
         this.sw = sw;
@@ -100,7 +105,10 @@ var Discript = (function () {
         var btn = document.createElement('button');
         btn.className = 'button start';
         btn.innerText = this.btntitle;
-        btn.onclick = callback.bind(this);
+        // btn.onclick = callback.bind(this);
+        btn.addEventListener('touchstart', function (event) {
+            callback.call(this);
+        }.bind(this), false);
         this.elem.appendChild(btn);
         return this.elem;
     };
@@ -125,7 +133,10 @@ var GameOver = (function () {
         var btn = document.createElement('button');
         btn.className = "button";
         btn.innerText = this.btntitle;
-        btn.onclick = callback.bind(this);
+        btn.addEventListener('touchstart', function (event) {
+            callback.call(this);
+        }.bind(this), false);
+        // btn.onclick = callback.bind(this);
         this.elem.appendChild(btn);
         return this.elem;
     };
@@ -174,6 +185,7 @@ var Control = (function () {
         this.rect = [160, 160];
         this.moveRect = [50, 50];
         this.elemPosition = [10, 10];
+        this.angle = 0; //角度
     }
     Control.prototype.create = function () {
         this.elem = document.createElement('div');
@@ -197,13 +209,14 @@ var Control = (function () {
     };
     Control.prototype.resetPos = function () {
         //重置位置
-        console.log(this.moveCenter);
-        this.transPosition([0, 0]);
+        // console.log(this.moveCenter)
+        this.toPosition = [0, 0];
+        this.transPosition();
     };
     //传入圆心转换成坐标,
-    Control.prototype.transPosition = function (center) {
-        var x = (this.elemCenter[0] - this.moveCenter[0]) + center[0];
-        var y = (this.elemCenter[1] - this.moveCenter[1]) - center[1];
+    Control.prototype.transPosition = function () {
+        var x = (this.elemCenter[0] - this.moveCenter[0]) + this.toPosition[0];
+        var y = (this.elemCenter[1] - this.moveCenter[1]) - this.toPosition[1];
         this.moveElem.style.left = x + 'px';
         this.moveElem.style.top = y + 'px';
     };
@@ -231,6 +244,7 @@ var Control = (function () {
         var y1 = -(y - this.elemCenter[1]);
         console.log(x1, y1);
         var ang = Math.atan2(y1, x1);
+        // this.angle = ang;
         // console.log('角度：'+ang)
         var c = Math.sqrt(x1 * x1 + y1 * y1);
         var r = this.elemCenter[0] - this.moveCenter[0]; //最长半径
@@ -246,9 +260,15 @@ var Control = (function () {
             x1 = x2;
             y1 = y2;
         }
-        var toPos = [x1, y1];
-        this.transPosition(toPos);
+        this.toPosition = [x1, y1];
+        this.transPosition();
     };
+    Control.prototype.getAngle = function () {
+        // console.log(this.toPosition)
+        this.angle = Math.atan2(this.toPosition[1], this.toPosition[0]);
+        return this.angle;
+    };
+    //获取到角度
     Control.prototype.remove = function () {
         this.elem.parentNode.removeChild(this.elem);
     };
@@ -354,31 +374,36 @@ var JY = (function () {
     JY.prototype.loadFile = function (callback) {
         var _this = this;
         var obj = {};
-        var _loop_1 = function(v) {
-            obj[v] = {};
-            obj[v].count = 0;
-            var type = v;
-            console.log(_this.files[v]);
-            var _loop_2 = function(i, l) {
-                var item = _this.files[v][i];
-                if (type == 'image') {
-                    var img = new Image();
-                    img.onload = function () {
-                        obj[v].count++;
-                        console.log(item + ' loaded');
-                        if (_this.checkLoaded(obj)) {
-                            callback.call(_this);
-                        }
-                    };
-                    img.src = item;
+        if (_this.files.length > 0) {
+            var _loop_1 = function(v) {
+                obj[v] = {};
+                obj[v].count = 0;
+                var type = v;
+                console.log(_this.files[v]);
+                var _loop_2 = function(i, l) {
+                    var item = _this.files[v][i];
+                    if (type == 'image') {
+                        var img = new Image();
+                        img.onload = function () {
+                            obj[v].count++;
+                            console.log(item + ' loaded');
+                            if (_this.checkLoaded(obj)) {
+                                callback.call(_this);
+                            }
+                        };
+                        img.src = item;
+                    }
+                };
+                for (var i = 0, l = _this.files[v].length; i < l; i++) {
+                    _loop_2(i, l);
                 }
             };
-            for (var i = 0, l = _this.files[v].length; i < l; i++) {
-                _loop_2(i, l);
+            for (var v in _this.files) {
+                _loop_1(v);
             }
-        };
-        for (var v in _this.files) {
-            _loop_1(v);
+        }
+        else {
+            callback.call(_this);
         }
     };
     JY.prototype.checkLoaded = function (obj) {
@@ -458,6 +483,7 @@ var JY = (function () {
     //游戏中的
     JY.prototype.running = function () {
         // console.log('running...')
+        this.context.clearRect(0, 0, this.stage.width, this.stage.height);
     };
     //检查状态
     JY.prototype.checkState = function () {
@@ -520,8 +546,10 @@ var JY = (function () {
         }
         else if (oA.shape == SHAPE.circle) {
             var r2 = oA.r + oB.r;
-            bx = Math.abs(oA.x - oB.x) < r2;
-            by = Math.abs(oA.y - oB.y) < r2;
+            var oAc = oA.getCenter();
+            var oBc = oB.getCenter();
+            bx = Math.abs(oAc[0] - oBc[0]) < r2;
+            by = Math.abs(oAc[1] - oBc[1]) < r2;
             return (bx && by);
         }
     };

@@ -14,7 +14,10 @@ var GameOver = (function () {
         var btn = document.createElement('button');
         btn.className = "button";
         btn.innerText = this.btntitle;
-        btn.onclick = callback.bind(this);
+        btn.addEventListener('touchstart', function (event) {
+            callback.call(this);
+        }.bind(this), false);
+        // btn.onclick = callback.bind(this);
         this.elem.appendChild(btn);
         return this.elem;
     };

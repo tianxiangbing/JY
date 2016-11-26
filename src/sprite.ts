@@ -42,9 +42,14 @@ class Sprite {
         // this.img = document.createElement('img');
         // this.img.src = url;
     }
-    setSize(w:number, h:number) {
-        this.w = w;
-        this.h = h;
+    setSize(w?:number, h?:number) {
+        this.w = w||this.w;
+        this.h = h||this.h;
+        this.r = this.h/2;
+    }
+    getCenter(){
+        //圆心位置
+        return [this.x +this.r,this.y +this.r];
     }
     setCutSize(sw:number, sh:number) {
         this.sw = sw;

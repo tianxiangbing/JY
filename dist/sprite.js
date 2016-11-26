@@ -40,8 +40,13 @@ var Sprite = (function () {
         // this.img.src = url;
     };
     Sprite.prototype.setSize = function (w, h) {
-        this.w = w;
-        this.h = h;
+        this.w = w || this.w;
+        this.h = h || this.h;
+        this.r = this.h / 2;
+    };
+    Sprite.prototype.getCenter = function () {
+        //圆心位置
+        return [this.x + this.r, this.y + this.r];
     };
     Sprite.prototype.setCutSize = function (sw, sh) {
         this.sw = sw;
