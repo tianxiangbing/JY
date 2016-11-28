@@ -38,10 +38,10 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.role.r = this.role.h / 2;
         };
         G.prototype.running = function () {
-            console.log(this.controlStage.getAngle());
+            // console.log(this.controlStage.getAngle())
             _super.prototype.running.call(this);
             this.move();
-            this.role.draw();
+            this.role.draw(this.angle);
             this.createBallList(); //创建小点点
             this.drawBallList();
             //吃小点
@@ -73,7 +73,6 @@ var __extends = (this && this.__extends) || function (d, b) {
                     zd.setPosition(this.stage.width - keyx, this.stage.height - keyy);
                 }
                 zd.shape = SHAPE.circle;
-                console.log(zd.x, zd.y);
             }
         };
         G.prototype.checkHits = function () {
@@ -112,10 +111,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         G.prototype.move = function () {
             var angle = this.controlStage.getAngle();
+            this.angle = -angle;
             if (angle != 0) {
                 this.vx = Math.cos(angle) * this.v;
                 this.vy = Math.sin(angle) * this.v;
             }
+            // console.log(this.angle)
+            // return;
             this.role.x = this.vx + this.role.x;
             this.role.y = this.role.y - this.vy;
             this.role.x = Math.max(0, this.role.x);

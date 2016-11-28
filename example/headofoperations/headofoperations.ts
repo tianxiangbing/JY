@@ -11,6 +11,7 @@
         ballList :Array<Sprite>=[];
         score:number = 0;
         zdList:Array<Sprite>=[];
+        angle:number;
         newGame() {
             this.init();
             this.createRole();
@@ -31,10 +32,10 @@
             this.role.r=this.role.h/2;
         }
         running() {
-            console.log(this.controlStage.getAngle())
+            // console.log(this.controlStage.getAngle())
             super.running();
             this.move()
-            this.role.draw();
+            this.role.draw(this.angle);
             this.createBallList();//创建小点点
             this.drawBallList();
             //吃小点
@@ -66,7 +67,7 @@
                     zd.setPosition(this.stage.width-keyx,this.stage.height -keyy);
                 }
                 zd.shape = SHAPE.circle;
-                console.log(zd.x,zd.y)
+                // console.log(zd.x,zd.y)
             }
         }
         checkHits(){
@@ -104,10 +105,13 @@
         }
         move() {
             let angle = this.controlStage.getAngle();
+            this.angle = -angle;
             if (angle != 0) {
                 this.vx = Math.cos(angle) * this.v;
                 this.vy = Math.sin(angle) * this.v;
             }
+            // console.log(this.angle)
+            // return;
             this.role.x = this.vx +this.role.x;
             this.role.y = this.role.y-this.vy;
             this.role.x = Math.max(0,this.role.x);

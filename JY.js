@@ -42,7 +42,7 @@ var Sprite = (function () {
     Sprite.prototype.setSize = function (w, h) {
         this.w = w || this.w;
         this.h = h || this.h;
-        this.r = this.r || this.h / 2;
+        this.r = this.h / 2;
     };
     Sprite.prototype.getCenter = function () {
         //圆心位置

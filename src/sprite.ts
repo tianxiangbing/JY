@@ -59,8 +59,13 @@ class Sprite {
         this.x = x;
         this.y = y;
     }
-    draw() {
+    draw(angle?:number) {
         this.context.save();
+        if(angle){
+            this.context.translate(this.x+this.r ,this.y+this.r)
+            this.context.rotate(angle);
+            this.context.translate(-(this.x+this.r) ,-(this.y+this.r));
+        } 
         if (this.sw && this.sh) {
             this.context.drawImage(this.img, this.sx, this.sy, this.sw, this.sh, this.x, this.y, this.w, this.h);
         } else {
