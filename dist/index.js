@@ -5,6 +5,7 @@
 /// <reference path="stage.ts" />
 /// <reference path="control.ts" />
 /// <reference path="score.ts" />
+/// <reference path="writeText.ts" />
 //游戏主框架
 var STATE;
 (function (STATE) {

@@ -5,6 +5,40 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 /// <reference path="../../src/index.ts" />
 (function () {
+    var Ball = (function (_super) {
+        __extends(Ball, _super);
+        function Ball(context, w, h, name) {
+            _super.call(this, context, 'head.png');
+            this.name = "游客" + (new Date().getTime()).toString().substr(-5);
+            this.setSize(w, h);
+            this.shape = SHAPE.circle;
+            this.name = name || this.name;
+        }
+        Ball.prototype.draw = function (angle) {
+            _super.prototype.draw.call(this, angle);
+            var text = new WriteText(this.context);
+            text.write(this.name, this.x, this.y + this.r);
+        };
+        Ball.prototype.drop = function (v) {
+            this.setPosition(this.x, this.y + v);
+        };
+        Ball.prototype.eat = function () {
+            var _this = this;
+            this.setImg('eat.png');
+            setTimeout(function () { return _this.setImg('head.png'); }, 300);
+        };
+        return Ball;
+    }(Sprite));
+    //机器人
+    var Robot = (function (_super) {
+        __extends(Robot, _super);
+        function Robot() {
+            _super.apply(this, arguments);
+        }
+        Robot.prototype.move = function () {
+        };
+        return Robot;
+    }(Ball));
     var G = (function (_super) {
         __extends(G, _super);
         function G() {
@@ -30,9 +64,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.zdList = [];
         };
         G.prototype.createRole = function () {
-            this.role = new Sprite(this.context, 'head.png');
-            this.role.shape = SHAPE.circle;
-            this.role.setSize(this.roleSize, this.roleSize);
+            // this.role = new Sprite(this.context, 'head.png');
+            this.role = new Ball(this.context, this.roleSize, this.roleSize);
             this.role.x = this.stage.width / 2;
             this.role.y = this.stage.height / 2;
             this.role.r = this.role.h / 2;
@@ -85,6 +118,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     _this.role.setSize();
                     // delete this.ballList[i];
                     _this.ballList.splice(i, 1);
+                    _this.role.eat();
                 }
             });
             this.zdList.forEach(function (ball) {
