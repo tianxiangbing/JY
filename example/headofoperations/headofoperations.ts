@@ -23,7 +23,7 @@
     }
     //机器人
     class Robot extends Ball{
-        move(){
+        move(stage:Stage){
 
         }
     }

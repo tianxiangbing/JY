@@ -35,7 +35,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         function Robot() {
             _super.apply(this, arguments);
         }
-        Robot.prototype.move = function () {
+        Robot.prototype.move = function (stage) {
         };
         return Robot;
     }(Ball));

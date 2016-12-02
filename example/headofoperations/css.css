@@ -24,6 +24,7 @@ body {
 }
 #view canvas{
     background-size: 100% 100%;
+    background: #3B3B3B;
 }
 
 .control {
