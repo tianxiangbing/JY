@@ -1,3 +1,5 @@
+**JY2正在开发中，全新的移动端h5游戏框架，敬请期待**
+
 #欢迎来到JY的世界
 JY是一个新的JavaScript库。 JY是一个快速和简洁的JavaScript库，它简化了HTML文档遍历，事件处理，动画，和快速Web开发的Ajax的设计，用来改变你编写JavaScript的方式。帮助你提升编写面向对象的javascript能力。
 
@@ -15,7 +17,7 @@ JY的想法起源于，现在大多数JS库已经相当成熟，但总有这样�
 JY会更小，因为它会去除一些不常用的不合理方法，它会更注重代码的运行效率，批量使用的优化，动画的执行速度等。现在压缩后的JS为16KB.(不包括GZIP)
 
 #API或Demo?
-JY的demo网址是http://www.lovewebgames.com/，并有一些其他方面的学习文章。
+JY的demo网址是[http://www.lovewebgames.com/](http://www.lovewebgames.com/ "http://www.lovewebgames.com/")，并有一些其他方面的学习文章。
 
 #JYG游戏框架
 JYG游戏框架，是基于JY的一款JS游戏引擎，采用最常见的状态检测模式，是为您节省大量判断状态的时间，专心写游戏内核的利器。
