@@ -56,8 +56,13 @@ var Sprite = (function () {
         this.x = x;
         this.y = y;
     };
-    Sprite.prototype.draw = function () {
+    Sprite.prototype.draw = function (angle) {
         this.context.save();
+        if (angle) {
+            this.context.translate(this.x + this.r, this.y + this.r);
+            this.context.rotate(angle);
+            this.context.translate(-(this.x + this.r), -(this.y + this.r));
+        }
         if (this.sw && this.sh) {
             this.context.drawImage(this.img, this.sx, this.sy, this.sw, this.sh, this.x, this.y, this.w, this.h);
         }
@@ -299,6 +304,21 @@ var Score = (function () {
     };
     return Score;
 }());
+var WriteText = (function () {
+    function WriteText(context) {
+        this.x = 0; //x坐标
+        this.y = 0; //y坐标
+        this.context = context;
+    }
+    WriteText.prototype.write = function (text, x, y, style) {
+        if (style === void 0) { style = ''; }
+        this.x = x;
+        this.y = y;
+        this.context.font = style;
+        this.context.fillText(text, this.x, this.y);
+    };
+    return WriteText;
+}());
 /// <reference path="sprite.ts" />
 /// <reference path="title.ts" />
 /// <reference path="descript.ts" />
@@ -306,6 +326,7 @@ var Score = (function () {
 /// <reference path="stage.ts" />
 /// <reference path="control.ts" />
 /// <reference path="score.ts" />
+/// <reference path="writeText.ts" />
 //游戏主框架
 var STATE;
 (function (STATE) {

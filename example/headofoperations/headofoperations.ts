@@ -1,4 +1,5 @@
 /// <reference path="../../src/index.ts" />
+/// <reference path="names.ts" />
 (function () {
     class Ball extends Sprite {
         name:string="游客"+ (new Date().getTime()).toString().substr(-5);
@@ -33,7 +34,9 @@
             this.score= 20+ Math.floor(Math.random()*30);
             this.w = this.score;
             this.h = this.score;
-            this.name='张三';
+            let index= Math.floor( Math.random() * names.length - 1);;
+            this.name= names[index];
+            names.splice(index,1);
             this.trans();
         }
         //随机更换方向
@@ -90,9 +93,10 @@
         init() {
             this.ballList = [];
             this.zdList = [];
+            this.robotList= [];
         }
         createRobot(){
-            for(let i =this.robotList.length;i<15;i++){
+            for(let i =this.robotList.length;i<5;i++){
                 let robot= new Robot(this.context);
                 robot.x= Math.random()* this.stage.width;
                 robot.y = Math.random()*this.stage.height;
@@ -251,17 +255,20 @@
             super.loading();
         }
     }
-    let view = document.getElementById('view');
-    let w = view.offsetWidth;
-    let h = view.offsetHeight;
-    let stage = new Stage(w, h);
-    let descript = new Discript('start');
-    descript.text = '<p class="title">大头吃小头</p>'
-    let gameOver = new GameOver('restart');
-    let title = new Title('大头吃小头');
-    let control = new Control();
-    control.rect = [100, 100]
-    let game = new G(view, stage, title, descript, gameOver, control);
-    game.files = { image: ['head.png', 'zd.png'] };
-    game.setup();
+    
+    setTimeout(function(){
+        let view = document.getElementById('view');
+        let w = view.offsetWidth;
+        let h = view.offsetHeight;
+        let stage = new Stage(w, h);
+        let descript = new Discript('start');
+        descript.text = '<p class="title">大头吃小头</p>'
+        let gameOver = new GameOver('restart');
+        let title = new Title('大头吃小头');
+        let control = new Control();
+        control.rect = [100, 100]
+        let game = new G(view, stage, title, descript, gameOver, control);
+        game.files = { image: ['head.png', 'zd.png'] };
+        game.setup();
+    },1000)
 })();

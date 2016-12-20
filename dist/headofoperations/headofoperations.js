@@ -4,6 +4,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 /// <reference path="../../src/index.ts" />
+/// <reference path="names.ts" />
 (function () {
     var Ball = (function (_super) {
         __extends(Ball, _super);
@@ -43,7 +44,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.score = 20 + Math.floor(Math.random() * 30);
             this.w = this.score;
             this.h = this.score;
-            this.name = '张三';
+            var index = Math.random() * names.length - 1;
+            this.name = names[index];
+            names.splice(index, 1);
             this.trans();
         }
         //随机更换方向
@@ -102,9 +105,10 @@ var __extends = (this && this.__extends) || function (d, b) {
         G.prototype.init = function () {
             this.ballList = [];
             this.zdList = [];
+            this.robotList = [];
         };
         G.prototype.createRobot = function () {
-            for (var i = this.robotList.length; i < 15; i++) {
+            for (var i = this.robotList.length; i < 5; i++) {
                 var robot = new Robot(this.context);
                 robot.x = Math.random() * this.stage.width;
                 robot.y = Math.random() * this.stage.height;
@@ -267,19 +271,21 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return G;
     }(JY));
-    var view = document.getElementById('view');
-    var w = view.offsetWidth;
-    var h = view.offsetHeight;
-    var stage = new Stage(w, h);
-    var descript = new Discript('start');
-    descript.text = '<p class="title">大头吃小头</p>';
-    var gameOver = new GameOver('restart');
-    var title = new Title('大头吃小头');
-    var control = new Control();
-    control.rect = [100, 100];
-    var game = new G(view, stage, title, descript, gameOver, control);
-    game.files = { image: ['head.png', 'zd.png'] };
-    game.setup();
+    setTimeout(function () {
+        var view = document.getElementById('view');
+        var w = view.offsetWidth;
+        var h = view.offsetHeight;
+        var stage = new Stage(w, h);
+        var descript = new Discript('start');
+        descript.text = '<p class="title">大头吃小头</p>';
+        var gameOver = new GameOver('restart');
+        var title = new Title('大头吃小头');
+        var control = new Control();
+        control.rect = [100, 100];
+        var game = new G(view, stage, title, descript, gameOver, control);
+        game.files = { image: ['head.png', 'zd.png'] };
+        game.setup();
+    }, 1000);
 })();
 
 //# sourceMappingURL=headofoperations.js.map
