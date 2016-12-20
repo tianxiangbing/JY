@@ -23,8 +23,47 @@
     }
     //机器人
     class Robot extends Ball{
+        score:number = 0;
+        angle:number=0;
+        v:number = .5;
+        vx:number=this.v;
+        vy:number=this.v;
+        constructor(public context:any){
+            super(context,10,10);
+            this.score= 20+ Math.floor(Math.random()*30);
+            this.w = this.score;
+            this.h = this.score;
+            this.name='张三';
+            this.trans();
+        }
+        //随机更换方向
+        trans(){
+            this.angle = Math.atan2(-1+Math.random()*2,-1+Math.random()*2);
+            return this.angle;
+        }
         move(stage:Stage){
-
+            let angle = 0;
+            if(Math.random()*1000<3){
+               this.trans();
+            }
+            angle= - this.angle;
+            if (angle != 0) {
+                this.vx = Math.cos(angle) * this.v;
+                this.vy = Math.sin(angle) * this.v;
+            }
+            this.x = this.vx + this.x;
+            this.y = this.y - this.vy;
+            this.x = Math.max(0, this.x);
+            this.x = Math.min(this.x, stage.width - this.w);
+            this.y = Math.max(0, this.y);
+            this.y = Math.min(this.y, stage.height - this.h);
+            if(this.x ==0 || this.y ==0 || this.x==stage.width -this.w ||this.y ==stage.height-this.h){
+                // console.log(this.x,this.y)
+                this.trans();
+            }
+        }
+        draw(){
+            super.draw(this.angle);
         }
     }
     class G extends JY {
@@ -36,19 +75,30 @@
         vx: number = this.v;
         vy: number = this.v;
         ballList: Array<Sprite> = [];
-        score: number = 0;
+        score: number = 20;
         zdList: Array<Sprite> = [];
         angle: number;
+        robotList:Array<Robot>=[];
         newGame() {
             this.init();
             this.createRole();
             //创建5个炸弹
-            this.createZd()
+            // this.createZd();
+            this.createRobot();
             super.newGame();
         }
         init() {
             this.ballList = [];
             this.zdList = [];
+        }
+        createRobot(){
+            for(let i =this.robotList.length;i<15;i++){
+                let robot= new Robot(this.context);
+                robot.x= Math.random()* this.stage.width;
+                robot.y = Math.random()*this.stage.height;
+                robot.r= robot.h/2;
+                this.robotList.push(robot);
+            }
         }
         createRole() {
             // this.role = new Sprite(this.context, 'head.png');
@@ -67,11 +117,20 @@
             //吃小点
             this.checkHits();
             this.drawZdList();
+            //robot
+            this.drawRobot();
+            this.createRobot();
         }
         drawZdList() {
             this.zdList.forEach(item => {
                 item.draw()
             });
+        }
+        drawRobot(){
+            this.robotList.forEach(item=>{
+                item.move(this.stage)
+                item.draw();
+            })
         }
         createZd() {
             for (let i = 0; i < 4; i++) {
@@ -107,12 +166,49 @@
                     this.ballList.splice(i, 1);
                     this.role.eat();
                 }
+                this.robotList.forEach((item,j)=>{
+                    if (this.hits(item, ball)) {
+                        item.score++;
+                        item.w += 1;
+                        item.h += 1;
+                        item.setSize()
+                        // delete this.ballList[i];
+                        this.ballList.splice(i, 1);
+                        item.eat();
+                    }
+                    if( this.hits (item,this.role)){
+                        if( item.score > this.score){
+                            this.over();
+                        }else  if( item.score < this.score){
+                            this.score += item.score;
+                            this.robotList.splice(j, 1);
+                        }
+                    }
+                });
+            });
+            this.robotList.forEach((item,i)=>{
+                this.robotList.forEach((obj,j)=>{
+                    if(i != j && this.hits(item,obj)&& item.score != obj.score){
+                        if(item.score>obj.score){
+                            item.score+=obj.score;
+                            this.robotList.splice(j, 1);
+                        }else{
+                            obj.score+=item.score;
+                            this.robotList.splice(i, 1);
+                        }
+                    }
+                });
             });
             this.zdList.forEach((ball) => {
                 if (this.hits(this.role, ball)) {
                     this.over();
                 }
-            })
+                this.robotList.forEach( (item,i)=>{
+                    if (this.hits(item, ball)) {
+                        this.robotList.splice(i, 1);
+                    }
+                });
+            });
         }
         drawBallList() {
             this.ballList.forEach(item => {
@@ -160,9 +256,9 @@
     let h = view.offsetHeight;
     let stage = new Stage(w, h);
     let descript = new Discript('start');
-    descript.text = '<p class="title">头头大作战</p>'
+    descript.text = '<p class="title">大头吃小头</p>'
     let gameOver = new GameOver('restart');
-    let title = new Title('头头大作战');
+    let title = new Title('大头吃小头');
     let control = new Control();
     control.rect = [100, 100]
     let game = new G(view, stage, title, descript, gameOver, control);

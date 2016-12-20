@@ -32,10 +32,48 @@ var __extends = (this && this.__extends) || function (d, b) {
     //机器人
     var Robot = (function (_super) {
         __extends(Robot, _super);
-        function Robot() {
-            _super.apply(this, arguments);
+        function Robot(context) {
+            _super.call(this, context, 10, 10);
+            this.context = context;
+            this.score = 0;
+            this.angle = 0;
+            this.v = .5;
+            this.vx = this.v;
+            this.vy = this.v;
+            this.score = 20 + Math.floor(Math.random() * 30);
+            this.w = this.score;
+            this.h = this.score;
+            this.name = '张三';
+            this.trans();
         }
+        //随机更换方向
+        Robot.prototype.trans = function () {
+            this.angle = Math.atan2(-1 + Math.random() * 2, -1 + Math.random() * 2);
+            return this.angle;
+        };
         Robot.prototype.move = function (stage) {
+            var angle = 0;
+            if (Math.random() * 1000 < 3) {
+                this.trans();
+            }
+            angle = -this.angle;
+            if (angle != 0) {
+                this.vx = Math.cos(angle) * this.v;
+                this.vy = Math.sin(angle) * this.v;
+            }
+            this.x = this.vx + this.x;
+            this.y = this.y - this.vy;
+            this.x = Math.max(0, this.x);
+            this.x = Math.min(this.x, stage.width - this.w);
+            this.y = Math.max(0, this.y);
+            this.y = Math.min(this.y, stage.height - this.h);
+            if (this.x == 0 || this.y == 0 || this.x == stage.width - this.w || this.y == stage.height - this.h) {
+                // console.log(this.x,this.y)
+                this.trans();
+            }
+        };
+        Robot.prototype.draw = function () {
+            _super.prototype.draw.call(this, this.angle);
         };
         return Robot;
     }(Ball));
@@ -49,19 +87,30 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.vx = this.v;
             this.vy = this.v;
             this.ballList = [];
-            this.score = 0;
+            this.score = 20;
             this.zdList = [];
+            this.robotList = [];
         }
         G.prototype.newGame = function () {
             this.init();
             this.createRole();
             //创建5个炸弹
-            this.createZd();
+            // this.createZd();
+            this.createRobot();
             _super.prototype.newGame.call(this);
         };
         G.prototype.init = function () {
             this.ballList = [];
             this.zdList = [];
+        };
+        G.prototype.createRobot = function () {
+            for (var i = this.robotList.length; i < 15; i++) {
+                var robot = new Robot(this.context);
+                robot.x = Math.random() * this.stage.width;
+                robot.y = Math.random() * this.stage.height;
+                robot.r = robot.h / 2;
+                this.robotList.push(robot);
+            }
         };
         G.prototype.createRole = function () {
             // this.role = new Sprite(this.context, 'head.png');
@@ -80,9 +129,19 @@ var __extends = (this && this.__extends) || function (d, b) {
             //吃小点
             this.checkHits();
             this.drawZdList();
+            //robot
+            this.drawRobot();
+            this.createRobot();
         };
         G.prototype.drawZdList = function () {
             this.zdList.forEach(function (item) {
+                item.draw();
+            });
+        };
+        G.prototype.drawRobot = function () {
+            var _this = this;
+            this.robotList.forEach(function (item) {
+                item.move(_this.stage);
                 item.draw();
             });
         };
@@ -120,11 +179,50 @@ var __extends = (this && this.__extends) || function (d, b) {
                     _this.ballList.splice(i, 1);
                     _this.role.eat();
                 }
+                _this.robotList.forEach(function (item, j) {
+                    if (_this.hits(item, ball)) {
+                        item.score++;
+                        item.w += 1;
+                        item.h += 1;
+                        item.setSize();
+                        // delete this.ballList[i];
+                        _this.ballList.splice(i, 1);
+                        item.eat();
+                    }
+                    if (_this.hits(item, _this.role)) {
+                        if (item.score > _this.score) {
+                            _this.over();
+                        }
+                        else if (item.score < _this.score) {
+                            _this.score += item.score;
+                            _this.robotList.splice(j, 1);
+                        }
+                    }
+                });
+            });
+            this.robotList.forEach(function (item, i) {
+                _this.robotList.forEach(function (obj, j) {
+                    if (i != j && _this.hits(item, obj) && item.score != obj.score) {
+                        if (item.score > obj.score) {
+                            item.score += obj.score;
+                            _this.robotList.splice(j, 1);
+                        }
+                        else {
+                            obj.score += item.score;
+                            _this.robotList.splice(i, 1);
+                        }
+                    }
+                });
             });
             this.zdList.forEach(function (ball) {
                 if (_this.hits(_this.role, ball)) {
                     _this.over();
                 }
+                _this.robotList.forEach(function (item, i) {
+                    if (_this.hits(item, ball)) {
+                        _this.robotList.splice(i, 1);
+                    }
+                });
             });
         };
         G.prototype.drawBallList = function () {
@@ -174,9 +272,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     var h = view.offsetHeight;
     var stage = new Stage(w, h);
     var descript = new Discript('start');
-    descript.text = '<p class="title">头头大作战</p>';
+    descript.text = '<p class="title">大头吃小头</p>';
     var gameOver = new GameOver('restart');
-    var title = new Title('头头大作战');
+    var title = new Title('大头吃小头');
     var control = new Control();
     control.rect = [100, 100];
     var game = new G(view, stage, title, descript, gameOver, control);
