@@ -4,8 +4,8 @@
     class Ball extends Sprite {
         name: string = "游客" + (new Date().getTime()).toString().substr(-5);
         url: string;
-        score:number=0;
-        constructor(context: any, w: number, h: number, name?: string, url: string = 'head-a.png',score:number=10) {
+        score: number = 0;
+        constructor(context: any, w: number, h: number, name?: string, url: string = 'head-a.png', score: number = 10) {
             super(context, url);
             this.score = score;
             this.setSize();
@@ -26,10 +26,10 @@
             this.setImg(url);
             setTimeout(() => this.setImg(this.url), 300);
         }
-        setSize(){
+        setSize() {
             //1分相当于math.pi*5*5
-            let r= Math.sqrt(this.score) *5;
-            super.setSize(2*r,2*r);
+            let r = Math.sqrt(this.score) * 5;
+            super.setSize(2 * r, 2 * r);
         }
     }
     //机器人
@@ -95,6 +95,9 @@
         zdList: Array<Sprite> = [];
         angle: number;
         robotList: Array<Robot> = [];
+        accelerate: Accelerate;
+        decompose: boolean = false;
+        decomposeV: number = 0;//分解速度
         newGame() {
             this.init();
             this.createRole();
@@ -102,6 +105,18 @@
             // this.createZd();
             this.createRobot();
             super.newGame();
+            //
+            this.createAccelerate()//创建加速器
+        }
+        createAccelerate() {
+            this.accelerate = new Accelerate();
+            this.view.appendChild(this.accelerate.create((e) => {
+                this.v = 5;
+                this.decompose = true;
+            }, (e) => {
+                this.v = 1;
+                this.decompose = false;
+            }));
         }
         init() {
             this.score = 10;
@@ -116,6 +131,22 @@
                 robot.y = Math.random() * this.stage.height;
                 robot.r = robot.h / 2;
                 this.robotList.push(robot);
+            }
+            this.decomposeV++;
+            //加速时分解
+            if (this.decompose && this.decomposeV >= 5 && this.role.score>0) {
+                // debugger;
+                console.log('分解了')
+                this.decomposeV = 0;
+                let ball: Sprite = new Sprite(this.context, 'head.png');
+                ball.setSize(5, 5);
+                ball.x = this.vx > 0 ? this.role.x + this.role.r - 1 * (this.vx + this.role.w) : this.role.x + this.role.w - this.vx;
+                ball.y = this.vy < 0 ? this.role.y + this.role.r - 1 * (this.vy + this.role.h) : this.role.y + this.role.h + this.vy;
+                ball.shape = SHAPE.circle;
+                ball.setPosition(ball.x, ball.y);
+                this.ballList.push(ball);
+                this.role.score--;
+                this.role.setSize();
             }
         }
         createRole() {
@@ -141,13 +172,13 @@
             //移动视窗
             this.moveScreen();
 
-            this.scoreScreen.change('得分：'+this.role.score.toString());
+            this.scoreScreen.change('得分：' + this.role.score.toString());
         }
         moveScreen() {
             let h = this.view.clientHeight;
             let w = this.view.clientWidth;
-            let x = Math.floor(this.role.x - w / 2);
-            let y = Math.floor(this.role.y - h / 2);
+            let x = Math.floor(this.role.x+this.role.r - w / 2);
+            let y = Math.floor(this.role.y+this.role.r - h / 2);
             let maxx = this.stage.width - w;
             let maxy = this.stage.height - h;
             this.stage.elem.style.left = -Math.min(maxx, Math.max(0, x)) + 'px';
@@ -273,13 +304,35 @@
         gameOver() {
             super.gameOver();
             this.gameOverStage.setText('得分：' + this.role.score);
+            this.accelerate.remove();
         }
         loading() {
             console.log('loading...')
             super.loading();
         }
     }
-
+    //加速面板
+    class Accelerate implements IScreen {
+        elem: HTMLElement;
+        create(startCallback?: Function, endCallback?: Function) {
+            this.elem = document.createElement('div');
+            this.elem.className = "accelerate";
+            // this.elem.style.background = 'url(act.png) no-repeaat'
+            this.elem.style.position = 'absolute';
+            this.elem.style.right = '10%';
+            this.elem.style.bottom = '10%';
+            this.elem.addEventListener('touchstart', (e) => {
+                startCallback(e);
+            }, false);
+            this.elem.addEventListener('touchend', (e) => {
+                endCallback(e);
+            }, false);
+            return this.elem;
+        }
+        remove() {
+            this.elem && this.elem.parentNode.removeChild(this.elem);
+        }
+    }
     setTimeout(function () {
         let view = document.getElementById('view');
         let w = view.offsetWidth;
@@ -292,7 +345,7 @@
         let control = new Control();
         control.rect = [100, 100]
         let game = new G(view, stage, title, descript, gameOver, control);
-        game.files = { image: ['head.png', 'head-a.png', 'eat-a.png', 'eat.png', 'zd.png'] };
+        game.files = { image: ['act.png', 'head.png', 'head-a.png', 'eat-a.png', 'eat.png', 'zd.png'] };
         game.setup();
     }, 1000)
 })();
