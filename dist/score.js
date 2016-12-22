@@ -1,27 +1,2 @@
-/// <reference path="iScreen.ts" />
-//分数面板
-var Score = (function () {
-    function Score(text) {
-        this.text = text;
-        console.log(arguments);
-    }
-    Score.prototype.create = function (callback) {
-        this.elem = document.createElement('div');
-        this.elem.className = "score";
-        this.elem.innerHTML = this.text || '';
-        this.elem.style.position = 'absolute';
-        this.elem.style.right = this.right || '10px';
-        this.elem.style.top = this.top || '10px';
-        return this.elem;
-    };
-    Score.prototype.change = function (text) {
-        this.text = text;
-        this.elem.innerHTML = this.text;
-    };
-    Score.prototype.remove = function () {
-        this.elem.parentNode.removeChild(this.elem);
-    };
-    return Score;
-}());
-
+var Score=function(){function e(e){this.text=e,console.log(arguments)}return e.prototype.create=function(e){return this.elem=document.createElement("div"),this.elem.className="score",this.elem.innerHTML=this.text||"",this.elem.style.position="absolute",this.elem.style.right=this.right||"10px",this.elem.style.top=this.top||"10px",this.elem},e.prototype.change=function(e){this.text=e,this.elem.innerHTML=this.text},e.prototype.remove=function(){this.elem.parentNode.removeChild(this.elem)},e}();
 //# sourceMappingURL=score.js.map

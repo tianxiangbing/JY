@@ -5,10 +5,11 @@ class WriteText{
     constructor(context:any){
         this.context = context;
     }
-    write(text:string,x:number,y:number,style:string=''){
+    write(text:string,x:number,y:number,style:string='',fillStyle:string=''){
         this.x= x;
         this.y = y;
         this.context.font=style;
+        this.context.fillStyle = fillStyle;
         this.context.fillText( text,this.x,this.y);
     }
 }

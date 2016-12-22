@@ -2,6 +2,7 @@ let gulp = require('gulp');
 let iwatch = require('gulp-watch');
 let ts = require("gulp-typescript");
 var sourcemaps = require('gulp-sourcemaps');
+var uglify = require('gulp-uglify');
 gulp.task('ts',function(){
     var tsResult = gulp.src(['src/*.ts','example/**/*.ts'])
         .pipe(sourcemaps.init()) // This means sourcemaps will be generated
@@ -10,6 +11,7 @@ gulp.task('ts',function(){
         }));
 
     return tsResult.js
+        .pipe(uglify())
        // .pipe( ... ) // You can use other plugins that also support gulp-sourcemaps
         .pipe(sourcemaps.write('./')) // Now the sourcemaps are added to the .js file
         .pipe(gulp.dest('dist'));

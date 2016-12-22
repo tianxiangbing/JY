@@ -2,54 +2,64 @@
 /// <reference path="names.ts" />
 (function () {
     class Ball extends Sprite {
-        name:string="游客"+ (new Date().getTime()).toString().substr(-5);
-        constructor(context:any, w:number, h:number,name?:string) {
-            super(context, 'head.png');
-            this.setSize(w, h);
+        name: string = "游客" + (new Date().getTime()).toString().substr(-5);
+        url: string;
+        score:number=0;
+        constructor(context: any, w: number, h: number, name?: string, url: string = 'head-a.png',score:number=10) {
+            super(context, url);
+            this.score = score;
+            this.setSize();
+            this.url = url;
             this.shape = SHAPE.circle;
-            this.name = name||this.name;
+            this.name = name || this.name;
         }
-        draw(angle?:number){
+        draw(angle?: number) {
+            this.setSize();
             super.draw(angle);
             let text = new WriteText(this.context);
-            text.write(this.name,this.x,this.y+this.r)
+            text.write(this.name, this.x, this.y + this.r, null, '#cccccc')
         }
         drop(v: number) {
             this.setPosition(this.x, this.y + v)
         }
-        eat(){
-            this.setImg('eat.png');
-            setTimeout(()=>this.setImg('head.png'),300);
+        eat(url: string = 'eat-a.png') {
+            this.setImg(url);
+            setTimeout(() => this.setImg(this.url), 300);
+        }
+        setSize(){
+            //1分相当于math.pi*5*5
+            let r= Math.sqrt(this.score) *5;
+            super.setSize(2*r,2*r);
         }
     }
     //机器人
-    class Robot extends Ball{
-        score:number = 0;
-        angle:number=0;
-        v:number = .5;
-        vx:number=this.v;
-        vy:number=this.v;
-        constructor(public context:any){
-            super(context,10,10);
-            this.score= 20+ Math.floor(Math.random()*30);
-            this.w = this.score;
-            this.h = this.score;
-            let index= Math.floor( Math.random() * names.length - 1);;
-            this.name= names[index];
-            names.splice(index,1);
+    class Robot extends Ball {
+        score: number = 0;
+        angle: number = 0;
+        v: number = 1;
+        vx: number = this.v;
+        vy: number = this.v;
+        constructor(public context: any) {
+            super(context, 10, 10, undefined, 'head.png');
+            let score = 10 + Math.floor(Math.random() * 10);
+            this.score = score;
+            let index = Math.floor(Math.random() * names.length - 1);;
+            this.name = names[index];
+            names.splice(index, 1);
             this.trans();
+            this.setSize();
         }
         //随机更换方向
-        trans(){
-            this.angle = Math.atan2(-1+Math.random()*2,-1+Math.random()*2);
+        trans() {
+            this.angle = Math.atan2(-1 + Math.random() * 2, -1 + Math.random() * 2);
             return this.angle;
         }
-        move(stage:Stage){
+        move(stage: Stage) {
             let angle = 0;
-            if(Math.random()*1000<3){
-               this.trans();
+            if (Math.random() * 1000 < 3) {
+                this.trans();
             }
-            angle= - this.angle;
+            angle = - this.angle;
             if (angle != 0) {
                 this.vx = Math.cos(angle) * this.v;
                 this.vy = Math.sin(angle) * this.v;
@@ -60,28 +70,31 @@
             this.x = Math.min(this.x, stage.width - this.w);
             this.y = Math.max(0, this.y);
             this.y = Math.min(this.y, stage.height - this.h);
-            if(this.x ==0 || this.y ==0 || this.x==stage.width -this.w ||this.y ==stage.height-this.h){
+            if (this.x == 0 || this.y == 0 || this.x == stage.width - this.w || this.y == stage.height - this.h) {
                 // console.log(this.x,this.y)
                 this.trans();
             }
         }
-        draw(){
+        draw() {
             super.draw(this.angle);
+        }
+        eat() {
+            super.eat('eat.png')
         }
     }
     class G extends JY {
         interval: 15;
         role: Ball;
-        roleSize: number = 20;
-        v: number = .5;//速度 
+        roleSize: number = 10;
+        v: number = 1;//速度 
         av: number = 0;//加速度
         vx: number = this.v;
         vy: number = this.v;
         ballList: Array<Sprite> = [];
-        score: number = 20;
+        score: number = 10;
         zdList: Array<Sprite> = [];
         angle: number;
-        robotList:Array<Robot>=[];
+        robotList: Array<Robot> = [];
         newGame() {
             this.init();
             this.createRole();
@@ -91,22 +104,23 @@
             super.newGame();
         }
         init() {
+            this.score = 10;
             this.ballList = [];
             this.zdList = [];
-            this.robotList= [];
+            this.robotList = [];
         }
-        createRobot(){
-            for(let i =this.robotList.length;i<5;i++){
-                let robot= new Robot(this.context);
-                robot.x= Math.random()* this.stage.width;
-                robot.y = Math.random()*this.stage.height;
-                robot.r= robot.h/2;
+        createRobot() {
+            for (let i = this.robotList.length; i < 15; i++) {
+                let robot = new Robot(this.context);
+                robot.x = Math.random() * this.stage.width;
+                robot.y = Math.random() * this.stage.height;
+                robot.r = robot.h / 2;
                 this.robotList.push(robot);
             }
         }
         createRole() {
             // this.role = new Sprite(this.context, 'head.png');
-            this.role = new Ball(this.context, this.roleSize, this.roleSize)
+            this.role = new Ball(this.context, this.roleSize, this.roleSize);
             this.role.x = this.stage.width / 2;
             this.role.y = this.stage.height / 2;
             this.role.r = this.role.h / 2;
@@ -124,14 +138,28 @@
             //robot
             this.drawRobot();
             this.createRobot();
+            //移动视窗
+            this.moveScreen();
+
+            this.scoreScreen.change('得分：'+this.role.score.toString());
+        }
+        moveScreen() {
+            let h = this.view.clientHeight;
+            let w = this.view.clientWidth;
+            let x = Math.floor(this.role.x - w / 2);
+            let y = Math.floor(this.role.y - h / 2);
+            let maxx = this.stage.width - w;
+            let maxy = this.stage.height - h;
+            this.stage.elem.style.left = -Math.min(maxx, Math.max(0, x)) + 'px';
+            this.stage.elem.style.top = -Math.min(maxy, Math.max(0, y)) + 'px';
         }
         drawZdList() {
             this.zdList.forEach(item => {
                 item.draw()
             });
         }
-        drawRobot(){
-            this.robotList.forEach(item=>{
+        drawRobot() {
+            this.robotList.forEach(item => {
                 item.move(this.stage)
                 item.draw();
             })
@@ -140,7 +168,7 @@
             for (let i = 0; i < 4; i++) {
                 let zd: Sprite = new Sprite(this.context, 'zd.png');
                 this.zdList.push(zd);
-                zd.setSize(20, 20);
+                zd.setSize(10, 10);
                 let keyx: number = this.stage.width / 4;
                 let keyy: number = this.stage.height / 4;
                 if (i == 0) {
@@ -162,42 +190,38 @@
         checkHits() {
             this.ballList.forEach((ball, i) => {
                 if (this.hits(this.role, ball)) {
-                    this.score++;
-                    this.role.w += 1;
-                    this.role.h += 1;
+                    this.role.score++;
                     this.role.setSize()
                     // delete this.ballList[i];
                     this.ballList.splice(i, 1);
                     this.role.eat();
                 }
-                this.robotList.forEach((item,j)=>{
+                this.robotList.forEach((item, j) => {
                     if (this.hits(item, ball)) {
                         item.score++;
-                        item.w += 1;
-                        item.h += 1;
                         item.setSize()
                         // delete this.ballList[i];
                         this.ballList.splice(i, 1);
                         item.eat();
                     }
-                    if( this.hits (item,this.role)){
-                        if( item.score > this.score){
+                    if (this.hits(item, this.role)) {
+                        if (item.score > this.role.score) {
                             this.over();
-                        }else  if( item.score < this.score){
-                            this.score += item.score;
+                        } else if (item.score < this.role.score) {
+                            this.role.score += item.score;
                             this.robotList.splice(j, 1);
                         }
                     }
                 });
             });
-            this.robotList.forEach((item,i)=>{
-                this.robotList.forEach((obj,j)=>{
-                    if(i != j && this.hits(item,obj)&& item.score != obj.score){
-                        if(item.score>obj.score){
-                            item.score+=obj.score;
+            this.robotList.forEach((item, i) => {
+                this.robotList.forEach((obj, j) => {
+                    if (i != j && this.hits(item, obj) && item.score != obj.score) {
+                        if (item.score > obj.score) {
+                            item.score += obj.score;
                             this.robotList.splice(j, 1);
-                        }else{
-                            obj.score+=item.score;
+                        } else {
+                            obj.score += item.score;
                             this.robotList.splice(i, 1);
                         }
                     }
@@ -207,7 +231,7 @@
                 if (this.hits(this.role, ball)) {
                     this.over();
                 }
-                this.robotList.forEach( (item,i)=>{
+                this.robotList.forEach((item, i) => {
                     if (this.hits(item, ball)) {
                         this.robotList.splice(i, 1);
                     }
@@ -220,11 +244,11 @@
             });
         }
         createBallList() {
-            let count: number = 100 - this.ballList.length;
+            let count: number = 300 - this.ballList.length;
             for (let i = 0; i < count; i++) {
                 let ball: Sprite = new Sprite(this.context, 'head.png');
                 this.ballList.push(ball);
-                ball.setSize(6, 6);
+                ball.setSize(5, 5);
                 ball.x = Math.random() * this.stage.width;
                 ball.y = Math.random() * this.stage.height;
                 ball.shape = SHAPE.circle;
@@ -248,19 +272,19 @@
         }
         gameOver() {
             super.gameOver();
-            this.gameOverStage.setText('得分：' + this.score);
+            this.gameOverStage.setText('得分：' + this.role.score);
         }
         loading() {
             console.log('loading...')
             super.loading();
         }
     }
-    
-    setTimeout(function(){
+
+    setTimeout(function () {
         let view = document.getElementById('view');
         let w = view.offsetWidth;
         let h = view.offsetHeight;
-        let stage = new Stage(w, h);
+        let stage = new Stage(w * 3, h * 3);
         let descript = new Discript('start');
         descript.text = '<p class="title">大头吃小头</p>'
         let gameOver = new GameOver('restart');
@@ -268,7 +292,7 @@
         let control = new Control();
         control.rect = [100, 100]
         let game = new G(view, stage, title, descript, gameOver, control);
-        game.files = { image: ['head.png', 'zd.png'] };
+        game.files = { image: ['head.png', 'head-a.png', 'eat-a.png', 'eat.png', 'zd.png'] };
         game.setup();
-    },1000)
+    }, 1000)
 })();

@@ -70,7 +70,7 @@ class Sprite {
             this.context.drawImage(this.img, this.sx, this.sy, this.sw, this.sh, this.x, this.y, this.w, this.h);
         } else {
             //不需要剪切
-            this.context.drawImage(this.img, this.x, this.y, this.w, this.h);
+            this.context.drawImage(this.img,Math.round(this.x), Math.round(this.y), this.w, this.h);
         }
         // this.context.drawImage(this.img,10,10);
         this.context.restore();

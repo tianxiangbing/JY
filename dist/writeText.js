@@ -1,17 +1,2 @@
-var WriteText = (function () {
-    function WriteText(context) {
-        this.x = 0; //x坐标
-        this.y = 0; //y坐标
-        this.context = context;
-    }
-    WriteText.prototype.write = function (text, x, y, style) {
-        if (style === void 0) { style = ''; }
-        this.x = x;
-        this.y = y;
-        this.context.font = style;
-        this.context.fillText(text, this.x, this.y);
-    };
-    return WriteText;
-}());
-
+var WriteText=function(){function t(t){this.x=0,this.y=0,this.context=t}return t.prototype.write=function(t,i,n,o,e){void 0===o&&(o=""),void 0===e&&(e=""),this.x=i,this.y=n,this.context.font=o,this.context.fillStyle=e,this.context.fillText(t,this.x,this.y)},t}();
 //# sourceMappingURL=writeText.js.map
