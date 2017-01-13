@@ -102,7 +102,7 @@
             this.init();
             this.createRole();
             //创建5个炸弹
-            // this.createZd();
+            this.createZd();
             this.createRobot();
             super.newGame();
             //
@@ -132,21 +132,29 @@
                 robot.r = robot.h / 2;
                 this.robotList.push(robot);
             }
-            this.decomposeV++;
+            this.decomposeV <= 0 ? this.decomposeV = 20 : undefined;
             //加速时分解
-            if (this.decompose && this.decomposeV >= 5 && this.role.score>0) {
+            if (this.decompose && this.decomposeV >= 20 && this.role.score > 0) {
                 // debugger;
-                console.log('分解了')
-                this.decomposeV = 0;
-                let ball: Sprite = new Sprite(this.context, 'head.png');
-                ball.setSize(5, 5);
+                // console.log('分解了')
+                this.decompose = false;
+                this.createCopy();
+                this.role.setSize();
+            }
+        }
+        //创建分身
+        createCopy() {
+            if (this.decomposeV >= 20) {
+                let ball: Robot = new Robot(this.context);
+                ball.name = '分身';
+                ball.score = this.role.score / 2;
+                ball.setSize();
                 ball.x = this.vx > 0 ? this.role.x + this.role.r - 1 * (this.vx + this.role.w) : this.role.x + this.role.w - this.vx;
                 ball.y = this.vy < 0 ? this.role.y + this.role.r - 1 * (this.vy + this.role.h) : this.role.y + this.role.h + this.vy;
                 ball.shape = SHAPE.circle;
                 ball.setPosition(ball.x, ball.y);
-                this.ballList.push(ball);
-                this.role.score--;
-                this.role.setSize();
+                this.role.score = this.role.score / 2;
+                this.robotList.push(ball);
             }
         }
         createRole() {
@@ -173,12 +181,14 @@
             this.moveScreen();
 
             this.scoreScreen.change('得分：' + this.role.score.toString());
+
+            this.decomposeV > 0 ? this.decomposeV-- : undefined;
         }
         moveScreen() {
             let h = this.view.clientHeight;
             let w = this.view.clientWidth;
-            let x = Math.floor(this.role.x+this.role.r - w / 2);
-            let y = Math.floor(this.role.y+this.role.r - h / 2);
+            let x = Math.floor(this.role.x + this.role.r - w / 2);
+            let y = Math.floor(this.role.y + this.role.r - h / 2);
             let maxx = this.stage.width - w;
             let maxy = this.stage.height - h;
             this.stage.elem.style.left = -Math.min(maxx, Math.max(0, x)) + 'px';
@@ -260,7 +270,8 @@
             });
             this.zdList.forEach((ball) => {
                 if (this.hits(this.role, ball)) {
-                    this.over();
+                    this.decomposeV <= 0 ? this.decomposeV = 20 : undefined;
+                    this.createCopy();
                 }
                 this.robotList.forEach((item, i) => {
                     if (this.hits(item, ball)) {
