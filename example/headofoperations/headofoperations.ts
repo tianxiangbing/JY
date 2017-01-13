@@ -147,13 +147,13 @@
             if (this.decomposeV >= 20) {
                 let ball: Robot = new Robot(this.context);
                 ball.name = '分身';
-                ball.score = this.role.score / 2;
+                ball.score = Math.ceil(this.role.score / 2);
                 ball.setSize();
                 ball.x = this.vx > 0 ? this.role.x + this.role.r - 1 * (this.vx + this.role.w) : this.role.x + this.role.w - this.vx;
                 ball.y = this.vy < 0 ? this.role.y + this.role.r - 1 * (this.vy + this.role.h) : this.role.y + this.role.h + this.vy;
                 ball.shape = SHAPE.circle;
                 ball.setPosition(ball.x, ball.y);
-                this.role.score = this.role.score / 2;
+                this.role.score = Math.floor(this.role.score / 2);
                 this.robotList.push(ball);
             }
         }
