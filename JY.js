@@ -114,6 +114,9 @@ var Discript = (function () {
         btn.addEventListener('touchstart', function (event) {
             callback.call(this);
         }.bind(this), false);
+        btn.addEventListener('click', function (event) {
+            callback.call(this);
+        }.bind(this), false);
         this.elem.appendChild(btn);
         return this.elem;
     };

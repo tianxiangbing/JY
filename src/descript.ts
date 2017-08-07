@@ -17,6 +17,9 @@ class Discript  implements  IScreen{
         btn.addEventListener('touchstart', function (event:TouchEvent) {
             callback.call(this)
         }.bind(this),false);
+        btn.addEventListener('click', function (event:TouchEvent) {
+            callback.call(this)
+        }.bind(this),false);
         this.elem.appendChild(btn)
         return this.elem;
     }
