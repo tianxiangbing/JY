@@ -677,9 +677,9 @@
 			clearTimeout(JY.resolve.time);
 			if (n < max && !JY.resolve.isEnd) {
 				var calleeFunc = arguments.callee;
-				JY.resolve.time = setTimeout(applyr(calleeFunc, callback, n, max, arr, done), 25);
+				JY.resolve.time = setTimeout(applyr(calleeFunc, callback, n, max, arr, done), 50);
 			} else {
-				f ? f.call(null) : null;
+				typeof f ==='function' ? f.call(null) : undefined;
 			};
 		},
 		//碰撞检测
