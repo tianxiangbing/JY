@@ -10,7 +10,7 @@
  * Date: 2012/7/11
  */
 
-(function(win) {
+(function (win) {
 	var JY = {};
 	var readyList = [];
 	var _ie = document.all ? true : false;
@@ -25,10 +25,10 @@
 	splitRex = /(\.\w+)|(\[\w+=[\"\']\w+[\"\']\])/,
 		attrRex = /\[\s*((?:[\w\u00c0-\uFFFF\-]|\\.)+)\s*(?:(\S?=)\s*(?:(['"])(.*?)\3|(#?(?:[\w\u00c0-\uFFFF\-]|\\.)*)|)|)\s*\]/;
 	JY = JY.prototype = {
-		byId: function(id, doc) {
+		byId: function (id, doc) {
 			return ((typeof id == "string") ? (doc || document).getElementById(id) : id) || null;
 		},
-		getCtx: function(id, doc) {
+		getCtx: function (id, doc) {
 			if (!this.byId(id, doc).getContext) {
 				alert('您的浏览器不支持html5元素，请更换浏览器，推荐使用360极速或谷歌或ie9以上版本的浏览器内核.');
 			};
@@ -36,7 +36,7 @@
 		},
 		//**事件延迟加载*/
 		//****绑定事件****/
-		bind: function(target, eventType, handle) {
+		bind: function (target, eventType, handle) {
 			/*
 			if(target.addEventListener){
 				this.bind=function(target,eventType,handle){
@@ -53,7 +53,7 @@
 			JY.event.add(target, eventType, handle);
 			return JY;
 		},
-		unbind: function(target, eventType, handle) {
+		unbind: function (target, eventType, handle) {
 			/*
 			if(target.removeEventListener){
 				this.unbind=function(target,eventType){
@@ -70,12 +70,12 @@
 			JY.event.remove(target, eventType, handle);
 			return JY;
 		},
-		one: function(target, eventType, handle) {
+		one: function (target, eventType, handle) {
 			target = JY.byId(target);
 			JY.event.add(target, eventType, handle, "one");
 			return JY;
 		},
-		on: function(trigger, eventType, selector, handle) {
+		on: function (trigger, eventType, selector, handle) {
 			if (typeof selector == "function") {
 				handle = selector;
 				JY.event.add(trigger, eventType, handle);
@@ -84,7 +84,7 @@
 			}
 			return JY;
 		},
-		off: function(trigger, eventType, selector, handle) {
+		off: function (trigger, eventType, selector, handle) {
 			var type = '';
 			if (typeof selector == "function") {
 				handle = selector;
@@ -98,20 +98,20 @@
 		},
 		//为所有选择器匹配的元素附加一个处理一个或多个事件，现在或将来，基于一组特定的根元素。
 		//父节点是trigger，目标节点是selector
-		delegate: function(trigger, selector, eventType, handle) {
+		delegate: function (trigger, selector, eventType, handle) {
 			JY.event.add(trigger, eventType, handle, "delegate", selector);
 			return JY;
 		},
-		undelegate: function(trigger, selector, eventType, handle) {
+		undelegate: function (trigger, selector, eventType, handle) {
 			target = JY.byId(trigger);
 			JY.event.remove(trigger, eventType, handle);
 			return JY;
 		},
-		live: function(target, eventType, handle) {
+		live: function (target, eventType, handle) {
 			JY.event.add(document, eventType, handle, "delegate", target);
 			return JY;
 		},
-		ready: function(func) {
+		ready: function (func) {
 			readyList.push(func);
 			if (_ie) {
 				JY.unbind(document, "readystatechange", JY.DOMContentLoaded);
@@ -121,13 +121,13 @@
 			};
 			return JY;
 		},
-		_startReady: function() {
+		_startReady: function () {
 			for (var i = 0, len = readyList.length; i < len; i++) {
 				setTimeout(readyList[i], 25);
 			};
 			return JY;
 		},
-		DOMContentLoaded: function(func) {
+		DOMContentLoaded: function (func) {
 			if (_ie) {
 				if (document.readyState === "complete" || document.readyState === "interactive") {
 					JY.unbind(document, "readystatechange", JY.DOMContentLoaded);
@@ -140,13 +140,13 @@
 			return JY;
 		},
 		//查找元素父级节点
-		parent: function(elem) {
+		parent: function (elem) {
 			elem = JY.byId(elem);
 			var p = elem.parentNode;
 			return p && p.nodeType !== 11 ? p : null;
 		},
 		//查找当前元素的子级
-		child: function(elem) {
+		child: function (elem) {
 			elem = JY.byId(elem);
 			var n = elem.firstChild;
 			var r = new List();
@@ -158,24 +158,24 @@
 			return r;
 		},
 		//查找相邻元素(后面)
-		next: function(elem) {
+		next: function (elem) {
 			return this._brother(elem, "nextSibling");
 		},
 		//查找相领前面元素
-		prev: function(elem) {
+		prev: function (elem) {
 			return this._brother(elem, "previousSibling");
 		},
 		//第一个子级节点
-		first: function(elem) {
+		first: function (elem) {
 			elem = JY.byId(elem).firstChild;
 			return (elem && elem.nodeType != 1) ? this.next(elem) : elem;
 		},
 		// 最后一个子级节点
-		last: function(elem) {
+		last: function (elem) {
 			elem = JY.byId(elem).lastChild;
 			return (elem && elem.nodeType != 1) ? this.prev(elem) : elem;
 		},
-		_brother: function(elem, position) {
+		_brother: function (elem, position) {
 			elem = JY.byId(elem);
 			do {
 				elem = elem[position];
@@ -184,7 +184,7 @@
 			return elem;
 		},
 		//设置或获取节点样式
-		css: function(elem, name, value) {
+		css: function (elem, name, value) {
 			elem = JY.byId(elem);
 			if (typeof name === "object") {
 				for (var i in name) {
@@ -199,25 +199,25 @@
 				}
 			}
 		},
-		curCss: function(elem, name) {
+		curCss: function (elem, name) {
 			if (doc.defaultView) {
-				this.curCss = function(elem, name) {
+				this.curCss = function (elem, name) {
 					return doc.defaultView.getComputedStyle(elem, null)[name];
 				};
 				return this.curCss(elem, name);
 			} else {
-				this.curCss = function(elem, name) {
+				this.curCss = function (elem, name) {
 					return elem.currentStyle ? elem.currentStyle[name] : elem.style[name];
 				};
 				return this.curCss(elem, name);
 			}
 		},
 		//获取或设置属性置
-		attr: function(elem, name, value) {
+		attr: function (elem, name, value) {
 			elem = JY.byId(elem);
 			return JY._assign(elem, name, value, 'attribute');
 		},
-		_assign: function(elem, name, value, func) {
+		_assign: function (elem, name, value, func) {
 			if (!elem) {
 				return this;
 			}
@@ -234,19 +234,19 @@
 			}
 		},
 		//隐藏节点
-		hide: function(elem) {
+		hide: function (elem) {
 			elem = JY.byId(elem);
 			JY.css(elem, "display", "none");
 			return this;
 		},
 		//显示节点
-		show: function(elem) {
+		show: function (elem) {
 			elem = JY.byId(elem);
 			JY.css(elem, "display", "block");
 			return this;
 		},
 		//*继承扩展对象*/
-		extend: function() {
+		extend: function () {
 			var target = arguments[0] || {};
 			var obj = arguments[1];
 			if (typeof target == "function") {
@@ -263,7 +263,7 @@
 			return target;
 		},
 		//*样式类*/
-		addClass: function(elem, cls) {
+		addClass: function (elem, cls) {
 			elem = JY.byId(elem);
 			if (!elem) {
 				return this;
@@ -271,15 +271,15 @@
 			if (elem.addClass) {
 				elem.addClass(cls);
 			} else
-			if (!JY.hasClass(elem, cls)) {
-				var tempCls = JY.attr(elem, "class");
-				tempCls = tempCls ? (tempCls + " " + cls) : cls;
-				JY.attr(elem, "class", tempCls);
-			};
+				if (!JY.hasClass(elem, cls)) {
+					var tempCls = JY.attr(elem, "class");
+					tempCls = tempCls ? (tempCls + " " + cls) : cls;
+					JY.attr(elem, "class", tempCls);
+				};
 			return elem;
 		},
 		//判断是否有class
-		hasClass: function(elem, cls) {
+		hasClass: function (elem, cls) {
 			var elem = JY.byId(elem);
 			if (elem.hasClass) {
 				return elem.hasClass(cls);
@@ -299,7 +299,7 @@
 			}
 		},
 		//根据class查找节点列表List
-		byClass: function(cls, parent, isArr) {
+		byClass: function (cls, parent, isArr) {
 			if (doc.getElementsByClassName) {
 				return isArr ? Array.prototype.slice.call(doc.getElementsByClassName(cls)) : List.prototype.init.call(null, doc.getElementsByClassName(cls));
 			};
@@ -320,7 +320,7 @@
 			return list;
 		},
 		//删除样式类
-		removeClass: function(elem, cls) {
+		removeClass: function (elem, cls) {
 			elem = JY.byId(elem);
 			if (!elem) {
 				return this;
@@ -336,7 +336,7 @@
 			return this;
 		},
 		//根据tagName获取节点列表List
-		byTag: function(tag, context, isArr) {
+		byTag: function (tag, context, isArr) {
 			//return List.prototype.init.call(null,doc.getElementsByTagName(tag));
 			context = context || doc;
 			var arr = context.getElementsByTagName(tag);
@@ -344,19 +344,19 @@
 			arr = JY.makeArr(arr);
 			return arr;
 		},
-		hover: function(elem, mouseover, mouseout) {
-			JY.bind(elem, "mouseover", function() {
+		hover: function (elem, mouseover, mouseout) {
+			JY.bind(elem, "mouseover", function () {
 				mouseover ? mouseover.call(elem) : null;
-			}).bind(elem, "mouseout", function() {
+			}).bind(elem, "mouseout", function () {
 				mouseout ? mouseout.call(elem) : mouseover.call(elem);
 			});
 			return this;
 		},
 		//根据css3查找节点列表List
-		query: function() {
+		query: function () {
 			return this.makeArr(this._query.apply(this, arguments));
 		},
-		_query: function(queryStr, context, tmpList) {
+		_query: function (queryStr, context, tmpList) {
 			context = context || doc;
 			if (doc.querySelectorAll) {
 				return context.querySelectorAll(queryStr);
@@ -404,11 +404,11 @@
 			return tmpList;
 		}*/
 		//筛选出与指定表达式匹配的元素集合。
-		filter: function(filterStr, list) {
+		filter: function (filterStr, list) {
 
 		},
 		//htmlCollection生成List
-		makeArr: function(htmlConllecton) {
+		makeArr: function (htmlConllecton) {
 			/*return List.prototype.init.call(null,htmlConllecton);*/
 			/*
 			var arr = Array.prototype.slice.call(htmlConllecton);
@@ -424,12 +424,12 @@
 			return list;
 		},
 		//ajax异表
-		ajax: function(argsObj) {
+		ajax: function (argsObj) {
 			var xhr = new XHR();
 			return xhr.send(argsObj);
 		},
 		//get方法的ajax
-		get: function() {
+		get: function () {
 			var args = arguments;
 			var argsObj = {};
 			argsObj.url = args[0];
@@ -439,7 +439,7 @@
 			new XHR().send(argsObj);
 		},
 		//post方法的ajax
-		post: function() {
+		post: function () {
 			var args = arguments;
 			var argsObj = {};
 			argsObj.url = args[0];
@@ -450,10 +450,10 @@
 			new XHR().send(argsObj);
 		},
 		//字符串转换成json格式
-		parseJson: function(txt) {
+		parseJson: function (txt) {
 			return typeof txt === "string" ? (new Function("return " + txt))() : txt;
 		},
-		method: function() {
+		method: function () {
 			var func = arguments[0];
 			var args = Array.prototype.slice.call(arguments, 1);
 			if (func) {
@@ -461,7 +461,7 @@
 			}
 		},
 		//json转换成&url参数
-		param: function(obj) {
+		param: function (obj) {
 			if (typeof obj == "string") {
 				return obj;
 			} else {
@@ -476,11 +476,11 @@
 			}
 		},
 		//用一个表达式来检查当前选择的元素集合，如果其中至少有一个元素符合这个给定的表达式就返回true。
-		is: function(elem, selector) {
+		is: function (elem, selector) {
 			return !!selector && JY.query.filter(selector, elem).length > 0;
 		},
 		//遍历集合List或array
-		each: function(arr, callback) {
+		each: function (arr, callback) {
 			for (var i = 0, l = arr.length; i < l; i++) {
 				if (arr[i] !== undefined) {
 					if (callback.call(arr[i], arr[i], i) === false) {
@@ -491,7 +491,7 @@
 			return this;
 		},
 		//元素位置
-		position: function(elem) {
+		position: function (elem) {
 			elem = JY.byId(elem);
 			return {
 				x: elem.getBoundingClientRect().left + doc.documentElement.scrollLeft,
@@ -499,7 +499,7 @@
 			};
 		},
 		//元素偏移量
-		offset: function(elem) {
+		offset: function (elem) {
 			elem = JY.byId(elem);
 			return {
 				x: elem.getBoundingClientRect().left + doc.documentElement.scrollLeft,
@@ -507,7 +507,7 @@
 			};
 		},
 		//交互变换的样式
-		toggleClass: function(elem, cls) {
+		toggleClass: function (elem, cls) {
 			if (JY.hasClass(elem, cls)) {
 				JY.removeClass(elem, cls);
 			} else {
@@ -516,11 +516,11 @@
 			return this;
 		},
 		//去除空格
-		trim: function(txt) {
+		trim: function (txt) {
 			return txt == null ? "" : txt.toString().replace(trimLeft, "").replace(trimRight, "");
 		},
 		//dom插入操作的中间函数
-		_domInsert: function(elem, child, callback) {
+		_domInsert: function (elem, child, callback) {
 			var tmp = document.createElement("div");
 			var frag = document.createDocumentFragment();
 			if (typeof child === "string") {
@@ -539,7 +539,7 @@
 			return elem;
 		},
 		//字符串转换成DOM对象
-		convertDOM: function(str) {
+		convertDOM: function (str) {
 			if (typeof str === "string") {
 				var tmp = document.createElement("div");
 				tmp.innerHTML = str;
@@ -550,41 +550,41 @@
 			}
 		},
 		//追加，插入到后面
-		append: function(elem, child) {
+		append: function (elem, child) {
 			elem = this.byId(elem);
-			return this._domInsert(elem, child, function(c) {
+			return this._domInsert(elem, child, function (c) {
 				this.appendChild(c);
 			})
 		},
 		//移除
-		remove: function(elem) {
+		remove: function (elem) {
 			elem = this.byId(elem);
 			var p = this.parent(elem);
 			p ? p.removeChild(elem) : null;
 		},
 		//插入最前面
-		prepend: function(elem, child) {
+		prepend: function (elem, child) {
 			elem = this.byId(elem);
-			return this._domInsert(elem, child, function(c) {
+			return this._domInsert(elem, child, function (c) {
 				this.insertBefore(c, this.firstChild);
 			});
 		},
 		//插入之前
-		before: function(elem, node) {
+		before: function (elem, node) {
 			elem = this.byId(elem);
-			return this._domInsert(elem, node, function(c) {
+			return this._domInsert(elem, node, function (c) {
 				this.parentNode.insertBefore(c, elem);
 			});
 		},
 		//插入之后
-		after: function(elem, node) {
+		after: function (elem, node) {
 			elem = this.byId(elem);
-			return this._domInsert(elem, node, function(c) {
+			return this._domInsert(elem, node, function (c) {
 				this.parentNode.insertBefore(c, JY.next(elem));
 			});
 		},
 		//HTML文本
-		toText: function(elem, txt) {
+		toText: function (elem, txt) {
 			elem = this.byId(elem);
 			if (txt == null) {
 				var tmpNode = document.createElement("div");
@@ -595,7 +595,7 @@
 				return elem;
 			}
 		},
-		text: function(elem, txt) {
+		text: function (elem, txt) {
 			elem = this.byId(elem);
 			if (txt == null) {
 				var tmpNode = document.createElement("div");
@@ -607,7 +607,7 @@
 				return elem;
 			}
 		},
-		html: function(elem, html) {
+		html: function (elem, html) {
 			elem = this.byId(elem);
 			if (html == null) {
 				return elem.innerHTML;
@@ -618,17 +618,17 @@
 			}
 		},
 		//鼠标拖动事件
-		mouseDrag: function(elem, callback, stopCallback, targetEvent, stopEvent) {
+		mouseDrag: function (elem, callback, stopCallback, targetEvent, stopEvent) {
 			var mousemove = null,
 				mouseEvent = {};
 			targetEvent = targetEvent || "mousedown";
 			stopEvent = stopEvent || "mouseup";
-			JY.bind(elem, targetEvent, function(e) {
+			JY.bind(elem, targetEvent, function (e) {
 				getMousePosition(e);
 				JY.bind(elem, "mousemove", getMousePosition);
 				callback.call(this, e);
 				mousemove = setInterval(JY.proxyFunc(callback, this), 15);
-			}).bind(elem, stopEvent, function(e) {
+			}).bind(elem, stopEvent, function (e) {
 				clearInterval(mousemove);
 				JY.unbind(elem, "mousemove", getMousePosition);
 				delete JY.mouseDrag.prevEvent;
@@ -644,46 +644,48 @@
 			};
 		},
 		//代理函数，处理改变当前作用域
-		proxyFunc: function(func, pointer) {
-			return function() {
+		proxyFunc: function (func, pointer) {
+			return function () {
 				func.apply(pointer, Array.prototype.slice.call(arguments));
 			}
 		},
 		//分解优化循环
-		resolve: function(callback, startIndex, max, arr, done) {
+		resolve:function (callback, startIndex, max, arr, done, time, isEnd){
 			var start = +new Date();
 			var n = startIndex;
 			var f = done;
-			JY.resolve.time = JY.resolve.time || null;
-			JY.resolve.isEnd = JY.resolve.isEnd || false;
+			time = time || null;
+			isEnd = isEnd || false;
 			for (; n < max && +new Date() - start < 50; n++) {
 				if (arr && arr[n] === undefined) {
 					continue;
 				};
 				if (arr) {
 					if (callback.call(arr[n], arr[n], n) === false) {
-						clearTimeout(JY.resolve.time);
-						JY.resolve.isEnd = true;
+						clearTimeout(time);
+						isEnd = true;
 						break;
 					};
 				} else {
 					if (callback(n) === false) {
-						clearTimeout(JY.resolve.time);
-						JY.resolve.isEnd = true;
+						clearTimeout(time);
+						isEnd = true;
 						break;
 					};
 				}
 			};
-			clearTimeout(JY.resolve.time);
-			if (n < max && !JY.resolve.isEnd) {
+			clearTimeout(time);
+			if (n < max && !isEnd) {
 				var calleeFunc = arguments.callee;
-				JY.resolve.time = setTimeout(applyr(calleeFunc, callback, n, max, arr, done), 50);
+				time = setTimeout(function(){
+					calleeFunc( callback, n, max, arr, done, time, isEnd)
+				}, 50);
 			} else {
-				typeof f ==='function' ? f.call(null) : undefined;
+				typeof f === 'function' ? f.call(null) : undefined;
 			};
 		},
 		//碰撞检测
-		hits: function(oA, oB, w) {
+		hits: function (oA, oB, w) {
 			w = w || 0;
 			var bx = false,
 				by = false;
@@ -708,15 +710,15 @@
 			return (bx && by);
 			//return  (Math.abs(oA.x - oB.x) <=Math.max(oA.width,oB.width) && Math.abs(oA.y - oB.y) <= Math.max(oA.width,oB.width) )
 		},
-		loadFile: function(src, type, callback, flashId) {
+		loadFile: function (src, type, callback, flashId) {
 			var arr = src.split(",");
 			if (type === "script") {
 				var n = 0;
-				JY.each(arr, function(v, i) {
+				JY.each(arr, function (v, i) {
 					var elem = document.createElement("script");
 					JY.append(document.body, elem);
 					if (elem.onreadystatechange !== undefined) {
-						elem.onreadystatechange = function() {
+						elem.onreadystatechange = function () {
 							if (elem.readyState == "loaded") {
 								n++;
 								if (n == arr.length) {
@@ -725,7 +727,7 @@
 							}
 						}
 					} else {
-						JY.bind(elem, "load", function(r) {
+						JY.bind(elem, "load", function (r) {
 							n++;
 							if (n == arr.length) {
 								callback ? callback.call(this) : null;
@@ -736,7 +738,7 @@
 				});
 			} else if (type === "image") {
 				var n = 0;
-				JY.each(arr, function(v, i) {
+				JY.each(arr, function (v, i) {
 					var elem = document.createElement("img");
 					var div = document.createElement('div');
 					JY.css(div, {
@@ -753,7 +755,7 @@
 								callback.call(this);
 							};
 						}
-						elem.onreadystatechange = function() {
+						elem.onreadystatechange = function () {
 							if (elem.readyState == "complete" || elem.readyState == "loaded") {
 								n++;
 								if (n == arr.length) {
@@ -762,7 +764,7 @@
 							}
 						}
 					} else {
-						elem.onload = function(r) {
+						elem.onload = function (r) {
 							n++;
 							if (n == arr.length) {
 								callback.call(this);
@@ -785,7 +787,7 @@
 			}
 		},
 		//进度条
-		progressbar: function(cur, max, maxWidth) {
+		progressbar: function (cur, max, maxWidth) {
 			var progressDiv = document.createElement("div");
 			JY.width(progressDiv, maxWidth);
 			JY.addClass(progressDiv, "progressbar");
@@ -806,7 +808,7 @@
 			JY.append(progressDiv, percent);
 			return JY.outerHTML(progressDiv);
 		},
-		outerHTML: function(elem) {
+		outerHTML: function (elem) {
 			elem = JY.byId(elem);
 			var tmp = doc.createElement('div');
 			JY.append(tmp, elem);
@@ -816,10 +818,10 @@
 		}
 	};
 	//元素高度和宽度
-	JY.each(["Height", "Width"], function() {
+	JY.each(["Height", "Width"], function () {
 		var _self = this;
 		var name = this.toLowerCase();
-		JY[name] = function(elem, value) {
+		JY[name] = function (elem, value) {
 			elem = JY.byId(elem);
 			if (value) {
 				value = typeof value === "string" ? value : value + 'px';
@@ -829,34 +831,34 @@
 			if (elem == window) {
 				return document.compatMode == "CSS1Compat" && document.documentElement["client" + _self] || document.body["client" + _self];
 			} else
-			if (elem == document) {
-				return Math.max(
-					document.documentElement["client" + _self],
-					document.body["scroll" + _self], document.documentElement["scroll" + _self],
-					document.body["offset" + _self], document.documentElement["offset" + _self]
-				);
-			} else {
-				var val = 0;
-				var wich = name == "height" ? ["Top", "Bottom"] : ["Left", "Right"];
-				if (doc.defaultView) {
-					val = parseFloat(JY.curCss(elem, name));
+				if (elem == document) {
+					return Math.max(
+						document.documentElement["client" + _self],
+						document.body["scroll" + _self], document.documentElement["scroll" + _self],
+						document.body["offset" + _self], document.documentElement["offset" + _self]
+					);
 				} else {
-					val = elem["offset" + _self];
-					JY.each(wich, function() {
-						val -= parseFloat(JY.css(elem, "border" + this + "Width"));
-						val -= parseFloat(JY.css(elem, "padding" + this));
-					});
+					var val = 0;
+					var wich = name == "height" ? ["Top", "Bottom"] : ["Left", "Right"];
+					if (doc.defaultView) {
+						val = parseFloat(JY.curCss(elem, name));
+					} else {
+						val = elem["offset" + _self];
+						JY.each(wich, function () {
+							val -= parseFloat(JY.css(elem, "border" + this + "Width"));
+							val -= parseFloat(JY.css(elem, "padding" + this));
+						});
+					}
+					return Math.round(val);
 				}
-				return Math.round(val);
-			}
 		}
 	});
 	//*列表集合*/
-	var List = function() {};
+	var List = function () { };
 	List.prototype = new Array();
 	List.prototype.constructor = List;
 	JY.extend(List, {
-		each: function(callBack) {
+		each: function (callBack) {
 			/*
 				for (var i = 0,l = this.length; i<l ;i++ ){
 					callBack.call(this[i],this[i],i);
@@ -865,12 +867,12 @@
 			JY.each(this, callBack);
 			return this;
 		},
-		_assign: function(v, n) {
-			this.each(function() {
+		_assign: function (v, n) {
+			this.each(function () {
 				JY[n](this, v);
 			});
 		},
-		css: function() {
+		css: function () {
 			if (arguments.length == 2) {
 				applyr(this._assign, "css").apply(this, arguments);
 				return this;
@@ -878,10 +880,10 @@
 				JY.css(this[0], arguments[0]);
 			}
 		},
-		attr: function() {
+		attr: function () {
 			applyr(this._assign, "attr").apply(this, arguments);
 		},
-		init: function() {
+		init: function () {
 			var tmp = new List();
 			var arg = arguments[0];
 			var n = null;
@@ -893,43 +895,43 @@
 			}
 			return tmp;
 		},
-		concat: function(list2) {
+		concat: function (list2) {
 			return List.prototype.init.call(null, Array.prototype.slice.call(this).concat(Array.prototype.slice.call(list2)));
 		},
-		first: function() {
+		first: function () {
 			return this[0];
 		},
-		last: function() {
+		last: function () {
 			return this[this.length - 1];
 		},
-		child: function() {
+		child: function () {
 			var list = new List();
-			this.each(function() {
-				JY.child(this).each(function() {
+			this.each(function () {
+				JY.child(this).each(function () {
 					list.push(this);
 				});
 			});
 			return list;
 		},
-		eq: function(i) {
+		eq: function (i) {
 			return this[i];
 		},
-		find: function(arg) {
+		find: function (arg) {
 			var list = new List();
-			this.each(function() {
+			this.each(function () {
 				var tmp = JY.query.find(arg, this).set;
 				Array.prototype.push.apply(list, tmp);
 			});
 			return list;
 		},
-		filter: function(arg) {
+		filter: function (arg) {
 			var tmp = JY.query.filter(arg, this);
 			return JY.makeArr(tmp);
 		},
-		parents: function(arg) {
+		parents: function (arg) {
 			var tmp = new List();
 			var arr = new List();
-			this.each(function() {
+			this.each(function () {
 				var p = JY.parent(this);
 				while (p && p.nodeType !== 9) {
 					tmp.push(p);
@@ -939,41 +941,41 @@
 			arr = JY.makeArr(JY.unique(JY.query.filter(arg, tmp)));
 			return arr;
 		},
-		closest: function(arg) {
-				var tmp = new List();
-				this.each(function() {
-					var p = JY.parent(this);
-					while (p && p.nodeType !== 9) {
-						if (JY.is([p], arg)) {
-							tmp.push(p);
-							break;
-						}
-						p = JY.parent(p);
+		closest: function (arg) {
+			var tmp = new List();
+			this.each(function () {
+				var p = JY.parent(this);
+				while (p && p.nodeType !== 9) {
+					if (JY.is([p], arg)) {
+						tmp.push(p);
+						break;
 					}
-				});
-				return JY.unique(tmp);
-			}
-			/*,
-			height:function(arg){
-				if (this.length==1){
-					if( arg ){
-						JY.height(this[0],arg);
-						return this;
-					}else{
-						return JY.height(this[0]);
-					}
-				}else{
-					var arr = [];
-					this.each(function(){
-						arr.push(JY.height(this,arg));
-					});
-					return arg  ? this : arr;
+					p = JY.parent(p);
 				}
-			}*/
+			});
+			return JY.unique(tmp);
+		}
+		/*,
+		height:function(arg){
+			if (this.length==1){
+				if( arg ){
+					JY.height(this[0],arg);
+					return this;
+				}else{
+					return JY.height(this[0]);
+				}
+			}else{
+				var arr = [];
+				this.each(function(){
+					arr.push(JY.height(this,arg));
+				});
+				return arg  ? this : arr;
+			}
+		}*/
 	});
-	JY.each(["height", "width", "position"], function() {
+	JY.each(["height", "width", "position"], function () {
 		var name = this;
-		List.prototype[name] = function(arg) {
+		List.prototype[name] = function (arg) {
 			if (this.length == 1) {
 				if (arg) {
 					JY[name](this[0], arg);
@@ -983,18 +985,18 @@
 				}
 			} else {
 				var arr = [];
-				this.each(function() {
+				this.each(function () {
 					arr.push(JY[name](this, arg));
 				});
 				return arg ? this : arr;
 			}
 		}
 	});
-	JY.each(["bind", "unbind", "show", "hide", "addClass", "toggleClass", "removeClass", "live", "one", "delegate"], function() {
+	JY.each(["bind", "unbind", "show", "hide", "addClass", "toggleClass", "removeClass", "live", "one", "delegate"], function () {
 		var name = this;
-		List.prototype[name] = function() {
+		List.prototype[name] = function () {
 			var args = Array.prototype.slice.call(arguments, 0);
-			this.each(function() {
+			this.each(function () {
 				JY[name].apply(this, [this].concat(args));
 			});
 			return this;
@@ -1004,15 +1006,47 @@
 
 	function applyr(f) {
 		var args = Array.prototype.slice.call(arguments, 1);
-		return function(x) {
+		return function (x) {
 			return f.apply(this, [x].concat(args));
 		}
 	};
+	function resolve(callback, startIndex, max, arr, done, time, isEnd) {
+		var start = +new Date();
+		var n = startIndex;
+		var f = done;
+		var time = time || null;
+		var isEnd = isEnd || false;
+		for (; n < max && +new Date() - start < 50; n++) {
+			if (arr && arr[n] === undefined) {
+				continue;
+			};
+			if (arr) {
+				if (callback.call(arr[n], arr[n], n) === false) {
+					clearTimeout(time);
+					isEnd = true;
+					break;
+				};
+			} else {
+				if (callback(n) === false) {
+					clearTimeout(time);
+					isEnd = true;
+					break;
+				};
+			}
+		};
+		clearTimeout(time);
+		if (n < max && !isEnd) {
+			var calleeFunc = arguments.callee;
+			time = setTimeout(applyr(calleeFunc, callback, n, max, arr, done, time, isEnd), 50);
+		} else {
+			typeof f === 'function' ? f.call(null) : undefined;
+		};
+	}
 	JY.cache = {};
 	JY.CID = 0; // DOM节点缓存的ID
 	//事件驱动
 	JY.event = {
-		getData: function(target) {
+		getData: function (target) {
 			var _data;
 			if (target === win) {
 				_data = 'JY_win';
@@ -1024,10 +1058,10 @@
 
 			return _data;
 		},
-		add: function(target, eventType, handle, type, selector) {
+		add: function (target, eventType, handle, type, selector) {
 
 			if (target.addEventListener) {
-				this.add = function(target, eventType, handle, type, selector) {
+				this.add = function (target, eventType, handle, type, selector) {
 					if (!target || target.nodeType === 3 || target.nodeType === 8) { //文本或注释
 						return this;
 					};
@@ -1050,7 +1084,7 @@
 					}
 				}
 			} else {
-				this.add = function(target, eventType, handle) {
+				this.add = function (target, eventType, handle) {
 					if (!target) {
 						return this;
 					}
@@ -1060,7 +1094,7 @@
 			};
 			this.add.apply(this, Array.prototype.slice.call(arguments, 0));
 		},
-		_proxy: function(target, eventType, handle, type, selector) {
+		_proxy: function (target, eventType, handle, type, selector) {
 			var _data = this.getData(target);
 			selector = selector || "";
 			JY.cache[_data] = JY.cache[_data] || {}; //初始化缓存事件列表
@@ -1068,9 +1102,9 @@
 			var eList = JY.cache[_data][eventType + selector];
 			var _self = this;
 			var fn = handle;
-			handle = function(e) {
+			handle = function (e) {
 				e.target = e.target || e.srcElement;
-				e.stop = function() {
+				e.stop = function () {
 					e.preventDefault();
 					e.stopPropagation();
 				};
@@ -1085,7 +1119,7 @@
 					} else {
 						evtList = JY.query(selector, target);
 					};
-					JY.each(evtList, function() {
+					JY.each(evtList, function () {
 						if (e.target === this) {
 							fn.call(this, e)
 						};
@@ -1101,13 +1135,13 @@
 			};
 			handle.oldHandle = fn;
 			eList.push(handle);
-			return function(e) {
-				JY.each(eList, function(d) {
+			return function (e) {
+				JY.each(eList, function (d) {
 					d.call(this, e);
 				});
 			};
 		},
-		remove: function(target, eventType, handle, type, selector) {
+		remove: function (target, eventType, handle, type, selector) {
 			var _self = this;
 			var _data = this.getData(target);
 			var evtList;
@@ -1118,7 +1152,7 @@
 			}
 			if (handle) {
 				var count = 0;
-				JY.each(evtList, function(d, i) {
+				JY.each(evtList, function (d, i) {
 					if (handle == d.oldHandle) {
 						delete evtList[i];
 					} else {
@@ -1131,7 +1165,7 @@
 			} else {
 				if (evtList) {
 					//target.removeEventListener(eventType,evtList.handle,false);
-					JY.each(evtList, function(v, i) {
+					JY.each(evtList, function (v, i) {
 						delete evtList[i];
 					});
 					JY.cache[_data][eventType + selector] = null;
@@ -1139,13 +1173,13 @@
 				}
 			};
 		},
-		deleteEvt: function(target, eventType, handle) {
+		deleteEvt: function (target, eventType, handle) {
 			if (target.removeEventListener) {
-				this.deleteEvt = function(target, eventType, handle) {
+				this.deleteEvt = function (target, eventType, handle) {
 					target.removeEventListener(eventType, handle, false);
 				}
 			} else {
-				this.deleteEvt = function(target, eventType, handle) {
+				this.deleteEvt = function (target, eventType, handle) {
 					target.detachEvent("on" + eventType, handle);
 				}
 			};
@@ -1154,17 +1188,17 @@
 	//绘图函数
 	JY.draw = {
 		cache: {},
-		setStyle: function(cssObj) {
+		setStyle: function (cssObj) {
 			this.cache = cssObj;
 		},
-		setPosition: function(o, x, y) {
+		setPosition: function (o, x, y) {
 			JY.css(o, {
 				left: x + "px",
 				top: y + "px"
 			});
 		},
 		//画点
-		point: function(container, x, y) {
+		point: function (container, x, y) {
 			var p = document.createElement("i");
 			JY.css(p, this.cache);
 			JY.append(container, p);
@@ -1176,13 +1210,13 @@
 			return p;
 		},
 		//绘线
-		line: function(objA, objB, c, callback) {
+		line: function (objA, objB, c, callback) {
 			var DvalueX = objB.x - objA.x;
 			var DvalueY = objB.y - objA.y;
 			var w = parseInt(this.cache.width);
 			var len = parseInt(Math.sqrt(DvalueX * DvalueX + DvalueY * DvalueY)) / w; //两点间距离
 			var angle = Math.atan2(DvalueX, DvalueY); //角度
-			JY.resolve(function() {
+			JY.resolve(function () {
 				var x = objA.x + Math.sin(angle) * w;
 				var y = objA.y + Math.cos(angle) * w;
 				JY.draw.point(c, x, y);
@@ -1197,9 +1231,9 @@
 	};
 	win.JY = JY;
 	win.List = List;
-	var XHR = function() {};
+	var XHR = function () { };
 	XHR.prototype = {
-		create: function() {
+		create: function () {
 			var msxml_progid = ['MSXML2.XMLHTTP.6.0',
 				'MSXML3.XMLHTTP',
 				'Microsoft.XMLHTTP', // Doesn't support readyState 3. 
@@ -1213,13 +1247,13 @@
 					try {
 						xhr = new ActiveXObject(msxml_progid[i]);
 						break;
-					} catch (e) {}
+					} catch (e) { }
 				};
 			} finally {
 				return xhr;
 			};
 		},
-		send: function(argsObj) {
+		send: function (argsObj) {
 			var _self = this;
 			var xhr = _self.create();
 			dataType = argsObj.dataType || "html";
@@ -1228,7 +1262,7 @@
 				argsObj.async = true;
 			};
 			if (argsObj.async) {
-				xhr.onreadystatechange = function() {
+				xhr.onreadystatechange = function () {
 					if (xhr.readyState == 4) {
 						JY.method(argsObj.success, _self.format(xhr.responseText, xhr.responseXML, argsObj.dataType));
 					}
@@ -1257,7 +1291,7 @@
 			};
 			return xhr;
 		},
-		format: function(txt, xml, type) {
+		format: function (txt, xml, type) {
 			switch (type) {
 				case "xml":
 					{
@@ -1282,7 +1316,7 @@
 })(window);
 
 
-(function() {
+(function () {
 	//状态码
 	var JYGSTATE = {
 		STATE_SYSTEM_WAIT_FOR_CLOSE: 0,
@@ -1296,7 +1330,7 @@
 		STATE_SYSTEM_LEVEL_OUT: 8,
 		STATE_SYSTEM_WAIT: 9
 	};
-	var JYG = function(stage) {
+	var JYG = function (stage) {
 		this.timer = null; //计时器
 		this.func = new Function(); //当前执行函数
 		this.stage = stage; //舞台
@@ -1316,36 +1350,36 @@
 		this.gameOverScreen = null;
 		this.frequency = 100; //刷新频率
 	};
-	var Game = function() {};
+	var Game = function () { };
 	Game.prototype = {
-		gameOver: function(b) {
+		gameOver: function (b) {
 			b.checkState(JYGSTATE.STATE_SYSTEM_GAME_OVER);
 		},
-		newGame: function(b) {
+		newGame: function (b) {
 			b.checkState(JYGSTATE.STATE_SYSTEM_NEW_LEVEL);
 		},
-		newLevel: function() {}
+		newLevel: function () { }
 	};
 	JYG.prototype = {
-		init: function() {
+		init: function () {
 			//over
 			this.checkState(JYGSTATE.STATE_SYSTEM_TITLE);
 		},
-		setStage: function(stage) {
+		setStage: function (stage) {
 			this.stage = stage;
 			this.stage.width = JY.width(stage);
 			this.stage.height = JY.height(stage);
 		},
-		startTimer: function() {
+		startTimer: function () {
 			var _self = this;
 			if (!_self.timer) {
 				_self.timer = setInterval(JY.proxyFunc(_self.runGame, _self), _self.frequency);
 			}
 		},
-		runGame: function() {
+		runGame: function () {
 			this.func();
 		},
-		checkState: function(stateVal) {
+		checkState: function (stateVal) {
 			this.lastState = this.currentState;
 			this.currentState = stateVal;
 			switch (stateVal) {
@@ -1401,26 +1435,26 @@
 					break;
 			}
 		},
-		setTitle: function() {
+		setTitle: function () {
 			this.addChild(this.titleScreen);
 			//JY.bind(this.titleScreen,"click", JY.proxyFunc( this.okButtonClickListener,this));
 			this.checkState(JYGSTATE.STATE_SYSTEM_WAIT);
 			this.nextState = JYGSTATE.STATE_SYSTEM_INSTRUCTIONS;
 			//this.stopTimer();
 		},
-		setInstructions: function() {
+		setInstructions: function () {
 			this.addChild(this.InstructionsScreen);
 			//JY.bind(this.InstructionsScreen, "click", JY.proxyFunc(this.okButtonClickListener, this));
 			JY.touch(this.InstructionsScreen, JY.proxyFunc(this.okButtonClickListener, this));
 			this.nextState = JYGSTATE.STATE_SYSTEM_NEW_GAME;
 			this.stopTimer();
 		},
-		systemNewGame: function() {
+		systemNewGame: function () {
 			this.game.newGame();
 			this.addChild(this.scoreScreen);
 			this.checkState(JYGSTATE.STATE_SYSTEM_NEW_LEVEL);
 		},
-		gameOver: function() {
+		gameOver: function () {
 			this.clearState();
 			this.addChild(this.gameOverScreen);
 			//JY.bind(this.gameOverScreen, "click", JY.proxyFunc(this.okButtonClickListener, this));
@@ -1429,38 +1463,38 @@
 			this.nextState = JYGSTATE.STATE_SYSTEM_TITLE;
 			this.stopTimer();
 		},
-		newLevel: function() {
+		newLevel: function () {
 			this.game.newLevel();
 			this.checkState(JYGSTATE.STATE_SYSTEM_LEVEL_IN);
 		},
-		gamePlay: function() {
+		gamePlay: function () {
 			this.game.runGame();
 		},
-		wait: function() {
+		wait: function () {
 			this.waitCount++;
 			if (this.waitCount > this.waitTime) {
 				this.checkState(JYGSTATE.STATE_SYSTEM_WAIT_FOR_CLOSE);
 			}
 		},
-		waitClose: function() {
+		waitClose: function () {
 			//this.checkState(this.nextState);
 			this.okButtonClickListener();
 			waitCount = 0;
 		},
-		levelIn: function() {
+		levelIn: function () {
 			waitTime = 10;
 			this.checkState(JYGSTATE.STATE_SYSTEM_WAIT);
 			this.nextState = JYGSTATE.STATE_SYSTEM_GAME_PLAY;
 		},
-		clearState: function() {
+		clearState: function () {
 			var _self = this;
 			var child = JY.child(_self.stage);
-			JY.each(child, function() {
+			JY.each(child, function () {
 				_self.removeChild(this);
 			});
 			this.stopTimer();
 		},
-		okButtonClickListener: function(e) {
+		okButtonClickListener: function (e) {
 			switch (this.nextState) {
 				case JYGSTATE.STATE_SYSTEM_TITLE:
 					{
@@ -1482,14 +1516,14 @@
 			}
 			this.checkState(this.nextState);
 		},
-		removeChild: function(child) {
+		removeChild: function (child) {
 			if (child.constructor == Sprite) {
 				JY.remove(child.DOM);
 			} else {
 				JY.remove(child);
 			}
 		},
-		addChild: function(child) {
+		addChild: function (child) {
 			if (child.constructor == Sprite) {
 				JY.append(this.stage, child.DOM);
 			} else {
@@ -1497,7 +1531,7 @@
 			}
 			return this;
 		},
-		stopTimer: function() {
+		stopTimer: function () {
 			clearInterval(this.timer);
 			this.timer = null;
 		}
@@ -1512,7 +1546,7 @@
 		this.x = 0;
 		this.y = 0;
 		this.data = null;
-		this.init = function(w, h, style) {
+		this.init = function (w, h, style) {
 			JY.extend(this.style, style || {});
 			this.DOM = document.createElement("i");
 			this.width = w || this.width;
@@ -1526,13 +1560,13 @@
 			JY.css(this.DOM, this.style);
 		};
 		this.init();
-		this.remove = function() {
+		this.remove = function () {
 			JY.remove(this.DOM);
 		};
-		this.addChild = function(s) {
+		this.addChild = function (s) {
 			JY.append(this.DOM, s.DOM);
 		};
-		this.setPosition = function(x, y) {
+		this.setPosition = function (x, y) {
 			this.x = x == null ? this.x : x;
 			this.y = y == null ? this.y : y;
 			JY.css(this.DOM, {
@@ -1541,7 +1575,7 @@
 			});
 			return this;
 		};
-		this.setStyle = function(style) {
+		this.setStyle = function (style) {
 			JY.css(this.DOM, style);
 			return this;
 		}
@@ -1551,7 +1585,7 @@
 	window.Game = Game;
 	window.Sprite = Sprite;
 
-	Function.prototype.method = function(name, func) {
+	Function.prototype.method = function (name, func) {
 		if (typeof name === "object") {
 			for (var i in name) {
 				this.prototype[i] = name[i];
@@ -1562,7 +1596,7 @@
 		return this;
 	};
 	//UserInfo.prototype=new Person();
-	Function.method("inherits", function(parent) {
+	Function.method("inherits", function (parent) {
 		var d = {}, // 递归调用时的计数器  
 			// 下面这行已经完成了最简单的原型继承：将子类的prototype设为父类的实例  
 			p = (this.prototype = new parent());
@@ -1607,9 +1641,9 @@
  *为HTML5而写成的JS游戏框架
  */
 ;
-(function(win) {
+(function (win) {
 	//canvasText output2013/3/21
-	var CanvasText = function(position, context) {
+	var CanvasText = function (position, context) {
 		this._textStack = [];
 
 		if (position === null || position === undefined) {
@@ -1628,7 +1662,7 @@
 		_textStack: null,
 		_currentOptionSet: null,
 
-		_newOptionSet: function() {
+		_newOptionSet: function () {
 			if (this._currentOptionSet != null) {
 				return;
 			}
@@ -1643,42 +1677,42 @@
 			};
 		},
 
-		position: function(x, y) {
+		position: function (x, y) {
 			this._position.x = x;
 			this._position.y = y;
 		},
 
-		family: function(family) {
+		family: function (family) {
 			this._newOptionSet();
 			this._currentOptionSet.family = family;
 			return this;
 		},
 
-		size: function(size) {
+		size: function (size) {
 			this._newOptionSet();
 			this._currentOptionSet.size = size;
 			return this;
 		},
 
-		weight: function(weight) {
+		weight: function (weight) {
 			this._newOptionSet();
 			this._currentOptionSet.weight = weight;
 			return this;
 		},
 
-		style: function(style) {
+		style: function (style) {
 			this._newOptionSet();
 			this._currentOptionSet.style = style;
 			return this;
 		},
 
-		color: function(color) {
+		color: function (color) {
 			this._newOptionSet();
 			this._currentOptionSet.color = color;
 			return this;
 		},
 
-		append: function(text) {
+		append: function (text) {
 			this._newOptionSet();
 			this._currentOptionSet.text = text;
 			this._textStack.push(this._currentOptionSet);
@@ -1686,12 +1720,12 @@
 			return this;
 		},
 
-		newLine: function() {
+		newLine: function () {
 			this.append('\n');
 			return this;
 		},
 
-		render: function() {
+		render: function () {
 
 			if (this._textStack.length == 0) {
 				return;
@@ -1769,13 +1803,13 @@
 		}
 	};
 	/*游戏画布2013/3/25*/
-	var GameCanvas = function() {
+	var GameCanvas = function () {
 		this.canvas;
 		this.context;
 		this.size;
 	};
 	GameCanvas.prototype = {
-		init: function(canvasId) {
+		init: function (canvasId) {
 			this.canvas = document.getElementById(canvasId);
 			this.context = this.canvas.getContext('2d');
 			this.size = {
@@ -1783,7 +1817,7 @@
 				y: this.canvas.height
 			};
 		},
-		render: function() {
+		render: function () {
 			this.context.clearRect(0, 0, this.size.x, this.size.y);
 		}
 	};
@@ -1792,28 +1826,28 @@
 		updatePerSecond: 60,
 		_loopInterval: null,
 		_prevTime: null,
-		init: function() {
+		init: function () {
 			this.bindControl();
 			this._prevTime = new Date().getTime();
 			this._loopInterval = window.setInterval(this.gameLoop.bind(this), 1000 / this.updatePerSecond);
 		},
-		gameLoop: function() {
+		gameLoop: function () {
 			var currentTime = new Date().getTime();
 			var elapsed = currentTime - this._prevTime;
 			this.update(elapsed);
 			this._prevTime = currentTime;
 		},
-		update: function(elapsed) {
+		update: function (elapsed) {
 
 		},
-		bindControl: function() {
+		bindControl: function () {
 
 		},
-		handleInput: function(pressed, event) {
+		handleInput: function (pressed, event) {
 
 		}
 	};
-	var Sprite5 = function() {
+	var Sprite5 = function () {
 		this.size = {
 			x: 0,
 			y: 0
@@ -1832,13 +1866,13 @@
 		this.y = 0;
 		this.context = null;
 		this.img = null;
-		this.init = function(context, img, cut, size) {
+		this.init = function (context, img, cut, size) {
 			this.context = context;
 			this.img = img;
 			cut ? this.cut = cut : null;
 			size ? this.size = size : null;
 		};
-		this.setPosition = function(x, y) {
+		this.setPosition = function (x, y) {
 			this.x = x || this.x;
 			this.y = y || this.y;
 			this.context.save();
@@ -1847,7 +1881,7 @@
 			this.context.drawImage(this.img, cutpos.x, cutpos.y, cutsize.x, cutsize.y, this.x, this.y, this.size.x, this.size.y);
 			this.context.restore();
 		};
-		this.setCut = function(x, y) {
+		this.setCut = function (x, y) {
 			this.context.save();
 			var cutpos = {
 				x: x,
