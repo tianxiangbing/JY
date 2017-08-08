@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>测试处理大量数据的性能</title>
+</head>
+
+<body>
+    <input type="text" id="number" value="100000"/><button id="submit">处理</button>
+    <p id="span"></p>
+    <div id="tips"></div>
+    <script src="../JY.js"></script>
+    <script>
+        document.getElementById('submit').addEventListener('click',function(){
+            buildData (document.getElementById('number').value)
+        });
+        function buildData(number) {
+            var data = [];
+            //生成数据
+            for (var k = 0; k < number; k++) {
+                data.push(Math.random() * 10);
+            }
+            //开始处理显示 
+            var st = Date.now();
+            for(var i =0 ,l = data.length ;i<l;i++ ){
+                document.getElementById('span').innerHTML=data[i];
+            }
+            var et = Date.now();
+            var tips = '<p>'+data.length+'次修改dom值耗时分析</p>';
+            tips += "<p>普通dom操作耗时："+(et-st) +' ms</p>';
+            var st2 = Date.now();
+            JY.resolve(function(v,i){
+                document.getElementById('span').innerHTML=v;
+            },0,data.length,data,function(){
+                var et2= Date.now();
+                tips+='<p>JY分解后的耗时：'+(et2-st2)+' ms</p>'
+                tips+='<p>总耗时：'+(et2-st)+' ms</p>'
+                document.getElementById('span').innerHTML=tips;
+            });
+        }
+    </script>
+</body>
+
+</html>

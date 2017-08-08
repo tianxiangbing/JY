@@ -656,7 +656,7 @@
 			var f = done;
 			time = time || null;
 			isEnd = isEnd || false;
-			for (; n < max && +new Date() - start < 50; n++) {
+			for (; n < max && +new Date() - start < 25; n++) {
 				if (arr && arr[n] === undefined) {
 					continue;
 				};
@@ -679,7 +679,7 @@
 				var calleeFunc = arguments.callee;
 				time = setTimeout(function(){
 					calleeFunc( callback, n, max, arr, done, time, isEnd)
-				}, 50);
+				}, 0);
 			} else {
 				typeof f === 'function' ? f.call(null) : undefined;
 			};
@@ -1010,38 +1010,6 @@
 			return f.apply(this, [x].concat(args));
 		}
 	};
-	function resolve(callback, startIndex, max, arr, done, time, isEnd) {
-		var start = +new Date();
-		var n = startIndex;
-		var f = done;
-		var time = time || null;
-		var isEnd = isEnd || false;
-		for (; n < max && +new Date() - start < 50; n++) {
-			if (arr && arr[n] === undefined) {
-				continue;
-			};
-			if (arr) {
-				if (callback.call(arr[n], arr[n], n) === false) {
-					clearTimeout(time);
-					isEnd = true;
-					break;
-				};
-			} else {
-				if (callback(n) === false) {
-					clearTimeout(time);
-					isEnd = true;
-					break;
-				};
-			}
-		};
-		clearTimeout(time);
-		if (n < max && !isEnd) {
-			var calleeFunc = arguments.callee;
-			time = setTimeout(applyr(calleeFunc, callback, n, max, arr, done, time, isEnd), 50);
-		} else {
-			typeof f === 'function' ? f.call(null) : undefined;
-		};
-	}
 	JY.cache = {};
 	JY.CID = 0; // DOM节点缓存的ID
 	//事件驱动
