@@ -1,4 +1,4 @@
-class WriteText{
+export default class WriteText{
     context: CanvasRenderingContext2D;//画布对象
     x: number = 0;//x坐标
     y: number = 0;//y坐标

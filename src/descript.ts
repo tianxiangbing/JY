@@ -1,6 +1,7 @@
-/// <reference path="iScreen.ts" />
+//// <reference path="iScreen.ts" />
+import IScreen from './iScreen'
 //描述设计
-class Discript  implements  IScreen{
+export default class Descript  implements  IScreen{
     elem: HTMLElement;
     constructor(public btntitle:string,public text?:string) {
         console.log(arguments)

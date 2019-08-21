@@ -1,5 +1,6 @@
-/// <reference path="iScreen.ts" />
-class GameOver implements IScreen {
+//// <reference path="iScreen.ts" />
+import IScreen from './iScreen'
+export default class GameOver implements IScreen {
     elem: HTMLElement;
     textElem: HTMLElement;
     constructor(public btntitle: string) {

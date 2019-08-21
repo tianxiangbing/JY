@@ -1,6 +1,7 @@
-/// <reference path="iScreen.ts" />
+//// <reference path="iScreen.ts" />
+import IScreen from './iScreen';
 //操作界面
-class Control implements IScreen {
+export default class Control implements IScreen {
     elem: HTMLElement;
     rect: Array<number> = [160, 160];
     moveElem: HTMLElement;

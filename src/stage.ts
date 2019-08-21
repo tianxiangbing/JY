@@ -1,6 +1,6 @@
-/// <reference path="iScreen.ts" />
-//舞台设计
-class Stage implements IScreen {
+//// <reference path="iScreen.ts" />
+import IScreen from './iScreen'
+export default class Stage implements IScreen {
     elem: HTMLCanvasElement;
     constructor(public width: number, public height: number, public style?: string) {
         console.log(arguments)

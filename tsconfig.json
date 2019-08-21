@@ -2,9 +2,10 @@
 	"compilerOptions": {
 		"target": "es5",
 		"noImplicitAny": false,
-		//"module": "amd",
+		"module": "commonjs",
 		"removeComments": false,
 		"sourceMap": true,
-		"outDir":"js"
+		"outDir":"js",
+		"moduleResolution": "node"
 	}
 }

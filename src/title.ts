@@ -1,6 +1,7 @@
-/// <reference path="iScreen.ts" />
 //描述设计
-class Title  implements  IScreen{
+//// <reference path="iScreen.ts" />
+import IScreen from './iScreen'
+export default class Title  implements  IScreen{
     elem: HTMLElement;
     constructor(public title:string) {
         console.log(arguments)

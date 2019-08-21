@@ -1,10 +1,10 @@
 //sprite
 //形状
-enum SHAPE{
+export enum SHAPE{
  rect,
  circle
 }
-class Sprite {
+export default class Sprite {
     ///
     context: any;//画布对象
     x: number = 0;//x坐标

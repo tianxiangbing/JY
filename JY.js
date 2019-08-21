@@ -5,7 +5,7 @@ var SHAPE;
     SHAPE[SHAPE["rect"] = 0] = "rect";
     SHAPE[SHAPE["circle"] = 1] = "circle";
 })(SHAPE || (SHAPE = {}));
-var Sprite = (function () {
+var Sprite = /** @class */ (function () {
     function Sprite(context, url) {
         this.x = 0; //x坐标
         this.y = 0; //y坐标
@@ -77,7 +77,7 @@ var Sprite = (function () {
 }());
 /// <reference path="iScreen.ts" />
 //描述设计
-var Title = (function () {
+var Title = /** @class */ (function () {
     function Title(title) {
         this.title = title;
         console.log(arguments);
@@ -96,7 +96,7 @@ var Title = (function () {
 }());
 /// <reference path="iScreen.ts" />
 //描述设计
-var Discript = (function () {
+var Discript = /** @class */ (function () {
     function Discript(btntitle, text) {
         this.btntitle = btntitle;
         this.text = text;
@@ -126,7 +126,7 @@ var Discript = (function () {
     return Discript;
 }());
 /// <reference path="iScreen.ts" />
-var GameOver = (function () {
+var GameOver = /** @class */ (function () {
     function GameOver(btntitle) {
         this.btntitle = btntitle;
     }
@@ -159,7 +159,7 @@ var GameOver = (function () {
 }());
 /// <reference path="iScreen.ts" />
 //舞台设计
-var Stage = (function () {
+var Stage = /** @class */ (function () {
     function Stage(width, height, style) {
         this.width = width;
         this.height = height;
@@ -188,7 +188,7 @@ var Stage = (function () {
 }());
 /// <reference path="iScreen.ts" />
 //操作界面
-var Control = (function () {
+var Control = /** @class */ (function () {
     function Control() {
         this.rect = [160, 160];
         this.moveRect = [50, 50];
@@ -284,7 +284,7 @@ var Control = (function () {
 }());
 /// <reference path="iScreen.ts" />
 //分数面板
-var Score = (function () {
+var Score = /** @class */ (function () {
     function Score(text) {
         this.text = text;
         console.log(arguments);
@@ -307,7 +307,7 @@ var Score = (function () {
     };
     return Score;
 }());
-var WriteText = (function () {
+var WriteText = /** @class */ (function () {
     function WriteText(context) {
         this.x = 0; //x坐标
         this.y = 0; //y坐标
@@ -345,7 +345,7 @@ var STATE;
     STATE[STATE["die"] = 7] = "die";
     STATE[STATE["gameOver"] = 8] = "gameOver";
 })(STATE || (STATE = {}));
-var JY = (function () {
+var JY = /** @class */ (function () {
     function JY(view, stage, titleStage, descriptStage, gameOverStage, controlStage) {
         this.view = view;
         this.stage = stage;
@@ -401,12 +401,12 @@ var JY = (function () {
         var _this = this;
         var obj = {};
         if (_this.files.length > 0) {
-            var _loop_1 = function(v) {
+            var _loop_1 = function (v) {
                 obj[v] = {};
                 obj[v].count = 0;
                 var type = v;
                 console.log(_this.files[v]);
-                var _loop_2 = function(i, l) {
+                var _loop_2 = function (i, l) {
                     var item = _this.files[v][i];
                     if (type == 'image') {
                         var img = new Image();

@@ -1,10 +1,13 @@
 {
   "name": "jy2",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "JY游戏框架",
-  "main": "JY.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp watch",
+    "build": "gulp",
+    "prepublish": "gulp"
   },
   "repository": {
     "type": "git",
