@@ -1,13 +1,12 @@
 {
   "name": "jy2",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "JY游戏框架",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gulp watch",
-    "build": "gulp",
-    "prepublish": "gulp"
+    "test": "webpack --config  webpack.test.config.js",
+    "start": "cross-env mode=commonjs webpack",
+    "build": "cross-env mode=umd webpack"
   },
   "repository": {
     "type": "git",
@@ -23,11 +22,14 @@
   },
   "homepage": "https://github.com/tianxiangbing/JY#readme",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-sourcemaps": "^2.2.0",
-    "gulp-typescript": "^3.1.2",
-    "gulp-uglify": "^2.0.0",
-    "gulp-watch": "^4.3.10",
-    "typescript": "^2.0.9"
-  }
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "cross-env": "^5.2.0",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
+  },
+  "dependencies": {}
 }

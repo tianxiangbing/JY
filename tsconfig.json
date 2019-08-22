@@ -1,11 +1,5 @@
 {
-	"compilerOptions": {
-		"target": "es5",
-		"noImplicitAny": false,
-		"module": "commonjs",
-		"removeComments": false,
-		"sourceMap": true,
-		"outDir":"js",
-		"moduleResolution": "node"
-	}
-}
+    "compilerOptions": {
+      "sourceMap": true
+    }
+  }
