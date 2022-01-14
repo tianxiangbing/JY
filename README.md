@@ -17,7 +17,7 @@ JY的想法起源于，现在大多数JS库已经相当成熟，但总有这样�
 JY会更小，因为它会去除一些不常用的不合理方法，它会更注重代码的运行效率，批量使用的优化，动画的执行速度等。现在压缩后的JS为16KB.(不包括GZIP)
 
 # API或Demo?
-JY的demo网址是[http://www.lovewebgames.com/](http://www.lovewebgames.com/ "http://www.lovewebgames.com/")，并有一些其他方面的学习文章。
+JY的demo网址是[https://tianxiangbing.github.io/jyweb/](https://tianxiangbing.github.io/jyweb/ "https://tianxiangbing.github.io/jyweb/")，并有一些其他方面的学习文章。
 
 # JYG游戏框架
 JYG游戏框架，是基于JY的一款JS游戏引擎，采用最常见的状态检测模式，是为您节省大量判断状态的时间，专心写游戏内核的利器。
